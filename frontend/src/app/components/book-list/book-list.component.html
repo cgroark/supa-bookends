@@ -1,0 +1,14 @@
+<h1>Book List</h1>
+@if (bookItems.length) {
+  <div>
+    @for (item of bookItems; track item.id) {
+      <div>
+        <h2>{{ item.title }}</h2>
+        <p>{{ item.author }}</p>
+        <p>{{ item.overview }}</p>
+      </div>
+    }
+  </div>
+
+}
+

@@ -1,11 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ItemFormComponent } from './components/item-form/item-form.component';
+import { BookFormComponent } from './components/book-form/book-form.component';
+import { BookListComponent } from './components/book-list/book-list.component';
 
 
 const routes: Routes = [
-  { path: 'add-item', component: ItemFormComponent }, // Add the route for ItemFormComponent
-  // { path: '', redirectTo: '/add-item', pathMatch: 'full' }, // Redirect default route to the item form (optional)
+  { path: 'add-book', component: BookFormComponent },
+  { path: 'book-list', component: BookListComponent}
+  // { path: '', redirectTo: '/book-form', pathMatch: 'full' },
 ];
 
 @NgModule({

@@ -1,15 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
 
-import { FormControl, FormGroup } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule, FormControl, FormGroup } from '@angular/forms';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 
 
 @Component({
-  selector: 'app-item-form',
-  templateUrl: './item-form.component.html',
-  styleUrls: ['./item-form.component.scss']
+  selector: 'app-book-form',
+  standalone: true,
+  templateUrl: './book-form.component.html',
+  styleUrls: ['./book-form.component.scss'],
+  imports: [ReactiveFormsModule, FormsModule, CommonModule, HttpClientModule]
 })
-export class ItemFormComponent implements OnInit {
+export class BookFormComponent implements OnInit {
 
   protected form: FormGroup = new FormGroup({
     title: new FormControl<string>(''),
@@ -31,7 +34,8 @@ export class ItemFormComponent implements OnInit {
       label: 'Audio',
       value: 2,
     }
-  ]
+  ];
+
   constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
@@ -45,7 +49,6 @@ export class ItemFormComponent implements OnInit {
         .post('http://127.0.0.1:8000/add-item', itemData)
         .subscribe((response) => {
           console.log('Item added:', response);
-          alert('Item added successfully!');
         });
     } else {
       alert('Please fill in all fields!');
@@ -53,3 +56,4 @@ export class ItemFormComponent implements OnInit {
   }
 
 }
+
