@@ -14,9 +14,14 @@ import { ItemFormComponent } from './components/item-form/item-form.component';
         AppComponent,
         ItemFormComponent,
     ],
-    bootstrap: [AppComponent], imports: [BrowserModule,
-        FormsModule,
-        ReactiveFormsModule,
-        NgSelectModule,
-        AppRoutingModule], providers: [provideHttpClient(withInterceptorsFromDi())] })
+    bootstrap: [AppComponent],
+    imports:
+    [
+      BrowserModule,
+      FormsModule,
+      ReactiveFormsModule,
+      NgSelectModule,
+      AppRoutingModule
+    ],
+    providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class AppModule { }
