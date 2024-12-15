@@ -1,0 +1,44 @@
+<h1>Here's a form</h1>
+
+<form
+  [formGroup]="form"
+  (ngSubmit)="onSubmit()">
+  <div>
+    <input
+      type="text"
+      formControlName="title"
+      id="title"
+      placeholder="Enter title"
+    />
+   <label for="title">Title</label>
+  </div>
+  <div>
+    <input
+      type="text"
+      formControlName="author"
+      id="author"
+      placeholder="Enter author"
+    />
+    <label for="author">Author</label>
+  </div>
+  <div>
+    <input
+      type="text"
+      formControlName="overview"
+      id="overview"
+      placeholder="Enter overview"
+    />
+    <label for="overview">Overview</label>
+  </div>
+  <div>
+    <label for="format">Format</label>
+    <ng-select
+      [items]="formatTypes"
+      bindLabel="label"
+      bindValue="value"
+      formControlName="format"
+      placeholder="Select format">
+    </ng-select>
+  </div>
+   <button type="buton">Submit </button>
+</form>

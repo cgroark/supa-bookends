@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@ng-select/ng-select": "^14.1.0",
+    "@supabase/supabase-js": "^2.47.7"
+  }
+}
