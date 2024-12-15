@@ -11,17 +11,6 @@ import { FormControl, FormGroup } from '@angular/forms';
 })
 export class ItemFormComponent implements OnInit {
 
-  protected formatTypes = [
-    {
-      label: 'Text',
-      value: 1,
-    },
-    {
-      label: 'Audio',
-      value: 2,
-    }
-  ]
-
   protected form: FormGroup = new FormGroup({
     title: new FormControl<string>(''),
     author: new FormControl<string>(''),
@@ -33,6 +22,16 @@ export class ItemFormComponent implements OnInit {
     end: new FormControl<Date | null>(null),
     comments: new FormControl<string>(''),
   })
+  protected formatTypes = [
+    {
+      label: 'Text',
+      value: 1,
+    },
+    {
+      label: 'Audio',
+      value: 2,
+    }
+  ]
   constructor(private http: HttpClient) { }
 
   ngOnInit(): void {

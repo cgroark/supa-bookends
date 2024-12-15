@@ -1,4 +1,6 @@
-import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
+import { NgModule,
+  // NO_ERRORS_SCHEMA
+} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -23,6 +25,6 @@ import { ItemFormComponent } from './components/item-form/item-form.component';
   ],
   providers: [],
   bootstrap: [AppComponent],
-  schemas: [NO_ERRORS_SCHEMA]
+  // schemas: [NO_ERRORS_SCHEMA]
 })
 export class AppModule { }
