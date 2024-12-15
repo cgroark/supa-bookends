@@ -22,6 +22,7 @@ export class BookListComponent implements OnInit {
     .get('http://127.0.0.1:8000/items')
     .subscribe((response) => {
       console.warn('items array', response);
+      this.bookItems = response;
     })
   }
 
