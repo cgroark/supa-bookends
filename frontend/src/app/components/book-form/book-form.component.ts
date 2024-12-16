@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Book} from 'src/app/models/book.model';
 
 import { ReactiveFormsModule, FormsModule, FormControl, FormGroup } from '@angular/forms';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
@@ -44,16 +45,29 @@ export class BookFormComponent implements OnInit {
 
   onSubmit() {
     if (this.form.valid) {
-      const itemData = this.form.value;
+      const {title, author, overview} = this.form.controls;
+      const newBook = {
+        title: title.value,
+        author: author.value,
+        overview: overview.value,
+        format: null,
+        status: null,
+        rating: null,
+        startDate: null,
+        endDate: null,
+        comments: null,
+      }
+
       this.http
-        .post('http://127.0.0.1:8000/add-item', itemData)
-        .subscribe((response) => {
+      .post('http://127.0.0.1:8000/books/', newBook) // Notice the URL change
+      .subscribe({
+        next: (response) => {
           console.log('Item added:', response);
-        });
-    } else {
-      alert('Please fill in all fields!');
+        },
+        error: (error) => {
+          console.error('Error adding item:', error);
+        }
+      });
     }
   }
-
-}
-
+};
