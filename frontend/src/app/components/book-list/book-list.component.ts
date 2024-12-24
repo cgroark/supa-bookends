@@ -2,15 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Book} from 'src/app/models/book.model';
 
-import { HttpClientModule, HttpClient
-} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-book-list',
   standalone: true,
   templateUrl: './book-list.component.html',
   styleUrls: ['./book-list.component.scss'],
-  imports: [CommonModule, HttpClientModule]
+  imports: [CommonModule]
 })
 export class BookListComponent implements OnInit {
 

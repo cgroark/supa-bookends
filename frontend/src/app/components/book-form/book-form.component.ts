@@ -5,7 +5,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { Book} from 'src/app/models/book.model';
 
 import { ReactiveFormsModule, FormsModule, FormControl, FormGroup } from '@angular/forms';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 
 @Component({
@@ -13,7 +13,7 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
   standalone: true,
   templateUrl: './book-form.component.html',
   styleUrls: ['./book-form.component.scss'],
-  imports: [NgSelectModule, ReactiveFormsModule, FormsModule, CommonModule, HttpClientModule]
+  imports: [NgSelectModule, ReactiveFormsModule, FormsModule, CommonModule]
 })
 export class BookFormComponent implements OnInit {
 
