@@ -7,9 +7,9 @@ class BookService:
     async def create_book(book: BookCreate):
         async with (await db.get_pool()).acquire() as conn:
             query = """
-                INSERT INTO books (title, author, overview, format, status, rating, start_date, end_date, comments)
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-                RETURNING id, title, author, overview, format, status, rating, start_date, end_date, comments
+                INSERT INTO books (title, author, overview, format, status, rating, start_date, end_date, comments, image_url)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+                RETURNING id, title, author, overview, format, status, rating, start_date, end_date, comments, image_url
             """
             row = await conn.fetchrow(
                 query,
@@ -21,7 +21,8 @@ class BookService:
                 book.rating,
                 book.start_date,
                 book.end_date,
-                book.comments
+                book.comments,
+                book.image_url
             )
             return dict(row)
 

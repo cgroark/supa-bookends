@@ -9,6 +9,7 @@ export class Book {
   startDate: Date | null;
   endDate: Date | null;
   comments: string | null;
+  imageUrl: string | null;
 
   constructor(
     id: number,
@@ -20,7 +21,8 @@ export class Book {
     rating: number | null = null,
     startDate: Date | null = null,
     endDate: Date | null = null,
-    comments: string | null = null
+    comments: string | null = null,
+    imageUrl: string | null = null
   ) {
     this.id = id;
     this.title = title;
@@ -32,6 +34,7 @@ export class Book {
     this.startDate = startDate;
     this.endDate = endDate;
     this.comments = comments;
+    this.imageUrl = imageUrl;
   }
 
   // Example method for displaying book info

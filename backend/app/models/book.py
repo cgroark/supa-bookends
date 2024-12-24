@@ -12,6 +12,7 @@ class BookCreate(BaseModel):
     start_date: Optional[date] = None
     end_date: Optional[date] = None
     comments: Optional[str] = None
+    image_url: Optional[str] = None
 
 class Book(BookCreate):
     id: int

@@ -30,7 +30,7 @@
     />
     <label for="overview">Overview</label>
   </div>
-  <!-- <div>
+  <div>
     <label for="format">Format</label>
     <ng-select
       [items]="formatTypes"
@@ -39,6 +39,26 @@
       formControlName="format"
       placeholder="Select format">
     </ng-select>
-  </div> -->
-   <button type="buton">Submit </button>
+  </div>
+  <div>
+    <label for="status">Status</label>
+    <ng-select
+      [items]="statusOptions"
+      bindLabel="label"
+      bindValue="value"
+      formControlName="status"
+      placeholder="Select status">
+    </ng-select>
+  </div>
+  <div>
+    <label for="rating">Rating</label>
+    <ng-select
+      [items]="ratingOptions"
+      bindLabel="label"
+      bindValue="value"
+      formControlName="rating"
+      placeholder="Select rating">
+    </ng-select>
+  </div>
+   <button class="btn btn-primary" type="buton">Submit </button>
 </form>
