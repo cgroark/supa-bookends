@@ -6,6 +6,8 @@ class BookService:
     @staticmethod
     async def create_book(book: BookCreate):
         async with (await db.get_pool()).acquire() as conn:
+            start_date = datetime.strptime(book.start_date, "%m-%d-%Y").date() if isinstance(book.start_date, str) else book.start_date
+            end_date = datetime.strptime(book.end_date, "%m-%d-%Y").date() if isinstance(book.end_date, str) else book.end_date
             query = """
                 INSERT INTO books (title, author, overview, format, status, rating, start_date, end_date, comments, image_url)
                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)

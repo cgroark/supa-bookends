@@ -1,0 +1,29 @@
+<h3>Fiction</h3>
+@for(book of fictionBooks; track book.primary_isbn10) {
+  <div>
+    <h4>{{ book.title }}</h4>
+    <strong> {{ book.author }} </strong>
+    <img
+      [src]="book.book_image"
+      [alt]="'picture of the cover of ' + book.title"
+      class="d-block"
+      [style.max-width.px]="150"
+    >
+    <p>{{ book.description }}</p>
+  </div>
+}
+
+<h3>Non-Fiction</h3>
+@for(book of nonFictionBooks; track book.primary_isbn10) {
+  <div>
+    <h4>{{ book.title }}</h4>
+    <strong> {{ book.author }} </strong>
+    <img
+      [src]="book.book_image"
+      [alt]="'picture of the cover of ' + book.title"
+      class="d-block"
+      [style.max-width.px]="150"
+    >
+    <p>{{ book.description }}</p>
+  </div>
+}

@@ -6,10 +6,10 @@ export class Book {
   format: number | null;
   status: number | null;
   rating: number | null;
-  startDate: Date | null;
-  endDate: Date | null;
+  start_date: Date | null;
+  end_date: Date | null;
   comments: string | null;
-  imageUrl: string | null;
+  image_url: string | null;
 
   constructor(
     id: number,
@@ -19,10 +19,10 @@ export class Book {
     format: number | null = null,
     status: number | null = null,
     rating: number | null = null,
-    startDate: Date | null = null,
-    endDate: Date | null = null,
+    start_date: Date | null = null,
+    end_date: Date | null = null,
     comments: string | null = null,
-    imageUrl: string | null = null
+    image_url: string | null = null
   ) {
     this.id = id;
     this.title = title;
@@ -31,10 +31,10 @@ export class Book {
     this.format = format;
     this.status = status;
     this.rating = rating;
-    this.startDate = startDate;
-    this.endDate = endDate;
+    this.start_date = start_date;
+    this.end_date = end_date;
     this.comments = comments;
-    this.imageUrl = imageUrl;
+    this.image_url = image_url;
   }
 
   // Example method for displaying book info

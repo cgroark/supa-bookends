@@ -16,13 +16,12 @@ export class BookListComponent implements OnInit {
   // protected bookItems: Book[] = [];
   protected bookItems: any;
 
-
   constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
     this.http
     .get('http://127.0.0.1:8000/books/')
-    .subscribe((response) => {
+    .subscribe((response: any) => {
       console.warn('items array', response);
       this.bookItems = response;
     })

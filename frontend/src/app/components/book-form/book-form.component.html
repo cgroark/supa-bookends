@@ -60,5 +60,45 @@
       placeholder="Select rating">
     </ng-select>
   </div>
-   <button class="btn btn-primary" type="buton">Submit </button>
+  <div>
+    <input
+      id="start"
+      #startInput="ngbDatepicker"
+      type="date"
+      formControlName="start"
+      ngbDatepicker
+    />
+    <label
+      id="start"
+    >
+      <i class="bi bi-calendar-event me-1"></i>
+      Start
+    </label>
+  </div>
+  <div>
+    <input
+      id="end"
+      #endInput="ngbDatepicker"
+      type="date"
+      formControlName="end"
+      ngbDatepicker
+    />
+    <label
+      id="end"
+    >
+      <i class="bi bi-calendar-event me-1"></i>
+      End
+    </label>
+  </div>
+  <div>
+    <textarea
+      formControlName="comments"
+      rows="4"
+      id="comments"
+      placeholder="Enter comments"
+    ></textarea>
+    <label for="comments">comments</label>
+  </div>
+
+  <button class="btn btn-primary" type="buton">Submit </button>
 </form>
