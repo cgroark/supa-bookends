@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 import { HttpClient } from '@angular/common/http';
+import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-bestsellers',
   standalone: true,
-  imports: [],
+  imports: [CommonModule, NgbAccordionModule],
   templateUrl: './bestsellers.component.html',
   styleUrl: './bestsellers.component.scss'
 })

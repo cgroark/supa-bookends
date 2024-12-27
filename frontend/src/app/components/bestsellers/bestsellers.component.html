@@ -1,20 +1,66 @@
 <h3>Fiction</h3>
-@for(book of fictionBooks; track book.primary_isbn10) {
-  <div>
-    <h4>{{ book.title }}</h4>
-    <strong> {{ book.author }} </strong>
-    <img
-      [src]="book.book_image"
-      [alt]="'picture of the cover of ' + book.title"
-      class="d-block"
-      [style.max-width.px]="150"
-    >
-    <p>{{ book.description }}</p>
+<div class="d-flex flex-wrap">
+  @for(book of fictionBooks; track book.primary_isbn10; let index = $index) {
+    @if(index < 6) {
+    <ng-container
+        *ngTemplateOutlet="
+          bestsellerItem;
+          context: {each: book}
+        "
+      />
+    }
+  }
+</div>
+<div ngbAccordion>
+  <div ngbAccordionItem>
+    <div ngbAccordionHeader>
+      <button
+        ngbAccordionButton
+      >
+        View More
+      </button>
+    </div>
+    <div ngbAccordionCollapse>
+      <div
+        ngbAccordionBody
+        class="px-0"
+      >
+        <ng-template>
+          @for(book of fictionBooks; track book.primary_isbn10; let index = $index) {
+            @if(index > 6) {
+            <ng-container
+                *ngTemplateOutlet="
+                  bestsellerItem;
+                  context: {each: book}
+                "
+              />
+            }
+          }
+        </ng-template>
+      </div>
+    </div>
   </div>
-}
+</div>
+
 
 <h3>Non-Fiction</h3>
-@for(book of nonFictionBooks; track book.primary_isbn10) {
+<div class="d-flex flex-wrap">
+  @for(book of nonFictionBooks; track book.primary_isbn10; let index = $index) {
+    @if(index < 6) {
+    <ng-container
+        *ngTemplateOutlet="
+          bestsellerItem;
+          context: {each: book}
+        "
+      />
+    }
+  }
+</div>
+
+<ng-template
+    #bestsellerItem
+    let-book="each"
+  >
   <div>
     <h4>{{ book.title }}</h4>
     <strong> {{ book.author }} </strong>
@@ -22,8 +68,28 @@
       [src]="book.book_image"
       [alt]="'picture of the cover of ' + book.title"
       class="d-block"
-      [style.max-width.px]="150"
+      [style.max-width.px]="90"
     >
-    <p>{{ book.description }}</p>
+    <div ngbAccordion>
+      <div ngbAccordionItem>
+        <div ngbAccordionHeader>
+          <button
+            ngbAccordionButton
+          >
+            Overview
+          </button>
+        </div>
+        <div ngbAccordionCollapse>
+          <div
+            ngbAccordionBody
+            class="px-0"
+          >
+            <ng-template><p>
+              {{ book.description }}
+            </p></ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-}
+</ng-template>
