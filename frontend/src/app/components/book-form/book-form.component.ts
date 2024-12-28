@@ -52,6 +52,7 @@ export class BookFormComponent implements OnInit {
     }
   ];
   protected isLoading = false;
+  protected isManuallyAdding = false;
   protected ratingOptions = [
     {
       label: '⭐️',
@@ -132,7 +133,8 @@ export class BookFormComponent implements OnInit {
         title: this.selectedBook.title ? this.selectedBook.title : 'Unknown',
         author: this.selectedBook.authors ? this.selectedBook.authors[0] : 'Unknown',
         overview: this.selectedBook.overview ? this.selectedBook.overview : 'Unknown',
-      })
+      });
+      this.isManuallyAdding = false;
     } else {
       this.form.patchValue({
         title: '',
@@ -140,7 +142,10 @@ export class BookFormComponent implements OnInit {
         overview: '',
       })
     }
+  }
 
+  toggleManualAdd(): void {
+    this.isManuallyAdding = !this.isManuallyAdding;
   }
 
   formatDate(date: { year: number, month: number, day: number }): string {
@@ -149,7 +154,7 @@ export class BookFormComponent implements OnInit {
     return `${date.year}-${month}-${day}`;
   }
 
-  onSubmit() {
+  onSubmit(): void{
     if (this.form.valid) {
       const {title, author, overview, format, status, rating, start, end, comments} = this.form.controls;
       console.warn(start)

@@ -1,49 +1,60 @@
-<h1>Here's a form</h1>
-<h2>find a book</h2>
-<ng-select
-  [items]="books$ | async"
-  [typeahead]="bookInput$"
-  [loading]="isLoading"
-  loadingText="Searching..."
-  [(ngModel)]="selectedBook"
-  (change)="onBookChange($event)"
-  placeholder="Start typing to search"
->
-<ng-template
-  ng-label-tmp
-  let-item="item"
+
+@if(!isManuallyAdding) {
+  <ng-select
+    [items]="books$ | async"
+    [typeahead]="bookInput$"
+    [loading]="isLoading"
+    loadingText="Searching..."
+    [(ngModel)]="selectedBook"
+    (change)="onBookChange($event)"
+    placeholder="Start typing to search"
   >
-  <div class="d-flex align-items-center gap-1">
-    <span>{{ item.title }}</span>
-    @if(item.authors) {
-      @for(author of item.authors; track $index ) {
-        <span
-        class="small badge bg-secondary"
-        >{{ author }}</span
-      >
-      }
-    }
-  </div>
-  </ng-template>
   <ng-template
-    ng-option-tmp
+    ng-label-tmp
     let-item="item"
-    let-search="searchTerm"
     >
     <div class="d-flex align-items-center gap-1">
-      <span [ngOptionHighlight]="search">{{ item.title }}</span>
+      <span>{{ item.title }}</span>
       @if(item.authors) {
         @for(author of item.authors; track $index ) {
           <span
-          [ngOptionHighlight]="search"
           class="small badge bg-secondary"
           >{{ author }}</span
         >
         }
       }
     </div>
-  </ng-template>
-</ng-select>
+    </ng-template>
+    <ng-template
+      ng-option-tmp
+      let-item="item"
+      let-search="searchTerm"
+      >
+      <div class="d-flex align-items-center gap-1">
+        <span [ngOptionHighlight]="search">{{ item.title }}</span>
+        @if(item.authors) {
+          @for(author of item.authors; track $index ) {
+            <span
+            [ngOptionHighlight]="search"
+            class="small badge bg-secondary"
+            >{{ author }}</span
+          >
+          }
+        }
+      </div>
+    </ng-template>
+  </ng-select>
+}
+
+@if(!selectedBook){
+  <button
+    class="btn btn-primary"
+    type="button"
+    (click)="toggleManualAdd()"
+  >{{!isManuallyAdding ? 'Add book manually' : 'Search for a book' }}</button>
+}
+
+@if(selectedBook || isManuallyAdding){
 <form
   [formGroup]="form"
   (ngSubmit)="onSubmit()">
@@ -94,55 +105,59 @@
       placeholder="Select status">
     </ng-select>
   </div>
-  <div>
-    <label for="rating">Rating</label>
-    <ng-select
-      [items]="ratingOptions"
-      bindLabel="label"
-      bindValue="value"
-      formControlName="rating"
-      placeholder="Select rating">
-    </ng-select>
-  </div>
-  <div>
-    <input
-      id="start"
-      #startInput="ngbDatepicker"
-      type="date"
-      formControlName="start"
-      ngbDatepicker
-    />
-    <label
-      id="start"
-    >
-      <i class="bi bi-calendar-event me-1"></i>
-      Start
-    </label>
-  </div>
-  <div>
-    <input
-      id="end"
-      #endInput="ngbDatepicker"
-      type="date"
-      formControlName="end"
-      ngbDatepicker
-    />
-    <label
-      id="end"
-    >
-      <i class="bi bi-calendar-event me-1"></i>
-      End
-    </label>
-  </div>
-  <div>
-    <textarea
-      formControlName="comments"
-      rows="4"
-      id="comments"
-      placeholder="Enter comments"
-    ></textarea>
-    <label for="comments">comments</label>
-  </div>
+  @if(form.controls['status'].value === 4) {
+    <div>
+      <label for="rating">Rating</label>
+      <ng-select
+        [items]="ratingOptions"
+        bindLabel="label"
+        bindValue="value"
+        formControlName="rating"
+        placeholder="Select rating">
+      </ng-select>
+    </div>
+    <div>
+      <input
+        id="start"
+        #startInput="ngbDatepicker"
+        type="date"
+        formControlName="start"
+        ngbDatepicker
+      />
+      <label
+        id="start"
+      >
+        <i class="bi bi-calendar-event me-1"></i>
+        Start
+      </label>
+    </div>
+    <div>
+      <input
+        id="end"
+        #endInput="ngbDatepicker"
+        type="date"
+        formControlName="end"
+        ngbDatepicker
+      />
+      <label
+        id="end"
+      >
+        <i class="bi bi-calendar-event me-1"></i>
+        End
+      </label>
+    </div>
+    <div>
+      <textarea
+        formControlName="comments"
+        rows="4"
+        id="comments"
+        placeholder="Enter comments"
+      ></textarea>
+      <label for="comments">comments</label>
+    </div>
+  }
+
 
   <button class="btn btn-primary" type="buton">Submit </button>
 </form>
+}
