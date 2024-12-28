@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { HttpClient } from '@angular/common/http';
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
+import { combineLatest } from 'rxjs';
 
 @Component({
   selector: 'app-bestsellers',
@@ -18,21 +19,16 @@ export class BestsellersComponent implements OnInit {
 
   constructor(private http: HttpClient) {}
   ngOnInit(): void {
-    this.http
-    .get('https://api.nytimes.com/svc/books/v3/lists/hardcover-fiction.json?api-key=BAGqFvDh9IJi1JWLxfJ9SIh2rctbgwiE')
-    .subscribe((response: any) => {
-      this.fictionBooks = response.results.books;
-      console.warn('best', this.fictionBooks)
-    });
+    if(!this.fictionBooks.length) {
+      const fictionCall$ = this.http
+      .get('https://api.nytimes.com/svc/books/v3/lists/hardcover-fiction.json?api-key=BAGqFvDh9IJi1JWLxfJ9SIh2rctbgwiE');
+      const nonFictionCall$ = this.http
+      .get('https://api.nytimes.com/svc/books/v3/lists/hardcover-nonfiction.json?api-key=BAGqFvDh9IJi1JWLxfJ9SIh2rctbgwiE');
 
-    this.http
-    .get('https://api.nytimes.com/svc/books/v3/lists/hardcover-nonfiction.json?api-key=BAGqFvDh9IJi1JWLxfJ9SIh2rctbgwiE')
-    .subscribe((response: any) => {
-      this.nonFictionBooks = response.results.books;
-      console.warn('best', this.nonFictionBooks)
-    })
-
-
-
+      combineLatest([fictionCall$, nonFictionCall$]).subscribe(([fictionResponse, nonFictionResponse]: any) => {
+        this.fictionBooks = fictionResponse.results.books;
+        this.nonFictionBooks = nonFictionResponse.results.books;
+      })
+    }
   }
 }

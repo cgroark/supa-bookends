@@ -56,19 +56,46 @@
     }
   }
 </div>
+<div ngbAccordion>
+  <div ngbAccordionItem>
+    <div ngbAccordionHeader>
+      <button
+        ngbAccordionButton
+      >
+        View More
+      </button>
+    </div>
+    <div ngbAccordionCollapse>
+      <div
+        ngbAccordionBody
+        class="px-0"
+      >
+        <ng-template>
+          @for(book of nonFictionBooks; track book.primary_isbn10; let index = $index) {
+            @if(index > 6) {
+            <ng-container
+                *ngTemplateOutlet="
+                  bestsellerItem;
+                  context: {each: book}
+                "
+              />
+            }
+          }
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>
 
 <ng-template
     #bestsellerItem
     let-book="each"
   >
-  <div>
-    <h4>{{ book.title }}</h4>
-    <strong> {{ book.author }} </strong>
+  <div class="w-50 p-1">
     <img
       [src]="book.book_image"
       [alt]="'picture of the cover of ' + book.title"
-      class="d-block"
-      [style.max-width.px]="90"
+      class="w-100"
     >
     <div ngbAccordion>
       <div ngbAccordionItem>
@@ -76,7 +103,7 @@
           <button
             ngbAccordionButton
           >
-            Overview
+            Summary
           </button>
         </div>
         <div ngbAccordionCollapse>

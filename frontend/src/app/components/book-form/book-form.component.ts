@@ -1,10 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
+import {NgOptionHighlightModule} from '@ng-select/ng-option-highlight';
 
 import { Book} from 'src/app/models/book.model';
-
+import  {Observable, of, ReplaySubject} from 'rxjs'
+import {
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  switchMap,
+  tap,
+} from 'rxjs/operators';
 import { ReactiveFormsModule, FormsModule, FormControl, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 
@@ -14,9 +23,12 @@ import { HttpClient } from '@angular/common/http';
   standalone: true,
   templateUrl: './book-form.component.html',
   styleUrls: ['./book-form.component.scss'],
-  imports: [NgSelectModule, NgbDatepickerModule, ReactiveFormsModule, FormsModule, CommonModule]
+  imports: [NgSelectModule, NgbDatepickerModule, NgOptionHighlightModule, ReactiveFormsModule, FormsModule, CommonModule]
 })
 export class BookFormComponent implements OnInit {
+
+  protected books$: Observable<any[]>;
+  protected bookInput$ = new ReplaySubject<string>(1);
 
   protected form: FormGroup = new FormGroup({
     title: new FormControl<string>(''),
@@ -39,26 +51,7 @@ export class BookFormComponent implements OnInit {
       value: 2,
     }
   ];
-
-  protected statusOptions = [
-    {
-      label: 'Add to reading list',
-      value: 1,
-    },
-    {
-      label: 'Reading',
-      value: 2,
-    },
-    {
-      label: 'Set aside',
-      value: 3,
-    },
-    {
-      label: 'Finished',
-      value: 4,
-    }
-  ];
-
+  protected isLoading = false;
   protected ratingOptions = [
     {
       label: '⭐️',
@@ -81,11 +74,73 @@ export class BookFormComponent implements OnInit {
       value: 5,
     }
   ];
+  protected selectedBook: any;
+  protected statusOptions = [
+    {
+      label: 'Add to reading list',
+      value: 1,
+    },
+    {
+      label: 'Reading',
+      value: 2,
+    },
+    {
+      label: 'Set aside',
+      value: 3,
+    },
+    {
+      label: 'Finished',
+      value: 4,
+    }
+  ];
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    this.books$ = this.bookInput$.pipe(
+      tap(() => (this.isLoading = true)),
+      debounceTime(200),
+      distinctUntilChanged(),
+      switchMap((term) => {
+        if (!term) {
+          this.isLoading = false;
+          return of([]);
+        }
+        const searchTerm = of(term);
+        return this.http.get<any>(`https://www.googleapis.com/books/v1/volumes?q=${term}&langRestrict=en`).pipe(
+          map((response) =>
+            response.items.map((item: any) => ({
+              title: item.volumeInfo?.title || 'Unknown Title',
+              authors: item.volumeInfo?.authors || ['Unknown Author'],
+              imageUrl: item.volumeInfo?.imageLinks.smallThumbnail,
+              overview: item.volumeInfo?.description
+            })) || []
+          ),
+          tap(() => (this.isLoading = false)),
+        );
+      }),
+    );
+   }
 
   ngOnInit(): void {
     console.warn(this.formatTypes)
+  }
+
+  onBookChange(selected: any): void {
+    console.log('Selected Book:', selected);
+    this.selectedBook = selected;
+    if(this.selectedBook ) {
+      this.form.patchValue({
+        title: this.selectedBook.title ? this.selectedBook.title : 'Unknown',
+        author: this.selectedBook.authors ? this.selectedBook.authors[0] : 'Unknown',
+        overview: this.selectedBook.overview ? this.selectedBook.overview : 'Unknown',
+      })
+    } else {
+      this.form.patchValue({
+        title: '',
+        author: '',
+        overview: '',
+      })
+    }
+
   }
 
   formatDate(date: { year: number, month: number, day: number }): string {

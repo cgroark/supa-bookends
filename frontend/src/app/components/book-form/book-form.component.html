@@ -1,5 +1,49 @@
 <h1>Here's a form</h1>
-
+<h2>find a book</h2>
+<ng-select
+  [items]="books$ | async"
+  [typeahead]="bookInput$"
+  [loading]="isLoading"
+  loadingText="Searching..."
+  [(ngModel)]="selectedBook"
+  (change)="onBookChange($event)"
+  placeholder="Start typing to search"
+>
+<ng-template
+  ng-label-tmp
+  let-item="item"
+  >
+  <div class="d-flex align-items-center gap-1">
+    <span>{{ item.title }}</span>
+    @if(item.authors) {
+      @for(author of item.authors; track $index ) {
+        <span
+        class="small badge bg-secondary"
+        >{{ author }}</span
+      >
+      }
+    }
+  </div>
+  </ng-template>
+  <ng-template
+    ng-option-tmp
+    let-item="item"
+    let-search="searchTerm"
+    >
+    <div class="d-flex align-items-center gap-1">
+      <span [ngOptionHighlight]="search">{{ item.title }}</span>
+      @if(item.authors) {
+        @for(author of item.authors; track $index ) {
+          <span
+          [ngOptionHighlight]="search"
+          class="small badge bg-secondary"
+          >{{ author }}</span
+        >
+        }
+      }
+    </div>
+  </ng-template>
+</ng-select>
 <form
   [formGroup]="form"
   (ngSubmit)="onSubmit()">

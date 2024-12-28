@@ -1,0 +1,14 @@
+.accordion-button {
+  padding: 0;
+  background: none;
+  &::after {
+    color: red;
+  }
+  &:focus {
+    box-shadow: none;
+  }
+}
+
+.accordion-item {
+  border: none;
+}
