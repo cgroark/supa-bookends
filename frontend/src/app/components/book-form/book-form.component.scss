@@ -1,0 +1,24 @@
+@import '../../../styles/variables';
+
+input, textarea {
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  min-height: 36px;
+  &:focus-visible {
+    outline: none;
+  }
+}
+
+.search-section {
+  background-color: #f38ba2;
+}
+
+button.btn:not(.btn-outline-secondary) {
+  background-color:  $teal;
+  color: $ivory;
+  &:hover {
+    color:  $teal;
+    background-color: $ivory;
+    border: 1px solid  $teal;
+  }
+}

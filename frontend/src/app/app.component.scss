@@ -1,3 +1,9 @@
+@import '../../src/styles/variables';
+
+.root {
+  background-color: $black;
+  font-family: $font-ubuntu;
+}
 .main-body  {
   max-width: 1025px;
 }

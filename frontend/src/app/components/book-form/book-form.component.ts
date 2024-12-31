@@ -33,11 +33,9 @@ export class BookFormComponent implements OnInit {
   protected form: FormGroup = new FormGroup({
     title: new FormControl<string>(''),
     author: new FormControl<string>(''),
-    overview: new FormControl<string>(''),
     format: new FormControl<number | null>(null),
     status: new FormControl<number | null>(null),
     rating: new FormControl<number | null>(null),
-    start: new FormControl<Date | null>(null),
     end: new FormControl<Date | null>(null),
     comments: new FormControl<string>(''),
   })
@@ -111,7 +109,7 @@ export class BookFormComponent implements OnInit {
             response.items.map((item: any) => ({
               title: item.volumeInfo?.title || 'Unknown Title',
               authors: item.volumeInfo?.authors || ['Unknown Author'],
-              imageUrl: item.volumeInfo?.imageLinks.smallThumbnail,
+              imageUrl: item.volumeInfo?.imageLinks.thumbnail,
               overview: item.volumeInfo?.description
             })) || []
           ),
@@ -122,7 +120,7 @@ export class BookFormComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    console.warn(this.formatTypes)
+
   }
 
   onBookChange(selected: any): void {
@@ -132,14 +130,12 @@ export class BookFormComponent implements OnInit {
       this.form.patchValue({
         title: this.selectedBook.title ? this.selectedBook.title : 'Unknown',
         author: this.selectedBook.authors ? this.selectedBook.authors[0] : 'Unknown',
-        overview: this.selectedBook.overview ? this.selectedBook.overview : 'Unknown',
       });
       this.isManuallyAdding = false;
     } else {
       this.form.patchValue({
         title: '',
         author: '',
-        overview: '',
       })
     }
   }
@@ -154,22 +150,22 @@ export class BookFormComponent implements OnInit {
     return `${date.year}-${month}-${day}`;
   }
 
+
+
   onSubmit(): void{
     if (this.form.valid) {
-      const {title, author, overview, format, status, rating, start, end, comments} = this.form.controls;
-      console.warn(start)
+      const {title, author, format, status, rating, end, comments} = this.form.controls;
 
       const newBook = {
         title: title.value,
         author: author.value,
-        overview: overview.value,
+        overview: this.selectedBook ? this.selectedBook.overview : null,
         format: format.value,
         status: status.value,
         rating: rating.value,
-        start_date: this.formatDate(start.value),
-        end_date: this.formatDate(end.value),
+        end_date: end.value ? this.formatDate(end.value) : null,
         comments: comments.value,
-        image_url: null,
+        image_url: this.selectedBook?.imageUrl ?? null,
       }
 
       console.warn(newBook)

@@ -1,6 +1,7 @@
 
 @if(!isManuallyAdding) {
-  <ng-select
+  <div class="py-4 px-3 search-section">
+    <ng-select
     [items]="books$ | async"
     [typeahead]="bookInput$"
     [loading]="isLoading"
@@ -44,11 +45,12 @@
       </div>
     </ng-template>
   </ng-select>
+  </div>
 }
 
 @if(!selectedBook){
   <button
-    class="btn btn-primary"
+    class="btn btn-outline-secondary border-0 d-block ms-auto me-3 my-2"
     type="button"
     (click)="toggleManualAdd()"
   >{{!isManuallyAdding ? 'Add book manually' : 'Search for a book' }}</button>
@@ -56,108 +58,118 @@
 
 @if(selectedBook || isManuallyAdding){
 <form
+  class="mt-2 p-3"
   [formGroup]="form"
   (ngSubmit)="onSubmit()">
-  <div>
-    <input
-      type="text"
-      formControlName="title"
-      id="title"
-      placeholder="Enter title"
-    />
-   <label for="title">Title</label>
+  <div class="row">
+    <div class="col-sm-8">
+      <div class="mb-2">
+        <label class="d-block text-secondary" for="title">
+          <i class="bi bi-book me-1"></i>
+          Title
+        </label>
+        <input
+          class="w-100"
+          type="text"
+          formControlName="title"
+          id="title"
+        />
+      </div>
+      <div class="mb-2">
+        <label class="d-block text-secondary" for="author">
+          <i class="bi bi-pen me-1"></i>          Author
+        </label>
+        <input
+          class="w-100"
+          type="text"
+          formControlName="author"
+          id="author"
+        />
+      </div>
+      <div class="mb-2">
+        <label class="d-block text-secondary" for="format">
+          <i class="bi bi-book-half me-1"></i>
+          Format
+        </label>
+        <ng-select
+          [items]="formatTypes"
+          bindLabel="label"
+          bindValue="value"
+          formControlName="format"
+        >
+        </ng-select>
+      </div>
+      <div class="mb-2">
+        <label class="d-block text-secondary" for="status">
+          <i class="bi bi-bookmark-check me-1"></i>
+          Status
+        </label>
+        <ng-select
+          [items]="statusOptions"
+          bindLabel="label"
+          bindValue="value"
+          formControlName="status"
+        >
+        </ng-select>
+      </div>
+    </div>
+    @if(selectedBook?.imageUrl) {
+      <div class="col-sm-4 mt-4">
+        <img [src]="selectedBook.imageUrl" alt="book cover" class="w-100">
+      </div>
+    }
   </div>
-  <div>
-    <input
-      type="text"
-      formControlName="author"
-      id="author"
-      placeholder="Enter author"
-    />
-    <label for="author">Author</label>
-  </div>
-  <div>
-    <input
-      type="text"
-      formControlName="overview"
-      id="overview"
-      placeholder="Enter overview"
-    />
-    <label for="overview">Overview</label>
-  </div>
-  <div>
-    <label for="format">Format</label>
-    <ng-select
-      [items]="formatTypes"
-      bindLabel="label"
-      bindValue="value"
-      formControlName="format"
-      placeholder="Select format">
-    </ng-select>
-  </div>
-  <div>
-    <label for="status">Status</label>
-    <ng-select
-      [items]="statusOptions"
-      bindLabel="label"
-      bindValue="value"
-      formControlName="status"
-      placeholder="Select status">
-    </ng-select>
-  </div>
+
   @if(form.controls['status'].value === 4) {
-    <div>
-      <label for="rating">Rating</label>
-      <ng-select
-        [items]="ratingOptions"
-        bindLabel="label"
-        bindValue="value"
-        formControlName="rating"
-        placeholder="Select rating">
-      </ng-select>
-    </div>
-    <div>
-      <input
-        id="start"
-        #startInput="ngbDatepicker"
-        type="date"
-        formControlName="start"
-        ngbDatepicker
-      />
-      <label
-        id="start"
-      >
-        <i class="bi bi-calendar-event me-1"></i>
-        Start
-      </label>
-    </div>
-    <div>
-      <input
-        id="end"
-        #endInput="ngbDatepicker"
-        type="date"
-        formControlName="end"
-        ngbDatepicker
-      />
-      <label
-        id="end"
-      >
-        <i class="bi bi-calendar-event me-1"></i>
-        End
-      </label>
-    </div>
-    <div>
-      <textarea
-        formControlName="comments"
-        rows="4"
-        id="comments"
-        placeholder="Enter comments"
-      ></textarea>
-      <label for="comments">comments</label>
+    <div class="row">
+      <div class="col-sm-8">
+        <div class="mb-2">
+          <label class="d-block text-secondary" for="rating">
+            <i class="bi bi-bookmark-heart me-1"></i>
+            Rating
+          </label>
+          <ng-select
+            [items]="ratingOptions"
+            bindLabel="label"
+            bindValue="value"
+            formControlName="rating"
+          >
+          </ng-select>
+        </div>
+        <div class="mb-2">
+          <label
+            class="d-block text-secondary"
+            id="end"
+          >
+            <i class="bi bi-calendar-event me-1"></i>
+            Finished on
+          </label>
+          <input
+            class="w-100"
+            id="end"
+            #endInput="ngbDatepicker"
+            type="date"
+            formControlName="end"
+            ngbDatepicker
+          />
+        </div>
+        <div class="mb-2">
+          <label class="d-block text-secondary" for="comments">
+            <i class="bi bi-body-text me-1"></i>
+            Comments
+          </label>
+          <textarea
+            formControlName="comments"
+            rows="4"
+            id="comments"
+          ></textarea>
+        </div>
+      </div>
     </div>
   }
-
-
-  <button class="btn btn-primary" type="buton">Submit </button>
+  <button class="btn d-block mx-auto mt-3 w-50" type="buton">
+    <i class="bi bi-save me-1"></i>
+    Save
+  </button>
 </form>
 }

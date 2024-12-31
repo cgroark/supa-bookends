@@ -1,0 +1,35 @@
+@import '../../../styles/variables';
+
+h1, h2, p, i {
+  color: $ivory;
+}
+
+h1 {
+  font-size: $font-size-large;
+}
+
+h2 {
+  font-size: $font-size-medium;
+}
+
+p, p > i {
+  font-size: $font-size-base;
+}
+
+
+
+::ng-deep .modal-body {
+  padding: 0;
+}
+
+::ng-deep .modal-header {
+  background-color:  $black;
+  color: $ivory;
+  border-bottom: 0;
+  button {
+    color: $ivory;
+    i {
+      font-size: 24px;
+    }
+  }
+}

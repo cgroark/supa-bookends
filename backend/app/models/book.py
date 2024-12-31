@@ -9,10 +9,10 @@ class BookCreate(BaseModel):
     format: Optional[int] = None
     status: Optional[int] = None
     rating: Optional[int] = None
-    start_date: Optional[date] = None
     end_date: Optional[date] = None
     comments: Optional[str] = None
     image_url: Optional[str] = None
+    user_id: Optional[str] = None
 
 class Book(BookCreate):
     id: int
