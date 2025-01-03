@@ -1,6 +1,6 @@
 from app.db.database import db
 from app.models.book import Book, BookCreate
-from typing import List
+from typing import List, Optional
 
 class BookService:
     @staticmethod
@@ -54,3 +54,35 @@ class BookService:
         query = "DELETE FROM books WHERE id = $1"
         pool = await db.get_pool()
         await pool.execute(query, book_id)
+
+    @staticmethod
+    async def update_book(book_id: int, book: BookCreate) -> Optional[dict]:
+        async with (await db.get_pool()).acquire() as conn:
+            end_date = None
+            if book.end_date and isinstance(book.end_date, str):
+                try:
+                    end_date = datetime.strptime(book.end_date, "%Y-%m-%d").date()
+                except ValueError as e:
+                    raise ValueError(f"Invalid date format for end_date: {book.end_date}") from e
+
+            query = """
+                UPDATE books
+                SET title = $1, author = $2, overview = $3, format = $4, status = $5,
+                    rating = $6, end_date = $7, comments = $8, image_url = $9
+                WHERE id = $10
+                RETURNING id, title, author, overview, format, status, rating, end_date, comments, image_url, user_id
+            """
+            row = await conn.fetchrow(
+                query,
+                book.title,
+                book.author,
+                book.overview,
+                book.format,
+                book.status,
+                book.rating,
+                end_date,
+                book.comments,
+                book.image_url,
+                book_id,
+            )
+            return dict(row) if row else None

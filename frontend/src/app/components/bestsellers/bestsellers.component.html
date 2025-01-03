@@ -1,87 +1,94 @@
-<h3>Fiction</h3>
-<div class="d-flex flex-wrap">
-  @for(book of fictionBooks; track book.primary_isbn10; let index = $index) {
-    @if(index < 6) {
-    <ng-container
-        *ngTemplateOutlet="
-          bestsellerItem;
-          context: {each: book}
-        "
-      />
+<div class="fiction p-2 rounded mb-3">
+  <h3>Fiction</h3>
+  <div class="d-flex flex-wrap">
+    @for(book of fictionBooks; track book.primary_isbn10; let index = $index) {
+      @if(index < 4) {
+      <ng-container
+          *ngTemplateOutlet="
+            bestsellerItem;
+            context: {each: book}
+          "
+        />
+      }
     }
-  }
-</div>
-<div ngbAccordion>
-  <div ngbAccordionItem>
-    <div ngbAccordionHeader>
-      <button
-        ngbAccordionButton
-      >
-        View More
-      </button>
-    </div>
-    <div ngbAccordionCollapse>
-      <div
-        ngbAccordionBody
-        class="px-0"
-      >
-        <ng-template>
-          @for(book of fictionBooks; track book.primary_isbn10; let index = $index) {
-            @if(index > 6) {
-            <ng-container
-                *ngTemplateOutlet="
-                  bestsellerItem;
-                  context: {each: book}
-                "
-              />
+  </div>
+  <div ngbAccordion>
+    <div ngbAccordionItem>
+      <div ngbAccordionHeader>
+        <button
+          ngbAccordionButton
+        >
+          View More
+        </button>
+      </div>
+      <div ngbAccordionCollapse>
+        <div
+          ngbAccordionBody
+          class="px-0"
+        >
+          <ng-template>
+            <div class="d-flex flex-wrap">
+            @for(book of fictionBooks; track book.primary_isbn10; let index = $index) {
+              @if(index > 4) {
+              <ng-container
+                  *ngTemplateOutlet="
+                    bestsellerItem;
+                    context: {each: book}
+                  "
+                />
+              }
             }
-          }
-        </ng-template>
+            </div>
+          </ng-template>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
-
-<h3>Non-Fiction</h3>
-<div class="d-flex flex-wrap">
-  @for(book of nonFictionBooks; track book.primary_isbn10; let index = $index) {
-    @if(index < 6) {
-    <ng-container
-        *ngTemplateOutlet="
-          bestsellerItem;
-          context: {each: book}
-        "
-      />
+<div class="non-fiction p-2 rounded mb-3">
+  <h3>Non-Fiction</h3>
+  <div class="d-flex flex-wrap">
+    @for(book of nonFictionBooks; track book.primary_isbn10; let index = $index) {
+      @if(index < 4) {
+      <ng-container
+          *ngTemplateOutlet="
+            bestsellerItem;
+            context: {each: book}
+          "
+        />
+      }
     }
-  }
-</div>
-<div ngbAccordion>
-  <div ngbAccordionItem>
-    <div ngbAccordionHeader>
-      <button
-        ngbAccordionButton
-      >
-        View More
-      </button>
-    </div>
-    <div ngbAccordionCollapse>
-      <div
-        ngbAccordionBody
-        class="px-0"
-      >
-        <ng-template>
-          @for(book of nonFictionBooks; track book.primary_isbn10; let index = $index) {
-            @if(index > 6) {
-            <ng-container
-                *ngTemplateOutlet="
-                  bestsellerItem;
-                  context: {each: book}
-                "
-              />
+  </div>
+  <div ngbAccordion>
+    <div ngbAccordionItem>
+      <div ngbAccordionHeader>
+        <button
+          ngbAccordionButton
+        >
+          View More
+        </button>
+      </div>
+      <div ngbAccordionCollapse>
+        <div
+          ngbAccordionBody
+          class="px-0"
+        >
+          <ng-template>
+            <div class="d-flex flex-wrap">
+            @for(book of nonFictionBooks; track book.primary_isbn10; let index = $index) {
+              @if(index > 4) {
+              <ng-container
+                  *ngTemplateOutlet="
+                    bestsellerItem;
+                    context: {each: book}
+                  "
+                />
+              }
             }
-          }
-        </ng-template>
+            </div>
+          </ng-template>
+        </div>
       </div>
     </div>
   </div>
@@ -92,31 +99,107 @@
     let-book="each"
   >
   <div class="w-50 p-1">
-    <img
-      [src]="book.book_image"
-      [alt]="'picture of the cover of ' + book.title"
-      class="w-100"
+    <div
+      [style.height.px]="160"
     >
-    <div ngbAccordion>
-      <div ngbAccordionItem>
-        <div ngbAccordionHeader>
-          <button
-            ngbAccordionButton
-          >
-            Summary
-          </button>
-        </div>
-        <div ngbAccordionCollapse>
-          <div
-            ngbAccordionBody
-            class="px-0"
-          >
-            <ng-template><p>
-              {{ book.description }}
-            </p></ng-template>
-          </div>
-        </div>
+        <img
+        [src]="book.book_image"
+        [alt]="'picture of the cover of ' + book.title"
+        (click)="onOpenBook(contentBook, book)"
+        class="w-100"
+        [style.max-height.px]="160"
+      >
+    </div>
+    <button
+      class="btn add-button w-100 my-1 p-1"
+      (click)="addBestSeller(contentForm, book)"
+      >
+      Add
+      <i class="bi bi-bookmark-plus ms-1"></i>
+    </button>
+  </div>
+</ng-template>
+
+<ng-template
+  #contentBook
+  let-modal
+>
+  <div class="modal-header">
+    <h4
+      class="modal-title"
+      id="modal-basic-title"
+    >
+      <i class="bi bi-book-half me-2"></i>
+      <em>{{ selectedBook.title }}</em>
+    </h4>
+    <button
+      class="btn ms-auto"
+      (click)="modal.dismiss('Cross click')"
+      type="button"
+      aria-label="Close"
+    >
+    <i class="bi bi-x-square-fill"></i>
+  </button>
+  </div>
+  <div class="modal-body">
+    <div class="row p-3">
+      <div class="col-9">
+        @if(selectedBook.description) {
+          {{ selectedBook.description }}
+        } @else {
+          <h4>
+            <i class="bi bi-window-x me-2"></i>
+            No summary available
+          </h4>
+        }
       </div>
+      <div class="col-3">
+        @if(selectedBook.book_image) {
+          <img
+            [src]="selectedBook.book_image"
+            [alt]="'book cover of '+ selectedBook.title"
+            class="w-100"
+          >
+        }
+        <button
+          class="btn add-button w-100 my-1 p-1"
+          (click)="addBestSeller(contentForm, selectedBook)"
+        >
+          Add
+          <i class="bi bi-bookmark-plus ms-1"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template
+  #contentForm
+  let-modal
+>
+  <div class="modal-header">
+    <h4
+      class="modal-title"
+      id="modal-basic-title"
+    >
+        <i class="bi bi-bookmark-plus me-2"></i>
+        Add <em>{{ identifiedBook ? bookToAdd.volumeInfo.title : '' }}</em> to your library
+    </h4>
+    <button
+      class="btn ms-auto"
+      (click)="modal.dismiss('Cross click')"
+      type="button"
+      aria-label="Close"
+    >
+    <i class="bi bi-x-square-fill"></i>
+  </button>
+  </div>
+  <div class="modal-body">
+    <div>
+      <app-book-form
+        [addingBestSeller]="bookToAdd"
+        [identifiedBook]="identifiedBook"
+      />
     </div>
   </div>
 </ng-template>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -14,7 +14,7 @@ import {
   switchMap,
   tap,
 } from 'rxjs/operators';
-import { ReactiveFormsModule, FormsModule, FormControl, FormGroup } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 
 
@@ -26,15 +26,25 @@ import { HttpClient } from '@angular/common/http';
   imports: [NgSelectModule, NgbDatepickerModule, NgOptionHighlightModule, ReactiveFormsModule, FormsModule, CommonModule]
 })
 export class BookFormComponent implements OnInit {
+  @Input() editingBook: any;
+  @Input() addingBestSeller: any;
+  @Input() identifiedBook = true;
 
   protected books$: Observable<any[]>;
   protected bookInput$ = new ReplaySubject<string>(1);
 
+  protected saveComplete = false;
+  protected editComplete = false;
+
   protected form: FormGroup = new FormGroup({
-    title: new FormControl<string>(''),
-    author: new FormControl<string>(''),
-    format: new FormControl<number | null>(null),
-    status: new FormControl<number | null>(null),
+    title: new FormControl<string>('',{
+        validators: [Validators.required]}),
+    author: new FormControl<string>('',{
+      validators: [Validators.required]}),
+    format: new FormControl<number | null>(null,{
+      validators: [Validators.required]}),
+    status: new FormControl<number | null>(null,{
+      validators: [Validators.required]}),
     rating: new FormControl<number | null>(null),
     end: new FormControl<Date | null>(null),
     comments: new FormControl<string>(''),
@@ -49,6 +59,7 @@ export class BookFormComponent implements OnInit {
       value: 2,
     }
   ];
+  protected isEditing = false;
   protected isLoading = false;
   protected isManuallyAdding = false;
   protected ratingOptions = [
@@ -109,7 +120,7 @@ export class BookFormComponent implements OnInit {
             response.items.map((item: any) => ({
               title: item.volumeInfo?.title || 'Unknown Title',
               authors: item.volumeInfo?.authors || ['Unknown Author'],
-              imageUrl: item.volumeInfo?.imageLinks.thumbnail,
+              image_url: item.volumeInfo?.imageLinks?.thumbnail,
               overview: item.volumeInfo?.description
             })) || []
           ),
@@ -120,7 +131,47 @@ export class BookFormComponent implements OnInit {
    }
 
   ngOnInit(): void {
-
+    console.warn('adding', this.addingBestSeller)
+    if(this.editingBook) {
+      console.warn('check editing', this.editingBook);
+      this.isEditing = true;
+      this.selectedBook = this.editingBook;
+      this.form.patchValue(
+        {
+          title: this.selectedBook.title ?? null,
+          author: this.selectedBook.author ?? null,
+          format: this.selectedBook.format ?? null,
+          status: this.selectedBook.status ?? null,
+          rating: this.selectedBook.rating ?? null,
+          end: this.selectedBook.end ?? null,
+          comments: this.selectedBook.comments ?? null,
+        }
+      )
+    } else if(this.addingBestSeller && this.identifiedBook) {
+      console.warn('form check', this.addingBestSeller)
+      this.selectedBook = {
+        title: this.addingBestSeller.volumeInfo?.title || 'Unknown Title',
+        authors: this.addingBestSeller.volumeInfo?.authors || ['Unknown Author'],
+        image_url: this.addingBestSeller.volumeInfo?.imageLinks.thumbnail,
+        overview: this.addingBestSeller.volumeInfo?.description
+      }
+      this.form.patchValue(
+        {
+          title: this.selectedBook.title ? this.selectedBook.title : 'Unknown',
+          author: this.selectedBook.authors ? this.selectedBook.authors[0] : 'Unknown',
+        }
+      )
+    } else if(this.addingBestSeller && !this.identifiedBook) {
+      console.warn('no book', this.addingBestSeller);
+      this.selectedBook = {
+        title: this.addingBestSeller.title || 'Unknown Title',
+        authors: this.addingBestSeller.author || 'Unknown Author',
+      }
+      const searchTerm = `${this.addingBestSeller.title || ''} ${this.addingBestSeller.author || ''}`.trim();
+      this.bookInput$.next(searchTerm); // Push the term into the ReplaySubject
+      console.warn('Search term pushed:', searchTerm);
+      console.warn('se', this.selectedBook)
+    }
   }
 
   onBookChange(selected: any): void {
@@ -150,36 +201,54 @@ export class BookFormComponent implements OnInit {
     return `${date.year}-${month}-${day}`;
   }
 
-
+  onEditBook(book: any): void {
+    console.warn('edit form comp', book)
+  }
 
   onSubmit(): void{
+    console.warn('form', this.form.controls)
     if (this.form.valid) {
       const {title, author, format, status, rating, end, comments} = this.form.controls;
 
       const newBook = {
         title: title.value,
         author: author.value,
-        overview: this.selectedBook ? this.selectedBook.overview : null,
+        overview:  this.selectedBook ? this.selectedBook.overview : null,
         format: format.value,
         status: status.value,
         rating: rating.value,
         end_date: end.value ? this.formatDate(end.value) : null,
         comments: comments.value,
-        image_url: this.selectedBook?.imageUrl ?? null,
+        image_url: this.selectedBook?.image_url ?? null,
       }
-
       console.warn(newBook)
 
-      this.http
-      .post('http://127.0.0.1:8000/books/', newBook) // Notice the URL change
-      .subscribe({
-        next: (response) => {
-          console.log('Item added:', response);
-        },
-        error: (error) => {
-          console.error('Error adding item:', error);
-        }
-      });
+      if (this.isEditing) {
+        this.http
+        .patch(`http://127.0.0.1:8000/books/${this.selectedBook.id}/`, newBook)
+        .subscribe({
+          next: (response) => {
+            console.log('Book updated:', response);
+            this.editComplete = true;
+            this.isEditing = false;
+          },
+          error: (error) => {
+            console.error('Error updating book:', error);
+          },
+        });
+      } else {
+        this.http
+        .post('http://127.0.0.1:8000/books/', newBook)
+        .subscribe({
+          next: (response) => {
+            console.log('Item added:', response);
+            this.saveComplete = true;
+          },
+          error: (error) => {
+            console.error('Error adding item:', error);
+          }
+        });
+      }
     }
   }
 };

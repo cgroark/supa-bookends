@@ -1,175 +1,228 @@
-
-@if(!isManuallyAdding) {
-  <div class="py-4 px-3 search-section">
-    <ng-select
-    [items]="books$ | async"
-    [typeahead]="bookInput$"
-    [loading]="isLoading"
-    loadingText="Searching..."
-    [(ngModel)]="selectedBook"
-    (change)="onBookChange($event)"
-    placeholder="Start typing to search"
-  >
-  <ng-template
-    ng-label-tmp
-    let-item="item"
-    >
-    <div class="d-flex align-items-center gap-1">
-      <span>{{ item.title }}</span>
-      @if(item.authors) {
-        @for(author of item.authors; track $index ) {
-          <span
-          class="small badge bg-secondary"
-          >{{ author }}</span
-        >
-        }
-      }
-    </div>
-    </ng-template>
-    <ng-template
-      ng-option-tmp
-      let-item="item"
-      let-search="searchTerm"
+@if(!saveComplete && !editComplete) {
+  @if(!isManuallyAdding && !editingBook && (!addingBestSeller || (addingBestSeller && !identifiedBook))) {
+    <div class="py-4 px-3 search-section">
+      <ng-select
+        [items]="books$ | async"
+        [typeahead]="bookInput$"
+        [loading]="isLoading"
+        loadingText="Searching..."
+        [(ngModel)]="selectedBook"
+        (change)="onBookChange($event)"
+        placeholder="Start typing to search"
       >
-      <div class="d-flex align-items-center gap-1">
-        <span [ngOptionHighlight]="search">{{ item.title }}</span>
-        @if(item.authors) {
-          @for(author of item.authors; track $index ) {
+      <ng-template
+        ng-label-tmp
+        let-item="item"
+        >
+        <div class="d-flex align-items-center gap-1">
+          <span>{{ item.title }}</span>
+          @if(item.authors && identifiedBook) {
+            @for(author of item.authors; track $index ) {
+              <span
+                class="small badge bg-secondary"
+                >{{ author }}</span
+              >
+            }
+          } @else {
             <span
-            [ngOptionHighlight]="search"
-            class="small badge bg-secondary"
-            >{{ author }}</span
-          >
+              class="small badge bg-secondary"
+              >{{ item.authors }}</span
+            >
           }
-        }
-      </div>
-    </ng-template>
-  </ng-select>
-  </div>
-}
-
-@if(!selectedBook){
-  <button
-    class="btn btn-outline-secondary border-0 d-block ms-auto me-3 my-2"
-    type="button"
-    (click)="toggleManualAdd()"
-  >{{!isManuallyAdding ? 'Add book manually' : 'Search for a book' }}</button>
-}
-
-@if(selectedBook || isManuallyAdding){
-<form
-  class="mt-2 p-3"
-  [formGroup]="form"
-  (ngSubmit)="onSubmit()">
-  <div class="row">
-    <div class="col-sm-8">
-      <div class="mb-2">
-        <label class="d-block text-secondary" for="title">
-          <i class="bi bi-book me-1"></i>
-          Title
-        </label>
-        <input
-          class="w-100"
-          type="text"
-          formControlName="title"
-          id="title"
-        />
-      </div>
-      <div class="mb-2">
-        <label class="d-block text-secondary" for="author">
-          <i class="bi bi-pen me-1"></i>          Author
-        </label>
-        <input
-          class="w-100"
-          type="text"
-          formControlName="author"
-          id="author"
-        />
-      </div>
-      <div class="mb-2">
-        <label class="d-block text-secondary" for="format">
-          <i class="bi bi-book-half me-1"></i>
-          Format
-        </label>
-        <ng-select
-          [items]="formatTypes"
-          bindLabel="label"
-          bindValue="value"
-          formControlName="format"
-        >
-        </ng-select>
-      </div>
-      <div class="mb-2">
-        <label class="d-block text-secondary" for="status">
-          <i class="bi bi-bookmark-check me-1"></i>
-          Status
-        </label>
-        <ng-select
-          [items]="statusOptions"
-          bindLabel="label"
-          bindValue="value"
-          formControlName="status"
-        >
-        </ng-select>
-      </div>
-    </div>
-    @if(selectedBook?.imageUrl) {
-      <div class="col-sm-4 mt-4">
-        <img [src]="selectedBook.imageUrl" alt="book cover" class="w-100">
-      </div>
-    }
-  </div>
-
-  @if(form.controls['status'].value === 4) {
-    <div class="row">
-      <div class="col-sm-8">
-        <div class="mb-2">
-          <label class="d-block text-secondary" for="rating">
-            <i class="bi bi-bookmark-heart me-1"></i>
-            Rating
-          </label>
-          <ng-select
-            [items]="ratingOptions"
-            bindLabel="label"
-            bindValue="value"
-            formControlName="rating"
+        </div>
+        </ng-template>
+        <ng-template
+          ng-option-tmp
+          let-item="item"
+          let-search="searchTerm"
           >
-          </ng-select>
-        </div>
-        <div class="mb-2">
-          <label
-            class="d-block text-secondary"
-            id="end"
-          >
-            <i class="bi bi-calendar-event me-1"></i>
-            Finished on
-          </label>
-          <input
-            class="w-100"
-            id="end"
-            #endInput="ngbDatepicker"
-            type="date"
-            formControlName="end"
-            ngbDatepicker
-          />
-        </div>
-        <div class="mb-2">
-          <label class="d-block text-secondary" for="comments">
-            <i class="bi bi-body-text me-1"></i>
-            Comments
-          </label>
-          <textarea
-            formControlName="comments"
-            rows="4"
-            id="comments"
-          ></textarea>
-        </div>
-      </div>
+          <div class="d-flex align-items-center gap-1">
+            <span [ngOptionHighlight]="search">{{ item.title }}</span>
+            @if(item.authors) {
+              @for(author of item.authors; track $index ) {
+                <span
+                [ngOptionHighlight]="search"
+                class="small badge bg-secondary"
+                >{{ author }}</span
+              >
+              }
+            }
+          </div>
+        </ng-template>
+      </ng-select>
     </div>
   }
-  <button class="btn d-block mx-auto mt-3 w-50" type="buton">
-    <i class="bi bi-save me-1"></i>
-    Save
-  </button>
-</form>
+
+  @if(!selectedBook && !editingBook){
+    <button
+      class="btn btn-outline-secondary border-0 d-block ms-auto me-3 my-2"
+      type="button"
+      (click)="toggleManualAdd()"
+    >{{!isManuallyAdding ? 'Add book manually' : 'Search for a book' }}</button>
+  }
+
+  @if(selectedBook || isManuallyAdding || editingBook){
+  <form
+    #ngForm="ngForm"
+    class="mt-2 p-3"
+    [formGroup]="form"
+    (ngSubmit)="onSubmit()">
+    <div class="row">
+      <div class="col-sm-8">
+        @if(form.controls['title']; as title) {
+          <div class="mb-2">
+            <label class="d-block text-secondary" for="title">
+              <i class="bi bi-book me-1"></i>
+              Title
+            </label>
+            <input
+              [class.is-invalid]="
+                (!title.valid && title.touched) ||
+              (!title.valid && ngForm.submitted)"
+              class="w-100"
+              type="text"
+              formControlName="title"
+              id="title"
+            />
+          </div>
+        }
+        @if(form.controls['author']; as author) {
+          <div class="mb-2">
+            <label class="d-block text-secondary" for="author">
+              <i class="bi bi-pen me-1"></i>
+              Author
+            </label>
+            <input
+              [class.is-invalid]="
+                (!author.valid && author.touched) ||
+              (!author.valid && ngForm.submitted)"
+              class="w-100"
+              type="text"
+              formControlName="author"
+              id="author"
+            />
+          </div>
+        }
+        @if(form.controls['format']; as format) {
+          <div class="mb-2">
+            <label class="d-block text-secondary" for="format">
+              <i class="bi bi-book-half me-1"></i>
+              Format
+            </label>
+            <ng-select
+              [class.is-invalid]="
+                (!format.valid && format.touched) ||
+              (!format.valid && ngForm.submitted)"
+              [items]="formatTypes"
+              bindLabel="label"
+              bindValue="value"
+              formControlName="format"
+            >
+            </ng-select>
+          </div>
+        }
+        @if(form.controls['status']; as status) {
+          <div class="mb-2">
+            <label class="d-block text-secondary" for="status">
+              <i class="bi bi-bookmark-check me-1"></i>
+              Status
+            </label>
+            <ng-select
+              [class.is-invalid]="
+                (!status.valid && status.touched) ||
+              (!status.valid && ngForm.submitted)"
+              [items]="statusOptions"
+              bindLabel="label"
+              bindValue="value"
+              formControlName="status"
+            >
+            </ng-select>
+          </div>
+        }
+      </div>
+      @if(selectedBook?.image_url) {
+        <div class="col-sm-4 mt-4">
+          <img [src]="selectedBook.image_url" alt="book cover" class="w-100">
+        </div>
+      }
+    </div>
+
+    @if(form.controls['rating'].value === 4) {
+      <div class="row">
+        <div class="col-sm-8">
+          @if(form.controls['rating']; as rating) {
+            <div class="mb-2">
+              <label class="d-block text-secondary" for="rating">
+                <i class="bi bi-bookmark-heart me-1"></i>
+                Rating
+              </label>
+              <ng-select
+                [class.is-invalid]="
+                  (!rating.valid && rating.touched) ||
+                (!rating.valid && ngForm.submitted)"
+                [items]="ratingOptions"
+                bindLabel="label"
+                bindValue="value"
+                formControlName="rating"
+              >
+              </ng-select>
+            </div>
+          }
+          @if(form.controls['end']; as end) {
+            <div class="mb-2">
+              <label
+                class="d-block text-secondary"
+                id="end"
+              >
+                <i class="bi bi-calendar-event me-1"></i>
+                Finished on
+              </label>
+              <input
+                [class.is-invalid]="
+                  (!end.valid && end.touched) ||
+                (!end.valid && ngForm.submitted)"
+                class="w-100"
+                id="end"
+                #endInput="ngbDatepicker"
+                type="date"
+                formControlName="end"
+                ngbDatepicker
+              />
+            </div>
+          }
+          <div class="mb-2">
+            <label class="d-block text-secondary" for="comments">
+              <i class="bi bi-body-text me-1"></i>
+              Comments
+            </label>
+            <textarea
+              formControlName="comments"
+              rows="4"
+              id="comments"
+            ></textarea>
+          </div>
+        </div>
+      </div>
+    }
+    <button class="btn d-block mx-auto mt-3 w-50" type="buton">
+      Save
+      <i class="bi bi-save ms-1"></i>
+    </button>
+  </form>
+  }
+}
+
+@else {
+  <div class="row p-3">
+    <div class="col-sm-8">
+      <h4 class="mt-sm-5">
+        <em>{{ form.controls['title'].value }}</em> {{ editComplete ? 'updated' : 'added ' }} successfully!
+      </h4>
+    </div>
+      @if(selectedBook?.image_url) {
+        <div class="col-sm-4">
+          <img [src]="selectedBook.image_url" alt="book cover" class="w-100">
+        </div>
+      }
+  </div>
 }

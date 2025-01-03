@@ -7,31 +7,86 @@
     See your friends books</p>
 </header>
 <div class="row">
-  <div class="col-md-8">
-    <h2>You're Reading</h2>
-    @for(book of currentBooks; track book.id) {
-      <div>
-        <img [src]="book.image_url" [alt]="'book cover of '+ book.title">
+  <div class="col-md-9">
+    <div class="row mb-3 p-2 rounded reading">
+      <div class="col-sm-3 border-end">
+        <h2>You're Reading</h2>
+        <button
+          class="btn add-button"
+          (click)="onOpenForm(content, null)"
+        >
+            Add a book
+            <i class="bi bi-bookmark-plus ms-1"></i>
+        </button>
       </div>
-    }
-    <h2>You last read</h2>
-    @for(book of recentBooks; track book.id; let index = $index) {
-      @if(index < 4) {
-        <div>
-          <img [src]="book.image_url" [alt]="'book cover of '+ book.title">
+      <div class="col-sm-9">
+        <div class="d-flex flex-wrap">
+          @for(book of currentBooks; track book.id) {
+            <ng-container
+              *ngTemplateOutlet="
+                bookItem;
+                context: {book: book}
+              "
+            />
+          }
         </div>
-      }
-    }
-    <button
-    class="btn btn-primary"
-    (click)="onOpen(content)"
-  >
-    Add a book<i class="bi-book ms-2"></i>
-  </button>
-    <h2>Recent Reads</h2>
+      </div>
+    </div>
+    <div class="row mb-3 p-2 rounded read">
+      <div class="col-sm-3 border-end">
+        <h2>Recently Read</h2>
+        <button
+          class="btn add-button"
+          [routerLink]="['/book-list']"
+        >
+            View all books
+            <i class="bi bi-bookmarks ms-1"></i>
+        </button>
+      </div>
+      <div class="col-sm-9">
+        <div class="d-flex flex-wrap">
+          @for(book of recentBooks; track book.id; let index = $index) {
+            @if(index < 3 && book.image_url) {
+              <ng-container
+                *ngTemplateOutlet="
+                  bookItem;
+                  context: {book: book}
+                "
+              />
+            }
+          }
+        </div>
+      </div>
+    </div>
+    <div class="row mb-3 p-2 rounded connections">
+      <div class="col-sm-3 border-end">
+        <h2>Friends' Recent Reads</h2>
+        <button
+          class="btn add-button"
+          [routerLink]="['/book-list']"
+        >
+            Find Friends
+            <i class="bi bi-bookmarks ms-1"></i>
+        </button>
+      </div>
+      <div class="col-sm-9">
+        <div class="d-flex flex-wrap">
+          @for(book of recentBooks; track book.id; let index = $index) {
+            @if(index < 6 && book.image_url) {
+              <ng-container
+                *ngTemplateOutlet="
+                  bookItem;
+                  context: {book: book}
+                "
+              />
+            }
+          }
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="col-md-4">
-    <h2>best sellers</h2>
+  <div class="col-md-3">
+    <h2>Best Sellers</h2>
     <app-bestsellers />
   </div>
 </div>
@@ -45,8 +100,14 @@
       class="modal-title"
       id="modal-basic-title"
     >
-      <i class="bi bi-search me-2"></i>
-      <ng-container>Add to your library</ng-container>
+      @if(!selectedBook) {
+        <i class="bi bi-bookmark-plus me-2"></i>
+        Add to your library
+      } @else {
+        <i class="bi bi-pencil me-2"></i>
+        Editing <em>{{ selectedBook.title }}</em>
+      }
+
     </h4>
     <button
       class="btn ms-auto"
@@ -59,7 +120,83 @@
   </div>
   <div class="modal-body">
     <div>
-      <app-book-form />
+      <app-book-form
+        [editingBook]="selectedBook"
+      />
+    </div>
+  </div>
+</ng-template>
+
+<ng-template
+    #bookItem
+    let-book="book"
+  >
+  <div
+    [style.max-width.px]="128"
+    class="m-2 book-item"
+  >
+    <img
+      [src]="book.image_url"
+      [alt]="'book cover of '+ book.title"
+      (click)="onOpenBook(contentBook, book)"
+    >
+    @if(book.status === 2) {
+      <button
+          class="btn edit-button mt-3 w-100 fw-bold"
+          (click)="onOpenForm(content, book)"
+        >
+          Edit
+          <i class="bi bi-pencil ms-1 fw-bold"></i>
+      </button>
+    }
+  </div>
+</ng-template>
+
+<ng-template
+  #contentBook
+  let-modal
+>
+  <div class="modal-header">
+    <h4
+      class="modal-title"
+      id="modal-basic-title"
+    >
+      <i class="bi bi-book-half me-2"></i>
+      <em>{{ selectedBook.title }}</em>
+    </h4>
+    <button
+      class="btn ms-auto"
+      (click)="modal.dismiss('Cross click')"
+      type="button"
+      aria-label="Close"
+    >
+    <i class="bi bi-x-square-fill"></i>
+  </button>
+  </div>
+  <div class="modal-body">
+    <div class="row p-3">
+      <div class="col-8">
+        @if(selectedBook.overview) {
+          {{ selectedBook.overview }}
+        } @else {
+          <h4>
+            <i class="bi bi-window-x me-2"></i>
+            No summary available
+          </h4>
+        }
+      </div>
+      <div class="col-4">
+        @if(selectedBook.image_url) {
+          <img
+            [src]="selectedBook.image_url"
+            [alt]="'book cover of '+ selectedBook.title"
+            [style.max-width.px]="128"
+          >
+        }
+        @if(selectedBook.rating) {
+          {{ selectedBook.rating }}
+        }
+      </div>
     </div>
   </div>
 </ng-template>

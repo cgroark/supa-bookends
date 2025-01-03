@@ -9,6 +9,13 @@ async def create_book(book: BookCreate):
     new_book = await BookService.create_book(book)
     return new_book
 
+@router.patch("/{book_id}/", response_model=Book)
+async def update_book(book_id: int, book: BookCreate):
+    updated_book = await BookService.update_book(book_id, book)
+    if not updated_book:
+        raise HTTPException(status_code=404, detail="Book not found")
+    return updated_book
+
 @router.get("/", response_model=list[Book])
 async def get_books():
     books = await BookService.get_books()

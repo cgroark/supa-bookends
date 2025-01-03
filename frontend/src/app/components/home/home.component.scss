@@ -16,6 +16,46 @@ p, p > i {
   font-size: $font-size-base;
 }
 
+div.reading, div.read, div.connections {
+  background-color: $light-black;
+}
+
+.edit-button {
+  background-color: $salmon;
+  color: $black;
+  i {
+    color: $black;
+  }
+  &:hover {
+    background-color: $black;
+    color: $salmon ;
+    border: solid 1px $salmon;
+    i {
+      color: $salmon;
+    }
+  }
+}
+
+.add-button {
+  background-color: $teal;
+  color: $ivory;
+  &:hover {
+    background-color: $ivory;
+    color: $teal;
+    i {
+      color: $teal;
+    }
+  }
+}
+
+.book-item {
+  img {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
 
 
 ::ng-deep .modal-body {

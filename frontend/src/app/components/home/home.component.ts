@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClient } from '@angular/common/http';
 import { BestsellersComponent } from '../bestsellers/bestsellers.component';
 import { BookFormComponent } from '../book-form/book-form.component';
@@ -7,7 +9,7 @@ import { BookFormComponent } from '../book-form/book-form.component';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [BestsellersComponent, BookFormComponent],
+  imports: [BestsellersComponent, BookFormComponent, CommonModule, RouterModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
@@ -15,7 +17,7 @@ export class HomeComponent implements OnInit {
 
   protected currentBooks: any;
   protected recentBooks: any;
-
+  protected selectedBook: any;
 
   constructor(private http: HttpClient, private modalService: NgbModal) {}
 
@@ -35,11 +37,20 @@ export class HomeComponent implements OnInit {
     })
   }
 
-  onOpen(content: any) {
+  onOpenForm(content: any, book: any):void {
     this.modalService.open(content, {
       size: 'md',
       backdrop: 'static',
     });
+    this.selectedBook = book;
+  }
+
+  onOpenBook(contentBook: any, book: any):void {
+    this.modalService.open(contentBook, {
+      size: 'md',
+      backdrop: 'static',
+    });
+    this.selectedBook = book;
   }
 
 }

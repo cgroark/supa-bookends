@@ -7,6 +7,16 @@ input, textarea {
   &:focus-visible {
     outline: none;
   }
+  &.is-invalid {
+    border: solid $red 1px;
+  }
+}
+
+.ng-select {
+  &.is-invalid {
+    border: solid $red 1px;
+    border-radius: 4px;
+  }
 }
 
 .search-section {
