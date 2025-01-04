@@ -1,5 +1,5 @@
 export class User {
-  id: number;
+  id: string;
   created_at: string;
   first: string;
   last: string;
@@ -8,7 +8,7 @@ export class User {
   username: string;
 
   constructor(data: Partial<User>) {
-    this.id = data.id || 0;
+    this.id = data.id || '';
     this.created_at = data.created_at || new Date().toISOString();
     this.first = data.first || '';
     this.last = data.last || '';

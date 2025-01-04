@@ -13,6 +13,7 @@ export class UserService {
   constructor(private http: HttpClient) {}
 
   createUser(user: Partial<User>): Observable<User> {
+    console.warn('crate in user service', user)
     return this.http.post<User>(`${this.apiUrl}/`, user).pipe(
       map((response) => User.fromApiResponse(response))
     );

@@ -39,6 +39,26 @@
             />
           </div>
         }
+        @if(form.controls['email']; as email) {
+          <div class="mb-2">
+            <label class="d-block text-secondary" for="email">
+              <i class="bi bi-envelope-at me-1"></i>
+              Email
+              @if(email.errors?.['email'] && email.touched) {
+                <span class="ms-1">Invalid email format</span>
+              }
+            </label>
+            <input
+              [class.is-invalid]="
+                (!email.valid && email.touched) ||
+              (!email.valid && ngForm.submitted)"
+              class="w-100"
+              type="text"
+              formControlName="email"
+              id="email"
+            />
+          </div>
+        }
         @if(form.controls['username']; as username) {
           <div class="mb-2">
             <label class="d-block text-secondary" for="username">

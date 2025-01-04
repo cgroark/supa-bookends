@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { ReactiveFormsModule, FormsModule, FormControl, FormGroup, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
+import { UserService } from 'src/app/services/user.service';
+import { SupabaseService } from 'src/app/services/supabase.service';
+
 export function passwordsMatchValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     const password = control.get('password')?.value;
@@ -15,7 +18,8 @@ export function passwordsMatchValidator(): ValidatorFn {
   standalone: true,
   imports: [ReactiveFormsModule, FormsModule],
   templateUrl: './user-form.component.html',
-  styleUrl: './user-form.component.scss'
+  styleUrl: './user-form.component.scss',
+  providers: [SupabaseService],
 })
 export class UserFormComponent {
   protected form: FormGroup = new FormGroup({
@@ -23,6 +27,9 @@ export class UserFormComponent {
         validators: [Validators.required]}),
     last: new FormControl<string>('',{
       validators: [Validators.required]}),
+    email: new FormControl<string>('', {
+      validators: [Validators.required, Validators.email]
+    }),
     goal: new FormControl<number | null>(null),
     username: new FormControl<string>('',{
       validators: [Validators.required]}),
@@ -31,14 +38,59 @@ export class UserFormComponent {
     passwordConfirm: new FormControl<string>('',{
       validators: [Validators.required]}),
   },
-  { validators: passwordsMatchValidator() }
-)
+    { validators: passwordsMatchValidator() }
+  );
+
   protected toggleType(event: any, target: HTMLInputElement) {
     event.preventDefault();
     target.type = target.type === 'password' ? 'text' : 'password';
   }
 
+  constructor(private userService: UserService, private supabaseService: SupabaseService){}
+
   onSubmit(): void {
     console.warn('submit', this.form);
+    if (this.form.invalid) {
+      console.warn('Form is invalid');
+      return;
+    }
+
+    const { email, first, last, username, password } = this.form.value;
+
+    const supabaseUser = {
+      email,
+      password,
+    };
+
+    this.supabaseService.createUser(supabaseUser.email, supabaseUser.password)
+    .then((authUser) => {
+      console.log('Supabase user created successfully:', authUser);
+
+      // Prepare data for your backend
+      const backendUser = {
+        id: authUser.id, // Pass the Supabase user ID
+        created_at: authUser.created_at, // Pass the creation timestamp
+        first,
+        last,
+        username,
+      };
+      console.log('backend user to create', backendUser)
+      // Call your backend API to store user profile information
+      this.userService.createUser(backendUser).subscribe({
+        next: (user) => {
+          console.log('Backend user created successfully:', user);
+          this.form.reset(); // Reset form after success
+        },
+        error: (error) => {
+          console.error('Error creating user in backend:', error);
+        },
+      });
+    })
+    .catch((error) => {
+      console.error('Error creating user in Supabase:', error.message);
+    });
+
+
   }
+
 }
