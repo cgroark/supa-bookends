@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
 import { SupabaseService } from 'src/app/services/supabase.service';
 import { AuthService } from 'src/app/services/auth.service';
-import {Router, RouterModule} from '@angular/router';
+import { ActivatedRoute, Router, RouterModule} from '@angular/router';
 import { HeaderComponent } from '../header/header.component';
 
 @Component({
@@ -13,7 +13,7 @@ import { HeaderComponent } from '../header/header.component';
   styleUrl: './login-form.component.scss',
   providers: [SupabaseService],
 })
-export class LoginFormComponent {
+export class LoginFormComponent implements OnInit {
   protected form: FormGroup = new FormGroup({
     email: new FormControl<string>('', {
       validators: [Validators.required, Validators.email]
@@ -22,7 +22,20 @@ export class LoginFormComponent {
       validators: [Validators.required]}),
   });
 
-  constructor(private authService: AuthService, private router: Router, private supabaseService: SupabaseService){}
+  protected fromSignup = false;
+
+  constructor(private activatedRoute: ActivatedRoute, private authService: AuthService, private router: Router, private supabaseService: SupabaseService){}
+
+  ngOnInit(): void {
+    this.activatedRoute.queryParams.subscribe(params => {
+      console.warn('params', params)
+      const from = params['from'];
+      if(from === 'signup') {
+        console.log('from signup');
+        this.fromSignup = true;
+      }
+    })
+  }
 
   onSubmit() {
     console.warn('submit', this.form);

@@ -25,6 +25,7 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     // Retrieve the token from localStorage
     const token = localStorage.getItem('auth_token_bookends');
+    console.warn('TOKEN'), token
 
     // Set the Authorization header
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);

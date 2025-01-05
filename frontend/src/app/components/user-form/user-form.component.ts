@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import { Component} from '@angular/core';
 import { ReactiveFormsModule, FormsModule, FormControl, FormGroup, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 import { UserService } from 'src/app/services/user.service';
 import { SupabaseService } from 'src/app/services/supabase.service';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { HeaderComponent } from '../header/header.component';
 
 export function passwordsMatchValidator(): ValidatorFn {
@@ -43,12 +43,14 @@ export class UserFormComponent {
     { validators: passwordsMatchValidator() }
   );
 
+  protected isLoading = false;
+
   protected toggleType(event: any, target: HTMLInputElement) {
     event.preventDefault();
     target.type = target.type === 'password' ? 'text' : 'password';
   }
 
-  constructor(private userService: UserService, private supabaseService: SupabaseService){}
+  constructor(private userService: UserService, private supabaseService: SupabaseService, private router: Router){}
 
   onSubmit(): void {
     console.warn('submit', this.form);
@@ -56,6 +58,7 @@ export class UserFormComponent {
       console.warn('Form is invalid');
       return;
     }
+    this.isLoading = true;
 
     const { email, first, last, username, password } = this.form.value;
 
@@ -81,15 +84,18 @@ export class UserFormComponent {
       this.userService.createUser(backendUser).subscribe({
         next: (user) => {
           console.log('Backend user created successfully:', user);
-          this.form.reset(); // Reset form after success
+          this.isLoading = false;
+          this.router.navigate(['/login'], { queryParams: { from: 'signup' } });
         },
         error: (error) => {
           console.error('Error creating user in backend:', error);
+          this.isLoading = false;
         },
       });
     })
     .catch((error) => {
       console.error('Error creating user in Supabase:', error.message);
+      this.isLoading = false;
     });
 
 
