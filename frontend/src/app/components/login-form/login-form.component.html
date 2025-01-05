@@ -1,0 +1,68 @@
+<app-header [centered]="true"/>
+<main>
+  <form
+    #ngForm="ngForm"
+    class="mt-2 p-4 m-auto rounded"
+    [formGroup]="form"
+    (ngSubmit)="onSubmit()">
+        @if(form.controls['email']; as email) {
+          <div class="mb-2">
+            <label class="d-block" for="email">
+              <i class="bi bi-envelope-at me-1"></i>
+              Email
+              @if(email.errors?.['email'] && email.touched) {
+                <span class="ms-1">Invalid email format</span>
+              }
+            </label>
+            <input
+              [class.is-invalid]="
+                (!email.valid && email.touched) ||
+              (!email.valid && ngForm.submitted)"
+              class="w-100"
+              type="text"
+              formControlName="email"
+              id="email"
+            />
+          </div>
+        }
+
+        @if(form.controls['password']; as password) {
+          <div class="mb-2 w-100">
+            <label class="d-block" for="password">
+              <i class="bi bi-shield-lock me-1"></i>
+              Password
+              @if(password.errors?.['minlength'] && password.touched) {
+                <span class="ms-1">Minimum length for password is 8 characters</span>
+              }
+            </label>
+            <input
+              #passwordType
+              [class.is-invalid]="
+                (!password.valid && password.touched) ||
+              (!password.valid && ngForm.submitted)"
+              type="password"
+              class="w-100"
+              formControlName="password"
+              id="password"
+            />
+            <button
+              class="btn password-toggle"
+              (click)="toggleType($event, passwordType)"
+            >
+              <i class="bi bi-eye"></i>
+            </button>
+          </div>
+        }
+
+    <button class="btn d-block mx-auto mt-3 w-50 login-button" type="buton">
+      Login
+      <i class="bi bi-arrow-bar-right ms-1"></i>
+    </button>
+    <div class="mt-3 text-center">
+      <p>
+        Don't have an account yet? <a routerLink="/sign-up">Sign up!</a>
+      </p>
+    </div>
+  </form>
+
+</main>

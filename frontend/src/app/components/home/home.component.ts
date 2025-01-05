@@ -2,14 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BestsellersComponent } from '../bestsellers/bestsellers.component';
 import { BookFormComponent } from '../book-form/book-form.component';
-
+import { HeaderComponent } from '../header/header.component';
+import { LogoutComponent } from '../logout/logout.component';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [BestsellersComponent, BookFormComponent, CommonModule, RouterModule],
+  imports: [BestsellersComponent, BookFormComponent, HeaderComponent, LogoutComponent, CommonModule, RouterModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
@@ -22,8 +23,14 @@ export class HomeComponent implements OnInit {
   constructor(private http: HttpClient, private modalService: NgbModal) {}
 
   ngOnInit(): void {
+    // Retrieve the token from localStorage
+    const token = localStorage.getItem('auth_token_bookends');
+
+    // Set the Authorization header
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
     this.http
-    .get('http://127.0.0.1:8000/books/')
+    .get('http://127.0.0.1:8000/books/', { headers })
     .subscribe((response: any) => {
       this.currentBooks = response.filter((each: any) =>
         // TODO: update userId check

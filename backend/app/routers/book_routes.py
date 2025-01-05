@@ -1,8 +1,11 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
+from app.utils.auth import validate_token
+
 from app.models.book import Book, BookCreate
 from app.services.book_service import BookService
 
 router = APIRouter(prefix="/books", tags=["Books"])
+
 
 @router.post("/", response_model=Book)
 async def create_book(book: BookCreate):
@@ -16,8 +19,14 @@ async def update_book(book_id: int, book: BookCreate):
         raise HTTPException(status_code=404, detail="Book not found")
     return updated_book
 
+# @router.get("/", response_model=list[Book])
+# async def get_books(token_data: dict = Depends(validate_token)):
+#     books = await BookService.get_books()
+#     return books
+
 @router.get("/", response_model=list[Book])
 async def get_books():
+    # The user is authenticated if the token is valid
     books = await BookService.get_books()
     return books
 

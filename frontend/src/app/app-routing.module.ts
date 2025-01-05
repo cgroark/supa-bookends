@@ -4,12 +4,15 @@ import { BookFormComponent } from './components/book-form/book-form.component';
 import { BookListComponent } from './components/book-list/book-list.component';
 import { HomeComponent } from './components/home/home.component';
 import { UserFormComponent } from './components/user-form/user-form.component';
+import { LoginFormComponent } from './components/login-form/login-form.component';
+import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
-  { path: '', component: HomeComponent},
+  { path: '', component: HomeComponent, canActivate: [AuthGuard]},
   { path: 'add-book', component: BookFormComponent },
-  { path: 'book-list', component: BookListComponent},
-  { path: 'user-form', component: UserFormComponent}
+  { path: 'book-list', component: BookListComponent, canActivate: [AuthGuard]},
+  { path: 'sign-up', component: UserFormComponent},
+  { path: 'login', component: LoginFormComponent}
 
   // { path: '', redirectTo: '/book-form', pathMatch: 'full' },
 ];

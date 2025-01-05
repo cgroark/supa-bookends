@@ -3,6 +3,8 @@ import { ReactiveFormsModule, FormsModule, FormControl, FormGroup, Validators, A
 
 import { UserService } from 'src/app/services/user.service';
 import { SupabaseService } from 'src/app/services/supabase.service';
+import { RouterModule } from '@angular/router';
+import { HeaderComponent } from '../header/header.component';
 
 export function passwordsMatchValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
@@ -16,7 +18,7 @@ export function passwordsMatchValidator(): ValidatorFn {
 @Component({
   selector: 'app-user-form',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule],
+  imports: [HeaderComponent, ReactiveFormsModule, FormsModule, RouterModule],
   templateUrl: './user-form.component.html',
   styleUrl: './user-form.component.scss',
   providers: [SupabaseService],

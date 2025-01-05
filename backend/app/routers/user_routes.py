@@ -1,9 +1,16 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
+from app.utils.auth import validate_token
 from app.models.user import User
 from app.services.user_service import UserService
 from uuid import UUID
 
 router = APIRouter(prefix="/users", tags=["Users"])
+
+# @router.get("/profile")
+# async def get_user_profile(token_data: dict = Depends(validate_token)):
+#     # Protected route: Return user profile based on token data
+#     return {"message": "User is authenticated", "token_data": token_data}
+
 
 @router.post("/", response_model=User)
 async def create_user(user: User):

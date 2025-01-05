@@ -1,4 +1,4 @@
-<div class="fiction p-2 rounded mb-3">
+<div class="fiction p-3 rounded mb-3">
   <h3>Fiction</h3>
   <div class="d-flex flex-wrap">
     @for(book of fictionBooks; track book.primary_isbn10; let index = $index) {
@@ -46,7 +46,7 @@
   </div>
 </div>
 
-<div class="non-fiction p-2 rounded mb-3">
+<div class="non-fiction p-3 rounded mb-3">
   <h3>Non-Fiction</h3>
   <div class="d-flex flex-wrap">
     @for(book of nonFictionBooks; track book.primary_isbn10; let index = $index) {
