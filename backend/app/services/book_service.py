@@ -41,6 +41,15 @@ class BookService:
         return [Book(**dict(row)) for row in rows]
 
     @staticmethod
+    async def get_books_by_user_id(user_id: str) -> list[Book]:
+        query = "SELECT * FROM books WHERE user_id = $1"  # Use $1 for positional parameter
+        pool = await db.get_pool()
+        rows = await pool.fetch(query, user_id)
+        return [Book(**dict(row)) for row in rows]
+
+        # return await db.fetch(query, values={"user_id": user_id})
+
+    @staticmethod
     async def get_book_by_id(book_id: int) -> Book:
         query = "SELECT * FROM books WHERE id = $1"
         pool = await db.get_pool()

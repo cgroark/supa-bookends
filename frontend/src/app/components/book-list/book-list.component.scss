@@ -1,0 +1,53 @@
+@import '../../../styles/variables';
+
+ h2, h3, p, i {
+  color: $ivory;
+}
+
+h2 {
+  font-size: $font-size-medium;
+}
+
+p, p > i {
+  font-size: $font-size-base;
+}
+
+.edit-button {
+  background-color: $salmon;
+  color: $black;
+  i {
+    color: $black;
+  }
+  &:hover {
+    background-color: $black;
+    color: $salmon ;
+    border: solid 1px $salmon;
+    i {
+      color: $salmon;
+    }
+  }
+}
+
+.book-item {
+  img {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+::ng-deep .modal-body {
+  padding: 0;
+}
+
+::ng-deep .modal-header {
+  background-color: $light-black;
+  color: $ivory;
+  border-bottom: 0;
+  button {
+    color: $ivory;
+    i {
+      font-size: 24px;
+    }
+  }
+}

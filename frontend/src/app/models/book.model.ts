@@ -35,7 +35,6 @@ export class Book {
     this.comments = comments;
     this.image_url = image_url;
     this.user_id = user_id;
-
   }
 
   // Example method for displaying book info

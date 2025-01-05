@@ -1,15 +1,238 @@
-<h1>Book List</h1>
-@if (bookItems) {
-  View list
-  <div>
-    @for (item of bookItems; track item.id) {
-      <div>
-        <h2>{{ item.title }}</h2>
-        <p>{{ item.author }}</p>
-        <p>{{ item.overview }}</p>
-      </div>
+<app-header />
+<h2>Book List</h2>
+<h3>Currently Reading</h3>
+@if (reading.length) {
+  <div class="d-flex flex-wrap">
+    @for (book of reading; track book.id) {
+      <ng-container
+        *ngTemplateOutlet="
+          bookItem;
+          context: {book: book}
+        "
+      />
     }
   </div>
-
 }
 
+<h3>Completed</h3>
+@if (completed2025.length) {
+  <h3>2025</h3>
+  <div class="d-flex flex-wrap">
+    @for (book of completed2025; track book.id) {
+      <ng-container
+        *ngTemplateOutlet="
+          bookItem;
+          context: {book: book}
+        "
+      />
+    }
+  </div>
+}
+
+@if (completed2024.length) {
+  <h3>2024</h3>
+  <div class="d-flex flex-wrap">
+    @for (book of completed2024; track book.id) {
+      <ng-container
+        *ngTemplateOutlet="
+          bookItem;
+          context: {book: book}
+        "
+      />
+    }
+  </div>
+}
+
+@if (completed2023.length) {
+  <h3>2023</h3>
+  <div class="d-flex flex-wrap">
+    @for (book of completed2023; track book.id) {
+      <ng-container
+        *ngTemplateOutlet="
+          bookItem;
+          context: {book: book}
+        "
+      />
+    }
+  </div>
+}
+
+@if (completed2022.length) {
+  <h3>2022</h3>
+  <div class="d-flex flex-wrap">
+    @for (book of completed2022; track book.id) {
+      <ng-container
+        *ngTemplateOutlet="
+          bookItem;
+          context: {book: book}
+        "
+      />
+    }
+  </div>
+}
+
+@if (completed2021.length) {
+  <h3>2021</h3>
+  <div class="d-flex flex-wrap">
+    @for (book of completed2021; track book.id) {
+      <ng-container
+        *ngTemplateOutlet="
+          bookItem;
+          context: {book: book}
+        "
+      />
+    }
+  </div>
+}
+
+@if (completed2020.length) {
+  <h3>2020</h3>
+  <div class="d-flex flex-wrap">
+    @for (book of completed2020; track book.id) {
+      <ng-container
+        *ngTemplateOutlet="
+          bookItem;
+          context: {book: book}
+        "
+      />
+    }
+  </div>
+}
+
+<h3>Set Aside</h3>
+@if (setAside) {
+  <div class="d-flex flex-wrap">
+    @for (book of setAside; track book.id) {
+      <ng-container
+        *ngTemplateOutlet="
+          bookItem;
+          context: {book: book}
+        "
+      />
+    }
+  </div>
+}
+
+<h3>Book List</h3>
+@if (wantToRead) {
+  <div class="d-flex flex-wrap">
+    @for (book of wantToRead; track book.id) {
+      <ng-container
+        *ngTemplateOutlet="
+          bookItem;
+          context: {book: book}
+        "
+      />
+    }
+  </div>
+}
+
+<ng-template
+  #content
+  let-modal
+>
+  <div class="modal-header">
+    <h4
+      class="modal-title"
+      id="modal-basic-title"
+    >
+      @if(!selectedBook) {
+        <i class="bi bi-bookmark-plus me-2"></i>
+        Add to your library
+      } @else {
+        <i class="bi bi-pencil me-2"></i>
+        Editing <em>{{ selectedBook.title }}</em>
+      }
+
+    </h4>
+    <button
+      class="btn ms-auto"
+      (click)="modal.dismiss('Cross click')"
+      type="button"
+      aria-label="Close"
+    >
+    <i class="bi bi-x-square-fill"></i>
+  </button>
+  </div>
+  <div class="modal-body">
+    <div>
+      <app-book-form
+        [editingBook]="selectedBook"
+      />
+    </div>
+  </div>
+</ng-template>
+
+<ng-template
+    #bookItem
+    let-book="book"
+  >
+  <div
+    [style.max-width.px]="128"
+    class="m-2 book-item"
+  >
+    <img
+      [src]="book.image_url"
+      [alt]="'book cover of '+ book.title"
+      (click)="onOpenBook(contentBook, book)"
+    >
+    @if(book.status === 2) {
+      <button
+          class="btn edit-button mt-3 w-100 fw-bold"
+          (click)="onOpenForm(content, book)"
+        >
+          Edit
+          <i class="bi bi-pencil ms-1 fw-bold"></i>
+      </button>
+    }
+  </div>
+</ng-template>
+
+<ng-template
+  #contentBook
+  let-modal
+>
+  <div class="modal-header">
+    <h4
+      class="modal-title"
+      id="modal-basic-title"
+    >
+      <i class="bi bi-book-half me-2"></i>
+      <em>{{ selectedBook.title }}</em>
+    </h4>
+    <button
+      class="btn ms-auto"
+      (click)="modal.dismiss('Cross click')"
+      type="button"
+      aria-label="Close"
+    >
+    <i class="bi bi-x-square-fill"></i>
+  </button>
+  </div>
+  <div class="modal-body">
+    <div class="row p-3">
+      <div class="col-8">
+        @if(selectedBook.overview) {
+          {{ selectedBook.overview }}
+        } @else {
+          <h4>
+            <i class="bi bi-window-x me-2"></i>
+            No summary available
+          </h4>
+        }
+      </div>
+      <div class="col-4">
+        @if(selectedBook.image_url) {
+          <img
+            [src]="selectedBook.image_url"
+            [alt]="'book cover of '+ selectedBook.title"
+            [style.max-width.px]="128"
+          >
+        }
+        @if(selectedBook.rating) {
+          {{ selectedBook.rating }}
+        }
+      </div>
+    </div>
+  </div>
+</ng-template>

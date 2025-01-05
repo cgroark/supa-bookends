@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
-import {NgOptionHighlightModule} from '@ng-select/ng-option-highlight';
-
+import { NgOptionHighlightModule } from '@ng-select/ng-option-highlight';
+import { jwtDecode}  from 'jwt-decode';
 import { Book} from 'src/app/models/book.model';
 import  {Observable, of, ReplaySubject} from 'rxjs'
 import {
@@ -207,7 +207,12 @@ export class BookFormComponent implements OnInit {
 
   onSubmit(): void{
     console.warn('form', this.form.controls)
-    if (this.form.valid) {
+    // Retrieve the token from localStorage
+    const token = localStorage.getItem('auth_token_bookends');
+    const decodedToken: any = token ? jwtDecode(token) : null;
+    if (this.form.valid && decodedToken) {
+      const userId = decodedToken.sub;
+
       const {title, author, format, status, rating, end, comments} = this.form.controls;
 
       const newBook = {
@@ -220,8 +225,9 @@ export class BookFormComponent implements OnInit {
         end_date: end.value ? this.formatDate(end.value) : null,
         comments: comments.value,
         image_url: this.selectedBook?.image_url ?? null,
+        user_id: userId,
       }
-      console.warn(newBook)
+      console.warn('book to send', newBook)
 
       if (this.isEditing) {
         this.http
