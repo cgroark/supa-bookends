@@ -8,13 +8,13 @@ import { Book} from 'src/app/models/book.model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { HeaderComponent } from '../header/header.component';
 import { BookFormComponent } from '../book-form/book-form.component';
-
+import { BookItemComponent } from '../book-item/book-item.component';
 @Component({
   selector: 'app-book-list',
   standalone: true,
   templateUrl: './book-list.component.html',
   styleUrls: ['./book-list.component.scss'],
-  imports: [BookFormComponent, HeaderComponent, CommonModule]
+  imports: [BookItemComponent, BookFormComponent, HeaderComponent, CommonModule]
 })
 export class BookListComponent implements OnInit {
 
@@ -87,13 +87,4 @@ export class BookListComponent implements OnInit {
     });
     this.selectedBook = book;
   }
-
-  onOpenBook(contentBook: any, book: any):void {
-    this.modalService.open(contentBook, {
-      size: 'md',
-      backdrop: 'static',
-    });
-    this.selectedBook = book;
-  }
-
 }

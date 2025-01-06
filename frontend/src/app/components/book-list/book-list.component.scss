@@ -12,26 +12,14 @@ p, p > i {
   font-size: $font-size-base;
 }
 
-.edit-button {
-  background-color: $salmon;
-  color: $black;
-  i {
-    color: $black;
-  }
+.add-button {
+  background-color: $teal;
+  color: $ivory;
   &:hover {
-    background-color: $black;
-    color: $salmon ;
-    border: solid 1px $salmon;
+    background-color: $ivory;
+    color: $teal;
     i {
-      color: $salmon;
-    }
-  }
-}
-
-.book-item {
-  img {
-    &:hover {
-      cursor: pointer;
+      color: $teal;
     }
   }
 }

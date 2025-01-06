@@ -1,0 +1,25 @@
+@import '../../../styles/variables';
+
+.edit-button {
+  background-color: $salmon;
+  color: $black;
+  i {
+    color: $black;
+  }
+  &:hover {
+    background-color: $black;
+    color: $salmon ;
+    border: solid 1px $salmon;
+    i {
+      color: $salmon;
+    }
+  }
+}
+
+.book-item {
+  img {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
