@@ -1,7 +1,42 @@
-<button
-  class="btn d-block ms-auto mb-4"
-  (click)="logout()"
+<a
+  class="ms-3 pb-1 text-decoration-none"
+  (click)="onOpenModal(content)"
 >
   Sign out
-  <i class="bi bi-emoji-dizzy me-1"></i>
-</button>
+  <i class="bi bi-emoji-dizzy ms-1"></i>
+</a>
+
+<ng-template
+  #content
+  let-modal
+>
+<div class="modal-header">
+  <h4
+    class="modal-title text-center"
+    id="modal-basic-title"
+  >
+    Sure you want to logout?
+  </h4>
+</div>
+  <div class="modal-body rounded">
+    <div>
+      <div class="d-flex">
+        <button
+          class="btn button-cancel me-auto"
+          (click)="modal.dismiss('Cross click')"
+        >
+          Cancel
+          <i class="bi bi-x-lg ms-1"></i>
+        </button>
+        <button
+          class="btn button-logout ms-auto"
+          (click)="logout()"
+          >
+          Sign Out
+          <i class="bi bi-emoji-dizzy ms-1"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+

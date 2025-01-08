@@ -1,111 +1,442 @@
 <app-header />
-<h2>Book List</h2>
-<button
-  class="btn add-button"
-  (click)="onOpenForm(content, null)"
->
-    Add a book
-    <i class="bi bi-bookmark-plus ms-1"></i>
-</button>
-<h3>Currently Reading</h3>
-@if (reading.length) {
-  <div class="d-flex flex-wrap">
-    @for (book of reading; track book.id) {
-      <app-book-item
-        [selectedBook]="book"
-      />
-    }
-  </div>
-}
+<app-navbar />
+<section class="py-3">
+  <h2 class="text-center text-sm-start">
+    <i class="bi bi-body-text me-2"></i>
+    Currently Reading
+  </h2>
+  @if (reading.length) {
+    <div class="d-flex flex-wrap justify-content-between">
+      @for (book of reading; track book.id; let index = $index) {
+        <app-book-item
+          [selectedBook]="book"
+          [editable]="true"
+        />
+      }
+    </div>
+  }
+  <button
+    class="btn add-button mx-auto d-block"
+    (click)="onOpenForm(content, null)"
+  >
+      Add a book
+      <i class="bi bi-bookmark-plus ms-1"></i>
+  </button>
+</section>
 
-<h3>Completed</h3>
-@if (completed2025.length) {
-  <h3>2025</h3>
-  <div class="d-flex flex-wrap">
-    @for (book of completed2025; track book.id) {
-      <app-book-item
-        [selectedBook]="book"
-      />
+<section class="py-3">
+  <h2 class="text-center text-sm-start">
+    <i class="bi bi-bookmark-check-fill me-2"></i>
+    Completed
+  </h2>
+  @if (completed2025.length) {
+    <!-- <h3 class="text-center">2025</h3> -->
+    <div class="d-flex flex-wrap justify-content-between">
+      @for (book of completed2025; track book.id; let index = $index) {
+        @if(index < 6)  {
+          <app-book-item
+            [selectedBook]="book"
+            [editable]="true"
+          />
+        }
+      }
+    </div>
+    @if(completed2025.length > 5) {
+      <div ngbAccordion>
+        <div ngbAccordionItem class="mb-4">
+          <div ngbAccordionHeader>
+            <button
+              ngbAccordionButton
+            >
+              View More
+            </button>
+          </div>
+          <div ngbAccordionCollapse>
+            <div
+              ngbAccordionBody
+              class="px-0"
+            >
+              <ng-template>
+                <div class="d-flex flex-wrap">
+                @for(book of completed2025; track book.id; let index = $index) {
+                  @if(index > 5) {
+                    <app-book-item
+                      [selectedBook]="book"
+                      [editable]="true"
+                    />
+                  }
+                }
+                </div>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </div>
     }
-  </div>
-}
+  }
 
-@if (completed2024.length) {
-  <h3>2024</h3>
-  <div class="d-flex flex-wrap">
-    @for (book of completed2024; track book.id) {
-      <app-book-item
-        [selectedBook]="book"
-      />
+  @if (completed2024.length) {
+    <h3 class="year px-4 py-1 w-50 ms-auto">
+      2024
+    </h3>
+    <!-- <h4 class="text-start year-stats px-4 pb-1 pt-2 w-50 d-inline-block">
+      {{ completed2024.length}} <i class="bi bi-book-half ms-1 me-3"></i>
+      @if(completed2023.length) {
+        {{ ((completed2024.length - completed2023.length) / completed2023.length) * 100 }}%
+        @if(completed2024.length > completed2023.length) {
+          <i class="bi bi-arrow-up ms-1"></i>
+        } @else if(completed2024.length === completed2023.length) {
+          <i class="bi bi-arrow-down-up ms-1"></i>
+        } @else {
+          <i class="bi bi-arrow-down"></i>
+        }
+      }
+    </h4> -->
+    <div class="d-flex flex-wrap justify-content-between">
+      @for (book of completed2024; track book.id; let index = $index) {
+        @if(index < 6)  {
+          <app-book-item
+            [selectedBook]="book"
+            [editable]="true"
+          />
+        }
+      }
+    </div>
+    @if(completed2024.length > 5) {
+      <div ngbAccordion>
+        <div ngbAccordionItem class="mb-4">
+          <div ngbAccordionHeader>
+            <button
+              ngbAccordionButton
+              class="justify-content-end"
+            >
+              View More
+            </button>
+          </div>
+          <div ngbAccordionCollapse>
+            <div
+              ngbAccordionBody
+              class="px-0"
+            >
+              <ng-template>
+                <div class="d-flex flex-wrap justify-content-between">
+                @for(book of completed2024; track book.id; let index = $index) {
+                  @if(index > 5) {
+                    <app-book-item
+                      [selectedBook]="book"
+                      [editable]="true"
+                    />
+                  }
+                }
+                </div>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </div>
     }
-  </div>
-}
+  }
 
-@if (completed2023.length) {
-  <h3>2023</h3>
-  <div class="d-flex flex-wrap">
-    @for (book of completed2023; track book.id) {
-      <app-book-item
-        [selectedBook]="book"
-      />
+  @if (completed2023.length) {
+    <h3 class="text-end year px-4 py-1 w-50 mt-2">
+      2023
+    </h3>
+    <div class="d-flex flex-wrap justify-content-between">
+      @for (book of completed2023; track book.id; let index = $index) {
+        @if(index < 6)  {
+          <app-book-item
+            [selectedBook]="book"
+            [editable]="true"
+          />
+        }
+      }
+    </div>
+    @if(completed2023.length > 5) {
+      <div ngbAccordion>
+        <div ngbAccordionItem class="mb-4">
+          <div ngbAccordionHeader>
+            <button
+              ngbAccordionButton
+              class="justify-content-start"
+            >
+              View More
+            </button>
+          </div>
+          <div ngbAccordionCollapse>
+            <div
+              ngbAccordionBody
+              class="px-0"
+            >
+              <ng-template>
+                <div class="d-flex flex-wrap justify-content-between">
+                @for(book of completed2023; track book.id; let index = $index) {
+                  @if(index > 5) {
+                    <app-book-item
+                      [selectedBook]="book"
+                      [editable]="true"
+                    />
+                  }
+                }
+                </div>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </div>
     }
-  </div>
-}
+  }
 
-@if (completed2022.length) {
-  <h3>2022</h3>
-  <div class="d-flex flex-wrap">
-    @for (book of completed2022; track book.id) {
-      <app-book-item
-        [selectedBook]="book"
-      />
+  @if (completed2022.length) {
+    <h3 class="year px-4 py-1 w-50 ms-auto">
+      2022
+    </h3>
+    <div class="d-flex flex-wrap justify-content-between">
+      @for (book of completed2022; track book.id; let index = $index) {
+        @if(index < 6)  {
+          <app-book-item
+            [selectedBook]="book"
+            [editable]="true"
+          />
+        }
+      }
+    </div>
+    @if(completed2022.length > 5) {
+      <div ngbAccordion>
+        <div ngbAccordionItem class="mb-4">
+          <div ngbAccordionHeader>
+            <button
+              ngbAccordionButton
+              class="justify-content-end"
+            >
+              View More
+            </button>
+          </div>
+          <div ngbAccordionCollapse>
+            <div
+              ngbAccordionBody
+              class="px-0"
+            >
+              <ng-template>
+                <div class="d-flex flex-wrap justify-content-between">
+                @for(book of completed2022; track book.id; let index = $index) {
+                  @if(index > 5) {
+                    <app-book-item
+                      [selectedBook]="book"
+                      [editable]="true"
+                    />
+                  }
+                }
+                </div>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </div>
     }
-  </div>
-}
+  }
 
-@if (completed2021.length) {
-  <h3>2021</h3>
-  <div class="d-flex flex-wrap">
-    @for (book of completed2021; track book.id) {
-      <app-book-item
-        [selectedBook]="book"
-      />
+  @if (completed2021.length) {
+    <h3 class="text-end year px-4 py-1 w-50 mt-2">
+      2021
+    </h3>
+    <div class="d-flex flex-wrap justify-content-between">
+      @for (book of completed2021; track book.id; let index = $index) {
+        @if(index < 6)  {
+          <app-book-item
+            [selectedBook]="book"
+            [editable]="true"
+          />
+        }
+      }
+    </div>
+    @if(completed2021.length > 5) {
+      <div ngbAccordion>
+        <div ngbAccordionItem class="mb-4">
+          <div ngbAccordionHeader>
+            <button
+              ngbAccordionButton
+              class="justify-content-start"
+            >
+              View More
+            </button>
+          </div>
+          <div ngbAccordionCollapse>
+            <div
+              ngbAccordionBody
+              class="px-0"
+            >
+              <ng-template>
+                <div class="d-flex flex-wrap justify-content-between">
+                @for(book of completed2021; track book.id; let index = $index) {
+                  @if(index > 5) {
+                    <app-book-item
+                      [selectedBook]="book"
+                      [editable]="true"
+                    />
+                  }
+                }
+                </div>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </div>
     }
-  </div>
-}
+  }
 
-@if (completed2020.length) {
-  <h3>2020</h3>
-  <div class="d-flex flex-wrap">
-    @for (book of completed2020; track book.id) {
-      <app-book-item
-        [selectedBook]="book"
-      />
+  @if (completed2020.length) {
+    <h3 class="year px-4 py-1 w-50 ms-auto">
+      2020
+    </h3>
+    <div class="d-flex flex-wrap justify-content-between">
+      @for (book of completed2020; track book.id; let index = $index) {
+        @if(index < 6)  {
+          <app-book-item
+            [selectedBook]="book"
+            [editable]="true"
+          />
+        }
+      }
+    </div>
+    @if(completed2020.length > 5) {
+      <div ngbAccordion>
+        <div ngbAccordionItem class="mb-4">
+          <div ngbAccordionHeader>
+            <button
+              ngbAccordionButton
+              class="justify-content-end"
+            >
+              View More
+            </button>
+          </div>
+          <div ngbAccordionCollapse>
+            <div
+              ngbAccordionBody
+              class="px-0"
+            >
+              <ng-template>
+                <div class="d-flex flex-wrap justify-content-between">
+                @for(book of completed2020; track book.id; let index = $index) {
+                  @if(index > 5) {
+                    <app-book-item
+                      [selectedBook]="book"
+                      [editable]="true"
+                    />
+                  }
+                }
+                </div>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </div>
     }
-  </div>
-}
+  }
+</section>
 
-<h3>Set Aside</h3>
-@if (setAside) {
-  <div class="d-flex flex-wrap">
-    @for (book of setAside; track book.id) {
-      <app-book-item
-        [selectedBook]="book"
-      />
+<section class="py-3">
+<h2 class="text-center text-sm-start">
+  <i class="bi bi-book-half me-2"></i>
+  Set Aside
+</h2>
+  @if (setAside.length) {
+    <div class="d-flex flex-wrap">
+      @for (book of setAside; track book.id; let index = $index) {
+        @if(index < 6) {
+          <app-book-item
+          [selectedBook]="book"
+          [editable]="true"
+        />
+        }
+      }
+    </div>
+    @if(setAside.length > 5) {
+      <div ngbAccordion>
+        <div ngbAccordionItem class="mb-4">
+          <div ngbAccordionHeader>
+            <button
+              ngbAccordionButton
+              class="justify-content-center"
+            >
+              View More
+            </button>
+          </div>
+          <div ngbAccordionCollapse>
+            <div
+              ngbAccordionBody
+              class="px-0"
+            >
+              <ng-template>
+                <div class="d-flex flex-wrap justify-content-between">
+                @for(book of setAside; track book.id; let index = $index) {
+                  @if(index > 5) {
+                    <app-book-item
+                      [selectedBook]="book"
+                      [editable]="true"
+                    />
+                  }
+                }
+                </div>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </div>
     }
-  </div>
-}
+  }
+</section>
 
-<h3>Book List</h3>
-@if (wantToRead) {
-  <div class="d-flex flex-wrap">
-    @for (book of wantToRead; track book.id) {
-      <app-book-item
-        [selectedBook]="book"
-      />
+<section class="py-3">
+<h2 class="text-center text-sm-start">
+  <i class="bi bi-bookmark-star me-2"></i>
+  Reading List
+</h2>
+  @if (wantToRead) {
+    <div class="d-flex flex-wrap">
+      @for (book of wantToRead; track book.id; let index = $index) {
+        @if(index < 12) {
+          <app-book-item
+          [selectedBook]="book"
+          [editable]="true"
+        />
+        }
+      }
+    </div>
+    @if(wantToRead.length > 11) {
+      <div ngbAccordion>
+        <div ngbAccordionItem class="mb-4">
+          <div ngbAccordionHeader>
+            <button
+              ngbAccordionButton
+              class="justify-content-center"
+            >
+              View More
+            </button>
+          </div>
+          <div ngbAccordionCollapse>
+            <div
+              ngbAccordionBody
+              class="px-0"
+            >
+              <ng-template>
+                <div class="d-flex flex-wrap justify-content-between">
+                @for(book of wantToRead; track book.id; let index = $index) {
+                  @if(index > 11) {
+                    <app-book-item
+                      [selectedBook]="book"
+                      [editable]="true"
+                    />
+                  }
+                }
+                </div>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </div>
     }
-  </div>
-}
+  }
+</section>
 
 <ng-template
   #content

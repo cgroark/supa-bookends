@@ -68,7 +68,9 @@
     [formGroup]="form"
     (ngSubmit)="onSubmit()">
     <div class="row">
-      <div class="col-sm-8">
+      <div
+        [class.col-sm-8]="selectedBook?.image_url"
+      >
         @if(form.controls['title']; as title) {
           <div class="mb-2">
             <label class="d-block text-secondary" for="title">

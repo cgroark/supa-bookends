@@ -6,15 +6,18 @@ import { jwtDecode}  from 'jwt-decode';
 import { Book} from 'src/app/models/book.model';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 import { HeaderComponent } from '../header/header.component';
 import { BookFormComponent } from '../book-form/book-form.component';
 import { BookItemComponent } from '../book-item/book-item.component';
+import { NavbarComponent } from '../navbar/navbar.component';
+
 @Component({
   selector: 'app-book-list',
   standalone: true,
   templateUrl: './book-list.component.html',
   styleUrls: ['./book-list.component.scss'],
-  imports: [BookItemComponent, BookFormComponent, HeaderComponent, CommonModule]
+  imports: [BookItemComponent, BookFormComponent, HeaderComponent, NavbarComponent, CommonModule, NgbAccordionModule]
 })
 export class BookListComponent implements OnInit {
 

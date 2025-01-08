@@ -1,0 +1,15 @@
+@import '../../../styles/variables';
+
+a {
+  color: $ivory;
+  text-decoration: none;
+  font-family: $font-ubuntu;
+  font-size: $font-size-base;
+  border-bottom: solid 2px $black;
+  &:hover {
+    border-bottom: solid 2px $salmon;
+  }
+  &.active {
+    border-bottom: solid 3px $salmon;
+  }
+}

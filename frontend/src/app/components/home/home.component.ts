@@ -7,12 +7,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BestsellersComponent } from '../bestsellers/bestsellers.component';
 import { BookFormComponent } from '../book-form/book-form.component';
 import { HeaderComponent } from '../header/header.component';
-import { LogoutComponent } from '../logout/logout.component';
+import { BookItemComponent } from '../book-item/book-item.component';
+import { NavbarComponent } from '../navbar/navbar.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [BestsellersComponent, BookFormComponent, HeaderComponent, LogoutComponent, CommonModule, RouterModule],
+  imports: [BestsellersComponent, BookItemComponent, BookFormComponent, HeaderComponent, NavbarComponent, CommonModule, RouterModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
@@ -54,7 +55,7 @@ export class HomeComponent implements OnInit {
     })
   }
 
-  onOpenForm(content: any, book: any):void {
+  protected onOpenForm(content: any, book: any):void {
     this.modalService.open(content, {
       size: 'md',
       backdrop: 'static',
@@ -62,7 +63,7 @@ export class HomeComponent implements OnInit {
     this.selectedBook = book;
   }
 
-  onOpenBook(contentBook: any, book: any):void {
+  protected onOpenBook(contentBook: any, book: any):void {
     this.modalService.open(contentBook, {
       size: 'md',
       backdrop: 'static',

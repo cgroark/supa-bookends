@@ -8,13 +8,12 @@ import { LoginFormComponent } from './components/login-form/login-form.component
 import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
-  { path: '', component: HomeComponent, canActivate: [AuthGuard]},
+  { path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
   { path: 'add-book', component: BookFormComponent },
   { path: 'books', component: BookListComponent, canActivate: [AuthGuard]},
   { path: 'sign-up', component: UserFormComponent},
-  { path: 'login', component: LoginFormComponent}
-
-  // { path: '', redirectTo: '/book-form', pathMatch: 'full' },
+  { path: 'login', component: LoginFormComponent},
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
 ];
 
 @NgModule({

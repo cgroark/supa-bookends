@@ -11,6 +11,7 @@ import { BookFormComponent } from '../book-form/book-form.component';
 })
 export class BookItemComponent {
   @Input() selectedBook: any;
+  @Input() editable = false;
 
   constructor(private modalService: NgbModal) { }
 

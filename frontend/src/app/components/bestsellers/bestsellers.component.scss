@@ -21,6 +21,11 @@ div.fiction, div.non-fiction {
   }
 }
 
+.accordion-item {
+  border: none;
+  background: $light-black;
+}
+
 .add-button {
   background-color: $teal;
   color: $ivory;
@@ -31,11 +36,6 @@ div.fiction, div.non-fiction {
       color: $teal;
     }
   }
-}
-
-.accordion-item {
-  border: none;
-  background: $light-black;
 }
 
 img {

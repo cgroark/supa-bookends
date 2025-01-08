@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { SupabaseService } from 'src/app/services/supabase.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {Router} from '@angular/router';
 
 @Component({
@@ -12,9 +13,16 @@ import {Router} from '@angular/router';
 
 })
 export class LogoutComponent {
-  constructor(private supabaseService: SupabaseService, private router: Router){}
+  constructor(private supabaseService: SupabaseService, private router: Router, private modalService: NgbModal){}
+
+  protected  onOpenModal(content: any):void {
+    this.modalService.open(content, {
+      size: 'sm',
+    });
+  }
 
   async logout() {
+    this.modalService.dismissAll();
     try {
       await this.supabaseService.logout();
       // Handle redirection after successful logout

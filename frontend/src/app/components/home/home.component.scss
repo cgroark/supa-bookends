@@ -20,22 +20,6 @@ div.reading, div.read, div.connections {
   background-color: $light-black;
 }
 
-.edit-button {
-  background-color: $salmon;
-  color: $black;
-  i {
-    color: $black;
-  }
-  &:hover {
-    background-color: $black;
-    color: $salmon ;
-    border: solid 1px $salmon;
-    i {
-      color: $salmon;
-    }
-  }
-}
-
 .add-button {
   background-color: $teal;
   color: $ivory;
@@ -44,14 +28,6 @@ div.reading, div.read, div.connections {
     color: $teal;
     i {
       color: $teal;
-    }
-  }
-}
-
-.book-item {
-  img {
-    &:hover {
-      cursor: pointer;
     }
   }
 }

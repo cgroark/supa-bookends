@@ -1,21 +1,31 @@
 
-  <div
-    [style.max-width.px]="128"
-    class="m-2 book-item"
-  >
-    <img
-      [src]="selectedBook.image_url"
-      [alt]="'book cover of '+ selectedBook.title"
-      (click)="onOpenBook(contentBook, selectedBook)"
+  <div class="d-flex">
+    <div
+      class="m-2 book-item px-1"
     >
+      <img
+        [src]="selectedBook.image_url"
+        [alt]="'book cover of '+ selectedBook.title"
+        (click)="onOpenBook(contentBook, selectedBook)"
+      >
+      @if(editable) {
+        <button
+            class="btn edit-button rounded-5 px-2"
+            (click)="onOpenForm(content, selectedBook)"
+          >
+            <i class="bi bi-pencil ms-1 fw-bold"></i>
+        </button>
+      }
+    </div>
     @if(selectedBook.status === 2) {
-      <button
-          class="btn edit-button mt-3 w-100 fw-bold"
-          (click)="onOpenForm(content, selectedBook)"
-        >
-          Edit
-          <i class="bi bi-pencil ms-1 fw-bold"></i>
-      </button>
+      <div class="m-2 align-content-center">
+        <h4 class="m-0">
+          <em>
+            {{selectedBook.title}}
+          </em>
+        </h4>
+        <p>{{ selectedBook.author }}</p>
+      </div>
     }
   </div>
 

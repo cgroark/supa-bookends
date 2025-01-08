@@ -1,6 +1,6 @@
 @import '../../../styles/variables';
 
- h2, h3, p, i {
+ h2, h3, h4, p, i {
   color: $ivory;
 }
 
@@ -10,6 +10,17 @@ h2 {
 
 p, p > i {
   font-size: $font-size-base;
+}
+
+h3.year {
+  background-color: $purple;
+}
+h4.year-stats {
+  background-color: $light-black;
+}
+
+section {
+  border-bottom: solid 2px $yellow;
 }
 
 .add-button {
@@ -22,6 +33,28 @@ p, p > i {
       color: $teal;
     }
   }
+}
+
+.accordion-button {
+  padding: 0;
+  background: $black;
+  color: $ivory;
+  font-size: 20px;
+  font-family: $font-ubuntu;
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+  &:focus {
+    box-shadow: none;
+  }
+  &::after, &.collapsed::after {
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23f9f4da'><path%20fill-rule='evenodd'%20d='M1.646%204.646a.5.5%200%200%201%20.708%200L8%2010.293l5.646-5.647a.5.5%200%200%201%20.708.708l-6%206a.5.5%200%200%201-.708%200l-6-6a.5.5%200%200%201%200-.708z'/></svg>");
+    margin-left: 5px;
+  }
+}
+
+.accordion-item {
+  border: none;
+  background: $black;
 }
 
 ::ng-deep .modal-body {

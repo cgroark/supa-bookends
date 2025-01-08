@@ -1,14 +1,17 @@
 @import '../../../styles/variables';
 
+h4, p {
+  color: $ivory;
+}
 .edit-button {
   background-color: $salmon;
-  color: $black;
+  margin-left: 100px;
+  margin-top: -42px;
   i {
     color: $black;
   }
   &:hover {
     background-color: $black;
-    color: $salmon ;
     border: solid 1px $salmon;
     i {
       color: $salmon;
@@ -17,7 +20,9 @@
 }
 
 .book-item {
+  max-width: 136px;
   img {
+    max-height: 192px;
     &:hover {
       cursor: pointer;
     }
