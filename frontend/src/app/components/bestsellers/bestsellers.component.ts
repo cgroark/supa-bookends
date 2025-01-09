@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -15,7 +15,6 @@ import { BookFormComponent } from '../book-form/book-form.component';
   styleUrl: './bestsellers.component.scss'
 })
 export class BestsellersComponent implements OnInit {
-
   protected fictionBooks: any[] = [];
   protected nonFictionBooks: any[] = [];
   protected identifiedBook = false;

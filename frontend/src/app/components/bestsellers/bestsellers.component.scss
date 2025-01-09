@@ -1,5 +1,7 @@
 @import '../../../styles/variables';
-
+ h2 {
+  color: $ivory;
+ }
 
 div.fiction, div.non-fiction {
   background-color: $light-black;
@@ -27,22 +29,29 @@ div.fiction, div.non-fiction {
 }
 
 .add-button {
-  background-color: $teal;
+  background-color: $salmon;
+  margin-left: 56px;
+  margin-top: -45px;
   color: $ivory;
   &:hover {
     background-color: $ivory;
-    color: $teal;
+    border: solid 1px $teal;
     i {
       color: $teal;
     }
   }
 }
 
-img {
-  &:hover {
-    cursor: pointer;
+.each-book {
+  height: 120px;
+  img {
+    max-width: 80px;
+    &:hover {
+      cursor: pointer;
+    }
   }
 }
+
 
 h3 {
   color: $ivory;

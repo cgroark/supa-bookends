@@ -19,9 +19,10 @@ import { NavbarComponent } from '../navbar/navbar.component';
 })
 export class HomeComponent implements OnInit {
 
-  protected currentBooks: any;
-  protected recentBooks: any;
+  protected currentBooks: any[] = [];
+  protected recentBooks: any[] = [];
   protected selectedBook: any;
+  protected noBooks = false;
 
   constructor(private http: HttpClient, private modalService: NgbModal) {}
 
@@ -52,6 +53,8 @@ export class HomeComponent implements OnInit {
         each.status === 4)
         .sort((a: any, b: any) => b.end_date.localeCompare(a.end_date));
         console.warn('rec', this.recentBooks)
+      this.noBooks = !this.recentBooks.length && !this.currentBooks.length;
+      console.warn('NO BOOKS', this.noBooks)
     })
   }
 
