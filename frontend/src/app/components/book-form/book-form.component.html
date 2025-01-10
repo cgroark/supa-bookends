@@ -1,6 +1,9 @@
-@if(!saveComplete && !editComplete) {
+<section
+  class="form-section mx-auto"
+  [class.w-75]="noModal"
+>
   @if(!isManuallyAdding && !editingBook && (!addingBestSeller || (addingBestSeller && !identifiedBook))) {
-    <div class="py-4 px-3 search-section">
+    <div class="py-4 px-3 search-section rounded">
       <ng-select
         [items]="books$ | async"
         [typeahead]="bookInput$"
@@ -53,7 +56,7 @@
     </div>
   }
 
-  @if(!selectedBook && !editingBook){
+  @if(!selectedBook){
     <button
       class="btn btn-outline-secondary border-0 d-block ms-auto me-3 my-2"
       type="button"
@@ -61,10 +64,10 @@
     >{{!isManuallyAdding ? 'Add book manually' : 'Search for a book' }}</button>
   }
 
-  @if(selectedBook || isManuallyAdding || editingBook){
+  @if(selectedBook || isManuallyAdding){
   <form
     #ngForm="ngForm"
-    class="mt-2 p-3"
+    class="mt-2 p-3 rounded"
     [formGroup]="form"
     (ngSubmit)="onSubmit()">
     <div class="row">
@@ -207,24 +210,16 @@
       </div>
     }
     <button class="btn d-block mx-auto mt-3 w-50" type="buton">
-      Save
-      <i class="bi bi-save ms-1"></i>
+      @if(isSubmitting) {
+        <span class="me-2">Saving</span>
+        <span class="spinner-border button" role="status">
+        </span>
+      } @else {
+        <span class="me-2">Save</span>
+        <i class="bi bi-save"></i>
+      }
     </button>
   </form>
   }
-}
+</section>
 
-@else {
-  <div class="row p-3">
-    <div class="col-sm-8">
-      <h4 class="mt-sm-5">
-        <em>{{ form.controls['title'].value }}</em> {{ editComplete ? 'updated' : 'added ' }} successfully!
-      </h4>
-    </div>
-      @if(selectedBook?.image_url) {
-        <div class="col-sm-4">
-          <img [src]="selectedBook.image_url" alt="book cover" class="w-100">
-        </div>
-      }
-  </div>
-}

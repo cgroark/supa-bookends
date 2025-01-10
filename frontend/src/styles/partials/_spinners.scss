@@ -1,0 +1,17 @@
+@import '../variables';
+
+.spinner-border {
+  color: $salmon;
+  width: 50px !important;
+  height: 50px !important;
+  display: block !important;
+  margin: 30px auto !important;
+  &.button {
+    color: $ivory;
+    display: inline-block !important;
+    margin: 0 !important;
+    width: 20px !important;
+    height: 20px !important;
+    margin-right: 5px !important;
+  }
+}

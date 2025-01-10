@@ -22,6 +22,9 @@ import { NavbarComponent } from '../navbar/navbar.component';
 export class BookListComponent implements OnInit {
 
   // protected bookItems: Book[] = [];
+  protected isLoading = true;
+  protected noBooks = false;
+  protected completed: any[] = [];
   protected completed2025: any[] = [];
   protected completed2024: any[] = [];
   protected completed2023: any[] = [];
@@ -54,32 +57,42 @@ export class BookListComponent implements OnInit {
 
     this.http
     .get(`http://127.0.0.1:8000/books?user_id=${userId}`, { headers })
-    .subscribe((response: any) => {
-      this.completed2020 = response.filter((each: any) =>
-        each.status === 4 &&  each.end_date >= '2020-01-01' && each.end_date < '2021-01-01')
-        .sort((a: any, b: any) => b.end_date.localeCompare(a.end_date));
-      this.completed2021 = response.filter((each: any) =>
-        each.status === 4 &&  each.end_date >= '2021-01-01' && each.end_date < '2022-01-01')
-        .sort((a: any, b: any) => b.end_date.localeCompare(a.end_date));
-      this.completed2022 = response.filter((each: any) =>
-        each.status === 4 &&  each.end_date >= '2022-01-01' && each.end_date < '2023-01-01')
-        .sort((a: any, b: any) => b.end_date.localeCompare(a.end_date));
-      this.completed2023 = response.filter((each: any) =>
-        each.status === 4 &&  each.end_date >= '2023-01-01' && each.end_date < '2024-01-01')
-        .sort((a: any, b: any) => b.end_date.localeCompare(a.end_date));
-      this.completed2024 = response.filter((each: any) =>
-        each.status === 4 &&  each.end_date >= '2024-01-01' && each.end_date < '2025-01-01')
-        .sort((a: any, b: any) => b.end_date.localeCompare(a.end_date));
-      this.completed2025 = response.filter((each: any) =>
-        each.status === 4 &&  each.end_date >= '2025-01-01' && each.end_date < '2026-01-01')
-        .sort((a: any, b: any) => b.end_date.localeCompare(a.end_date));
-      this.reading = response.filter((each: any) =>
-          each.status === 2);
-      this.wantToRead = response.filter((each: any) =>
-        each.status === 1)
-        .sort((a: any, b: any) => a.title.localeCompare(b.title));
-      this.setAside = response.filter((each: any) =>
-        each.status === 3);
+    .subscribe({
+      next: (response: any) => {
+        this.noBooks = !response.length
+        this.completed = response.filter((each: any) => each.status === 4);
+        console.warn('COM', this.completed)
+        this.completed2020 = response.filter((each: any) =>
+          each.status === 4 &&  each.end_date >= '2020-01-01' && each.end_date < '2021-01-01')
+          .sort((a: any, b: any) => b.end_date.localeCompare(a.end_date));
+        this.completed2021 = response.filter((each: any) =>
+          each.status === 4 &&  each.end_date >= '2021-01-01' && each.end_date < '2022-01-01')
+          .sort((a: any, b: any) => b.end_date.localeCompare(a.end_date));
+        this.completed2022 = response.filter((each: any) =>
+          each.status === 4 &&  each.end_date >= '2022-01-01' && each.end_date < '2023-01-01')
+          .sort((a: any, b: any) => b.end_date.localeCompare(a.end_date));
+        this.completed2023 = response.filter((each: any) =>
+          each.status === 4 &&  each.end_date >= '2023-01-01' && each.end_date < '2024-01-01')
+          .sort((a: any, b: any) => b.end_date.localeCompare(a.end_date));
+        this.completed2024 = response.filter((each: any) =>
+          each.status === 4 &&  each.end_date >= '2024-01-01' && each.end_date < '2025-01-01')
+          .sort((a: any, b: any) => b.end_date.localeCompare(a.end_date));
+        this.completed2025 = response.filter((each: any) =>
+          each.status === 4 &&  each.end_date >= '2025-01-01')
+          .sort((a: any, b: any) => b.end_date.localeCompare(a.end_date));
+        this.reading = response.filter((each: any) =>
+            each.status === 2);
+        this.wantToRead = response.filter((each: any) =>
+          each.status === 1)
+          .sort((a: any, b: any) => a.title.localeCompare(b.title));
+        this.setAside = response.filter((each: any) =>
+          each.status === 3);
+        this.isLoading = false;
+      },
+      error: (err: any) => {
+        console.error('Error fetching books:', err);
+        this.isLoading = false;
+      }
     })
   };
 

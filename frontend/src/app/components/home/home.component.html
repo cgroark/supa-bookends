@@ -1,118 +1,120 @@
 <app-header />
 <app-navbar />
-<div class="row">
-  <div
-    [ngClass]="noBooks ? 'p-4' : 'col-lg-9 p-4'"
-  >
-      <div class="row mb-3 p-3 rounded reading">
-        @if(currentBooks.length) {
-          <div class="col-sm-3 border-end">
-              <h2>
-                You're Reading
-              </h2>
+<main>
+  <div class="row">
+    <div
+      [ngClass]="noBooks ? 'px-4' : 'col-lg-9 px-4'"
+    >
+        <div class="row mb-3 p-3 rounded reading mt-3">
+          @if(isLoading) {
+            <span class="spinner-border" role="status">
+            </span>
+          } @else {
+            @if(currentBooks.length) {
+              <div class="col-sm-3 border-end">
+                  <h2>
+                    You're Reading
+                  </h2>
+                  <button
+                    class="btn add-button"
+                    (click)="onOpenForm(content, null)"
+                  >
+                      Add a book
+                      <i class="bi bi-bookmark-plus ms-1"></i>
+                  </button>
+              </div>
+              <div class="col-sm-9">
+                  <div class="d-flex flex-wrap">
+                    @for(book of currentBooks; track book.id) {
+                      <app-book-item
+                        [selectedBook]="book"
+                        [editable]="true"
+                      />
+                    }
+                  </div>
+              </div>
+            } @else {
+            <div class="p-1">
+              <div class="d-flex">
+                <h2 class="align-content-center">
+                  <i class="bi bi-bookmark-x-fill me-2"></i>
+                </h2>
+                <div class="align-content-center">
+                  <h2>
+                    You're not currently reading any books
+                  </h2>
+                  <p>
+                    <i class="bi bi-search me-2"></i>
+                    Search for books and add them to your library
+                  </p>
+                </div>
+              </div>
+              <app-book-form
+                [noModal]="true"
+              />
+            </div>
+            }
+          }
+        </div>
+        @if(recentBooks.length && !isLoading) {
+          <div class="row mb-3 p-3 rounded read">
+            <div class="col-sm-3 border-end">
+              <h2>Latest Books</h2>
               <button
                 class="btn add-button"
-                (click)="onOpenForm(content, null)"
+                [routerLink]="['/books']"
               >
-                  Add a book
-                  <i class="bi bi-bookmark-plus ms-1"></i>
+                  View all books
+                  <i class="bi bi-bookmarks ms-1"></i>
               </button>
-          </div>
-          <div class="col-sm-9">
+            </div>
+            <div class="col-sm-9">
               <div class="d-flex flex-wrap">
-                @for(book of currentBooks; track book.id) {
-                  <app-book-item
-                    [selectedBook]="book"
-                    [editable]="true"
-                  />
+                @for(book of recentBooks; track book.id; let index = $index) {
+                  @if(index < 3 && book.image_url) {
+                    <app-book-item
+                      [selectedBook]="book"
+                      [editable]="true"
+                    />
+                  }
                 }
-               </div>
-          </div>
-        } @else {
-          <div class="col-sm-3 border-end">
-            <h2>
-              No Books In Your Queue
-            </h2>
-          </div>
-          <div class="col-sm-9">
-            <div class="d-flex">
-              <h3 class="align-content-center me-3">
-                <i class="bi bi-bookmarks"></i>
-              </h3>
-              <div>
-                <h3>
-                  Search for books and add them to your library
-                </h3>
-                <button
-                  class="btn add-button w-100"
-                  (click)="onOpenForm(content, null)"
-                >
-                    Add a book
-                    <i class="bi bi-bookmark-plus ms-1"></i>
-                </button>
               </div>
             </div>
           </div>
         }
-      </div>
-    @if(recentBooks.length) {
-      <div class="row mb-3 p-3 rounded read">
-        <div class="col-sm-3 border-end">
-          <h2>Latest Books</h2>
-          <button
-            class="btn add-button"
-            [routerLink]="['/books']"
-          >
-              View all books
-              <i class="bi bi-bookmarks ms-1"></i>
-          </button>
-        </div>
-        <div class="col-sm-9">
-          <div class="d-flex flex-wrap">
-            @for(book of recentBooks; track book.id; let index = $index) {
-              @if(index < 3 && book.image_url) {
-                <app-book-item
-                  [selectedBook]="book"
-                  [editable]="true"
-                />
-              }
-            }
+        @if(recentBooks.length && !isLoading) {
+          <div class="row mb-3 p-3 rounded connections">
+            <div class="col-sm-3 border-end">
+              <h2>Friends' Recent Reads</h2>
+              <button
+                class="btn add-button"
+                [routerLink]="['/book-list']"
+              >
+                  Find Friends
+                  <i class="bi bi-bookmarks ms-1"></i>
+              </button>
+            </div>
+            <div class="col-sm-9">
+              <div class="d-flex flex-wrap">
+                @for(book of recentBooks; track book.id; let index = $index) {
+                  @if(index < 6 && book.image_url) {
+                    <app-book-item
+                      [selectedBook]="book"
+                    />
+                  }
+                }
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-    }
-    @if(recentBooks.length) {
-      <div class="row mb-3 p-3 rounded connections">
-        <div class="col-sm-3 border-end">
-          <h2>Friends' Recent Reads</h2>
-          <button
-            class="btn add-button"
-            [routerLink]="['/book-list']"
-          >
-              Find Friends
-              <i class="bi bi-bookmarks ms-1"></i>
-          </button>
-        </div>
-        <div class="col-sm-9">
-          <div class="d-flex flex-wrap">
-            @for(book of recentBooks; track book.id; let index = $index) {
-              @if(index < 6 && book.image_url) {
-                <app-book-item
-                  [selectedBook]="book"
-                />
-              }
-            }
-          </div>
-        </div>
-      </div>
-    }
+        }
+    </div>
+    <div
+    [ngClass]="noBooks ? '' : 'col-lg-3 pt-4'"
+    >
+      <app-bestsellers />
+    </div>
   </div>
-  <div
-  [ngClass]="noBooks ? '' : 'col-lg-3'"
-  >
-    <app-bestsellers />
-  </div>
-</div>
+</main>
 
 <ng-template
   #content

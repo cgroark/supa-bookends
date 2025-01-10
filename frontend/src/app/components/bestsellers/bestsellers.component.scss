@@ -1,5 +1,5 @@
 @import '../../../styles/variables';
- h2 {
+ h2, p {
   color: $ivory;
  }
 
@@ -29,7 +29,7 @@ div.fiction, div.non-fiction {
 }
 
 .add-button {
-  background-color: $salmon;
+  background-color: $teal;
   margin-left: 56px;
   margin-top: -45px;
   color: $ivory;

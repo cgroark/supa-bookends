@@ -1,5 +1,13 @@
 @import '../../../styles/variables';
 
+section.form-section {
+  @media screen and (max-width: 768px) {
+    width: 100% !important;
+  }
+}
+form {
+  background-color: white;
+}
 input, textarea {
   border-radius: 4px;
   border: 1px solid #ccc;

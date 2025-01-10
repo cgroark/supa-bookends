@@ -1,5 +1,9 @@
 @import '../../src/styles/variables';
 
+main {
+  background-color: $black;
+
+}
 .root {
   background-color: $black;
   font-family: $font-ubuntu;

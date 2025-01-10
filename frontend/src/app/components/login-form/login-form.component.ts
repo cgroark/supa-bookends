@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
 import { SupabaseService } from 'src/app/services/supabase.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { SystemMessageService } from '../../services/system-message.service';
 import { ActivatedRoute, Router, RouterModule} from '@angular/router';
 import { HeaderComponent } from '../header/header.component';
 
@@ -23,8 +24,9 @@ export class LoginFormComponent implements OnInit {
   });
 
   protected fromSignup = false;
+  protected isSubmitting = false;
 
-  constructor(private activatedRoute: ActivatedRoute, private authService: AuthService, private router: Router, private supabaseService: SupabaseService){}
+  constructor(private systemMessageService: SystemMessageService, private activatedRoute: ActivatedRoute, private authService: AuthService, private router: Router, private supabaseService: SupabaseService){}
 
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe(params => {
@@ -43,6 +45,7 @@ export class LoginFormComponent implements OnInit {
       console.warn('Form is invalid');
       return;
     }
+    this.isSubmitting = true;
 
     const { email, password } = this.form.value;
 
@@ -55,11 +58,15 @@ export class LoginFormComponent implements OnInit {
       .login(credentials.email, credentials.password)
       .then((response) => {
         console.log('Login successful:', response);
-        this.authService.saveToken(response.session.access_token); // Save the JWT
+        this.isSubmitting = false;
+        this.form.reset();
+        this.authService.saveToken(response.session.access_token);
+        this.systemMessageService.showMessage(`You've successfully logged in!`);
         this.router.navigate(['/']);
       })
       .catch((error) => {
         console.error('Login failed:', error.message);
+        this.isSubmitting = false;
     });
   }
 

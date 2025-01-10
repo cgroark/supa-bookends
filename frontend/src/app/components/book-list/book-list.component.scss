@@ -19,8 +19,12 @@ h4.year-stats {
   background-color: $light-black;
 }
 
-section {
-  border-bottom: solid 2px $yellow;
+section:not(.reading) {
+  border-bottom: solid 10px $yellow;
+}
+
+section.reading {
+  background-color: $light-black;
 }
 
 .add-button {

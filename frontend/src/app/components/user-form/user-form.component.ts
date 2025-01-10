@@ -3,6 +3,8 @@ import { ReactiveFormsModule, FormsModule, FormControl, FormGroup, Validators, A
 
 import { UserService } from 'src/app/services/user.service';
 import { SupabaseService } from 'src/app/services/supabase.service';
+import { SystemMessageService } from '../../services/system-message.service';
+
 import { Router, RouterModule } from '@angular/router';
 import { HeaderComponent } from '../header/header.component';
 
@@ -43,14 +45,14 @@ export class UserFormComponent {
     { validators: passwordsMatchValidator() }
   );
 
-  protected isLoading = false;
+  protected isSubmitting = false;
 
   protected toggleType(event: any, target: HTMLInputElement) {
     event.preventDefault();
     target.type = target.type === 'password' ? 'text' : 'password';
   }
 
-  constructor(private userService: UserService, private supabaseService: SupabaseService, private router: Router){}
+  constructor(private userService: UserService, private supabaseService: SupabaseService, private router: Router, private systemMessageService: SystemMessageService){}
 
   onSubmit(): void {
     console.warn('submit', this.form);
@@ -58,7 +60,7 @@ export class UserFormComponent {
       console.warn('Form is invalid');
       return;
     }
-    this.isLoading = true;
+    this.isSubmitting = true;
 
     const { email, first, last, username, password } = this.form.value;
 
@@ -84,18 +86,19 @@ export class UserFormComponent {
       this.userService.createUser(backendUser).subscribe({
         next: (user) => {
           console.log('Backend user created successfully:', user);
-          this.isLoading = false;
+          this.isSubmitting = false;
+          this.systemMessageService.showMessage(`You've successfully created an account!`);
           this.router.navigate(['/login'], { queryParams: { from: 'signup' } });
         },
         error: (error) => {
           console.error('Error creating user in backend:', error);
-          this.isLoading = false;
+          this.isSubmitting = false;
         },
       });
     })
     .catch((error) => {
       console.error('Error creating user in Supabase:', error.message);
-      this.isLoading = false;
+      this.isSubmitting = false;
     });
 
 

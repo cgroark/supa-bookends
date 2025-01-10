@@ -1,7 +1,7 @@
 
 <app-header [centered]="true"/>
 <main>
-  @if(!isLoading) {
+  @if(!isSubmitting) {
     <form
       #ngForm="ngForm"
       class="mt-2 p-4 m-auto rounded"
@@ -135,8 +135,14 @@
             </div>
           }
       <button class="btn d-block mx-auto mt-3 w-50" type="submit">
-        Sign Up
-        <i class="bi bi-save ms-1"></i>
+        @if(isSubmitting) {
+          <span class="me-2">Verifying</span>
+          <span class="spinner-border button" role="status">
+          </span>
+        } @else {
+          <span class="me-2">Sign up</span>
+          <i class="bi bi-save"></i>
+        }
       </button>
       <div class="mt-3 text-center">
         <p>
@@ -145,7 +151,8 @@
       </div>
     </form>
   } @else {
-    Loading...
+    <span class="spinner-border" role="status">
+    </span>
   }
 </main>
 

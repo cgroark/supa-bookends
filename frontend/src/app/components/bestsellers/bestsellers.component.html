@@ -1,101 +1,108 @@
-@if(fictionBooks.length) {
-<h2>Best Sellers</h2>
-<div class="fiction p-3 rounded mb-3">
-  <h3>Fiction</h3>
-  <div class="d-flex flex-wrap justify-content-between">
-    @for(book of fictionBooks; track book.primary_isbn10; let index = $index) {
-      @if(index < 8) {
-      <ng-container
-          *ngTemplateOutlet="
-            bestsellerItem;
-            context: {each: book}
-          "
-        />
+@if(isLoading) {
+  <span class="spinner-border" role="status">
+  </span>
+} @else if(fictionBooks.length) {
+    <h2 class="m-0">
+      <i class="bi bi-award me-1"></i>
+      Best Sellers
+    </h2>
+    <p>New York Times, updated {{ lastUpdated }}</p>
+  <div class="fiction p-3 rounded mb-3">
+    <h3>Fiction</h3>
+    <div class="d-flex flex-wrap justify-content-between">
+      @for(book of fictionBooks; track book.primary_isbn10; let index = $index) {
+        @if(index < 8) {
+        <ng-container
+            *ngTemplateOutlet="
+              bestsellerItem;
+              context: {each: book}
+            "
+          />
+        }
       }
-    }
-  </div>
-  <div ngbAccordion>
-    <div ngbAccordionItem>
-      <div ngbAccordionHeader>
-        <button
-          ngbAccordionButton
-        >
-          View More
-        </button>
-      </div>
-      <div ngbAccordionCollapse>
-        <div
-          ngbAccordionBody
-          class="px-0"
-        >
-          <ng-template>
-            <div class="d-flex flex-wrap">
-            @for(book of fictionBooks; track book.primary_isbn10; let index = $index) {
-              @if(index >= 8) {
-              <ng-container
-                  *ngTemplateOutlet="
-                    bestsellerItem;
-                    context: {each: book}
-                  "
-                />
+    </div>
+    <div ngbAccordion>
+      <div ngbAccordionItem>
+        <div ngbAccordionHeader>
+          <button
+            ngbAccordionButton
+          >
+            View More
+          </button>
+        </div>
+        <div ngbAccordionCollapse>
+          <div
+            ngbAccordionBody
+            class="px-0"
+          >
+            <ng-template>
+              <div class="d-flex flex-wrap">
+              @for(book of fictionBooks; track book.primary_isbn10; let index = $index) {
+                @if(index >= 8) {
+                <ng-container
+                    *ngTemplateOutlet="
+                      bestsellerItem;
+                      context: {each: book}
+                    "
+                  />
+                }
               }
-            }
-            </div>
-          </ng-template>
+              </div>
+            </ng-template>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<div class="non-fiction p-3 rounded mb-3">
-  <h3>Non-Fiction</h3>
-  <div class="d-flex flex-wrap justify-content-between">
-    @for(book of nonFictionBooks; track book.primary_isbn10; let index = $index) {
-      @if(index < 8) {
-      <ng-container
-          *ngTemplateOutlet="
-            bestsellerItem;
-            context: {each: book}
-          "
-        />
+  <div class="non-fiction p-3 rounded mb-3">
+    <h3>Non-Fiction</h3>
+    <div class="d-flex flex-wrap justify-content-between">
+      @for(book of nonFictionBooks; track book.primary_isbn10; let index = $index) {
+        @if(index < 8) {
+        <ng-container
+            *ngTemplateOutlet="
+              bestsellerItem;
+              context: {each: book}
+            "
+          />
+        }
       }
-    }
-  </div>
-  <div ngbAccordion>
-    <div ngbAccordionItem>
-      <div ngbAccordionHeader>
-        <button
-          ngbAccordionButton
-        >
-          View More
-        </button>
-      </div>
-      <div ngbAccordionCollapse>
-        <div
-          ngbAccordionBody
-          class="px-0"
-        >
-          <ng-template>
-            <div class="d-flex flex-wrap">
-            @for(book of nonFictionBooks; track book.primary_isbn10; let index = $index) {
-              @if(index >= 8) {
-              <ng-container
-                  *ngTemplateOutlet="
-                    bestsellerItem;
-                    context: {each: book}
-                  "
-                />
+    </div>
+    <div ngbAccordion>
+      <div ngbAccordionItem>
+        <div ngbAccordionHeader>
+          <button
+            ngbAccordionButton
+          >
+            View More
+          </button>
+        </div>
+        <div ngbAccordionCollapse>
+          <div
+            ngbAccordionBody
+            class="px-0"
+          >
+            <ng-template>
+              <div class="d-flex flex-wrap">
+              @for(book of nonFictionBooks; track book.primary_isbn10; let index = $index) {
+                @if(index >= 8) {
+                <ng-container
+                    *ngTemplateOutlet="
+                      bestsellerItem;
+                      context: {each: book}
+                    "
+                  />
+                }
               }
-            }
-            </div>
-          </ng-template>
+              </div>
+            </ng-template>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-
+}
 <ng-template
     #bestsellerItem
     let-book="each"
@@ -200,4 +207,3 @@
     </div>
   </div>
 </ng-template>
-}

@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule, DatePipe } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { HttpClient } from '@angular/common/http';
@@ -12,9 +12,12 @@ import { BookFormComponent } from '../book-form/book-form.component';
   standalone: true,
   imports: [BookFormComponent, CommonModule, NgbAccordionModule],
   templateUrl: './bestsellers.component.html',
-  styleUrl: './bestsellers.component.scss'
+  styleUrl: './bestsellers.component.scss',
+  providers: [DatePipe],
 })
 export class BestsellersComponent implements OnInit {
+  protected isLoading = true;
+  protected lastUpdated: string | null = null;
   protected fictionBooks: any[] = [];
   protected nonFictionBooks: any[] = [];
   protected identifiedBook = false;
@@ -23,7 +26,7 @@ export class BestsellersComponent implements OnInit {
   private currentModal: any;
 
 
-  constructor(private http: HttpClient, private modalService: NgbModal) {}
+  constructor(private http: HttpClient, private modalService: NgbModal, private datePipe: DatePipe) {}
   ngOnInit(): void {
     if(!this.fictionBooks.length) {
       const fictionCall$ = this.http
@@ -31,10 +34,21 @@ export class BestsellersComponent implements OnInit {
       const nonFictionCall$ = this.http
       .get('https://api.nytimes.com/svc/books/v3/lists/hardcover-nonfiction.json?api-key=BAGqFvDh9IJi1JWLxfJ9SIh2rctbgwiE');
 
-      combineLatest([fictionCall$, nonFictionCall$]).subscribe(([fictionResponse, nonFictionResponse]: any) => {
-        this.fictionBooks = fictionResponse.results.books;
-        this.nonFictionBooks = nonFictionResponse.results.books;
-      })
+      combineLatest([fictionCall$, nonFictionCall$]).subscribe({
+        next: ([fictionResponse, nonFictionResponse]: any) => {
+          this.fictionBooks = fictionResponse.results.books;
+          this.nonFictionBooks = nonFictionResponse.results.books;
+          this.lastUpdated = this.datePipe.transform(fictionResponse?.last_modified);
+          this.isLoading = false;
+        },
+        error: (err: any) => {
+          console.error('Error fetching books:', err);
+          this.isLoading = false;
+          // Optionally, handle error state here, e.g., show an error message to the user
+        },
+      });
+    } else {
+      this.isLoading = false;
     }
   }
 

@@ -1,7 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { SystemMessageService } from '../../services/system-message.service';
 
 import { NgSelectModule } from '@ng-select/ng-select';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgOptionHighlightModule } from '@ng-select/ng-option-highlight';
 import { jwtDecode}  from 'jwt-decode';
@@ -26,15 +28,13 @@ import { HttpClient } from '@angular/common/http';
   imports: [NgSelectModule, NgbDatepickerModule, NgOptionHighlightModule, ReactiveFormsModule, FormsModule, CommonModule]
 })
 export class BookFormComponent implements OnInit {
+  @Input() noModal = false;
   @Input() editingBook: any;
   @Input() addingBestSeller: any;
   @Input() identifiedBook = true;
 
   protected books$: Observable<any[]>;
   protected bookInput$ = new ReplaySubject<string>(1);
-
-  protected saveComplete = false;
-  protected editComplete = false;
 
   protected form: FormGroup = new FormGroup({
     title: new FormControl<string>('',{
@@ -61,6 +61,7 @@ export class BookFormComponent implements OnInit {
   ];
   protected isEditing = false;
   protected isLoading = false;
+  protected isSubmitting = false;
   protected isManuallyAdding = false;
   protected ratingOptions = [
     {
@@ -104,7 +105,7 @@ export class BookFormComponent implements OnInit {
     }
   ];
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private systemMessageService: SystemMessageService, private modalService: NgbModal) {
     this.books$ = this.bookInput$.pipe(
       tap(() => (this.isLoading = true)),
       debounceTime(200),
@@ -207,6 +208,7 @@ export class BookFormComponent implements OnInit {
 
   onSubmit(): void{
     console.warn('form', this.form.controls)
+    this.isSubmitting = true;
     // Retrieve the token from localStorage
     const token = localStorage.getItem('auth_token_bookends');
     const decodedToken: any = token ? jwtDecode(token) : null;
@@ -235,11 +237,18 @@ export class BookFormComponent implements OnInit {
         .subscribe({
           next: (response) => {
             console.log('Book updated:', response);
-            this.editComplete = true;
             this.isEditing = false;
+            this.isSubmitting = false;
+            this.modalService.dismissAll();
+            this.selectedBook = null;
+            this.isManuallyAdding = false;
+            this.form.reset();
+            this.systemMessageService.showMessage(`Your changes to ${newBook.title} have been saved!`);
           },
           error: (error) => {
             console.error('Error updating book:', error);
+            this.isSubmitting = false;
+            this.isEditing = false;
           },
         });
       } else {
@@ -248,10 +257,16 @@ export class BookFormComponent implements OnInit {
         .subscribe({
           next: (response) => {
             console.log('Item added:', response);
-            this.saveComplete = true;
+            this.isSubmitting = false;
+            this.modalService.dismissAll();
+            this.selectedBook = null;
+            this.isManuallyAdding = false;
+            this.form.reset();
+            this.systemMessageService.showMessage(`${newBook.title} has been added!`);
           },
           error: (error) => {
             console.error('Error adding item:', error);
+            this.isSubmitting = false;
           }
         });
       }

@@ -19,6 +19,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
 })
 export class HomeComponent implements OnInit {
 
+  protected isLoading = true;
   protected currentBooks: any[] = [];
   protected recentBooks: any[] = [];
   protected selectedBook: any;
@@ -42,20 +43,30 @@ export class HomeComponent implements OnInit {
     // Set the Authorization header
     const token = localStorage.getItem('auth_token_bookends');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-
+    this.isLoading = true;
     this.http
     .get(`http://127.0.0.1:8000/books?user_id=${userId}`, { headers })
-    .subscribe((response: any) => {
-      this.currentBooks = response.filter((each: any) =>
-        each.status === /*status.reading*/ 2);
-      console.warn('curr', this.currentBooks);
-      this.recentBooks = response.filter((each: any) =>
-        each.status === 4)
-        .sort((a: any, b: any) => b.end_date.localeCompare(a.end_date));
-        console.warn('rec', this.recentBooks)
-      this.noBooks = !this.recentBooks.length && !this.currentBooks.length;
-      console.warn('NO BOOKS', this.noBooks)
-    })
+    .subscribe({
+      next: (response: any) => {
+        this.currentBooks = response.filter((each: any) =>
+          each.status === /*status.reading*/ 2
+        );
+        console.warn('curr', this.currentBooks);
+
+        this.recentBooks = response.filter((each: any) =>
+          each.status === 4
+        ).sort((a: any, b: any) => b.end_date.localeCompare(a.end_date));
+        console.warn('rec', this.recentBooks);
+
+        this.noBooks = !this.recentBooks.length && !this.currentBooks.length;
+        this.isLoading = false;
+      },
+      error: (err: any) => {
+        console.error('Error fetching books:', err);
+        this.isLoading = false;
+        this.noBooks = true; // Optionally handle empty state in case of error
+      }
+    });
   }
 
   protected onOpenForm(content: any, book: any):void {
