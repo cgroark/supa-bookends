@@ -109,6 +109,7 @@
     <div>
       <app-book-form
         [editingBook]="selectedBook"
+        (bookUpdated)="fetchBooks()"
       />
     </div>
   </div>

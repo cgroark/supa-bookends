@@ -1,5 +1,5 @@
 export class Book {
-  id: number;
+  id: string;
   title: string;
   author: string;
   overview: string | null;
@@ -11,30 +11,34 @@ export class Book {
   image_url: string | null;
   user_id: string | null;
 
-  constructor(
-    id: number,
-    title: string,
-    author: string,
-    overview: string | null = null,
-    format: number | null = null,
-    status: number | null = null,
-    rating: number | null = null,
-    end_date: Date | null = null,
-    comments: string | null = null,
-    image_url: string | null = null,
-    user_id: string | null = null,
-  ) {
-    this.id = id;
-    this.title = title;
-    this.author = author;
-    this.overview = overview;
-    this.format = format;
-    this.status = status;
-    this.rating = rating;
-    this.end_date = end_date;
-    this.comments = comments;
-    this.image_url = image_url;
-    this.user_id = user_id;
+  constructor(data: Partial<Book>) {
+    this.id = data.id || '';
+    this.title = data.title || '';
+    this.author = data.author || '';
+    this.overview = data.overview || '';
+    this.format = data.format || null;
+    this.status = data.status || null;
+    this.rating = data.rating || null;
+    this.end_date = data.end_date || null;
+    this.comments = data.comments || '';
+    this.image_url = data.image_url || '';
+    this.user_id = data.user_id || '';
+  }
+
+  static fromApiResponse(response: any): Book {
+    return new Book({
+      id: response.id,
+      title: response.title,
+      author: response.author,
+      overview: response.overview,
+      format: response.format,
+      status: response.status,
+      rating: response.rating,
+      end_date: response.end_date,
+      comments: response.comments,
+      image_url: response.image_url,
+      user_id: response.user_id,
+    });
   }
 
   // Example method for displaying book info

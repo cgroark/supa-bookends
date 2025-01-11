@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { jwtDecode}  from 'jwt-decode';
+import { BookService } from 'src/app/services/book.service';
 import { Book} from 'src/app/models/book.model';
 
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 import { HeaderComponent } from '../header/header.component';
 import { BookFormComponent } from '../book-form/book-form.component';
@@ -24,20 +24,20 @@ export class BookListComponent implements OnInit {
   // protected bookItems: Book[] = [];
   protected isLoading = true;
   protected noBooks = false;
-  protected completed: any[] = [];
-  protected completed2025: any[] = [];
-  protected completed2024: any[] = [];
-  protected completed2023: any[] = [];
-  protected completed2022: any[] = [];
-  protected completed2021: any[] = [];
-  protected completed2020: any[] = [];
-  protected reading: any[] = [];
-  protected wantToRead: any[] = [];
-  protected setAside: any[] = [];
+  protected completed: Book[] = [];
+  protected completed2025: Book[] = [];
+  protected completed2024: Book[] = [];
+  protected completed2023: Book[] = [];
+  protected completed2022: Book[] = [];
+  protected completed2021: Book[] = [];
+  protected completed2020: Book[] = [];
+  protected reading: Book[] = [];
+  protected wantToRead: Book[] = [];
+  protected setAside: Book[] = [];
   protected selectedBook: any;
 
 
-  constructor(private http: HttpClient, private modalService: NgbModal) { }
+  constructor(private bookService: BookService, private modalService: NgbModal) { }
 
   ngOnInit(): void {
      // Retrieve the token from localStorage
@@ -51,16 +51,10 @@ export class BookListComponent implements OnInit {
   }
 
   protected fetchBooks(userId: string) {
-    // Set the Authorization header
-    const token = localStorage.getItem('auth_token_bookends');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-
-    this.http
-    .get(`http://127.0.0.1:8000/books?user_id=${userId}`, { headers })
-    .subscribe({
-      next: (response: any) => {
+    this.bookService.getAllUserBooks(userId).subscribe({
+      next: (response: Book[]) => {
         this.noBooks = !response.length
-        this.completed = response.filter((each: any) => each.status === 4);
+        this.completed = response.filter((each: Book) => each.status === 4);
         console.warn('COM', this.completed)
         this.completed2020 = response.filter((each: any) =>
           each.status === 4 &&  each.end_date >= '2020-01-01' && each.end_date < '2021-01-01')
@@ -80,12 +74,12 @@ export class BookListComponent implements OnInit {
         this.completed2025 = response.filter((each: any) =>
           each.status === 4 &&  each.end_date >= '2025-01-01')
           .sort((a: any, b: any) => b.end_date.localeCompare(a.end_date));
-        this.reading = response.filter((each: any) =>
+        this.reading = response.filter((each: Book) =>
             each.status === 2);
-        this.wantToRead = response.filter((each: any) =>
+        this.wantToRead = response.filter((each: Book) =>
           each.status === 1)
-          .sort((a: any, b: any) => a.title.localeCompare(b.title));
-        this.setAside = response.filter((each: any) =>
+          .sort((a: Book, b: Book) => a.title.localeCompare(b.title));
+        this.setAside = response.filter((each: Book) =>
           each.status === 3);
         this.isLoading = false;
       },

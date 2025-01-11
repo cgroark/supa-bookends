@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BookFormComponent } from '../book-form/book-form.component';
 
@@ -12,8 +12,9 @@ import { BookFormComponent } from '../book-form/book-form.component';
 export class BookItemComponent {
   @Input() selectedBook: any;
   @Input() editable = false;
+  @Output() bookUpdated = new EventEmitter<void>();
 
-  constructor(private modalService: NgbModal) { }
+  constructor(private modalService: NgbModal) {}
 
   onOpenForm(content: any, book: any):void {
     this.modalService.open(content, {
@@ -29,5 +30,10 @@ export class BookItemComponent {
       backdrop: 'static',
     });
     this.selectedBook = book;
+  }
+
+  protected fetchBooks() {
+    console.warn('fetch in item')
+    this.bookUpdated.emit();
   }
 }

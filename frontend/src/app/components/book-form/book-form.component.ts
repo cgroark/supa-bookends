@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, EventEmitter, OnInit, Input, Output, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SystemMessageService } from '../../services/system-message.service';
 
@@ -32,6 +32,7 @@ export class BookFormComponent implements OnInit {
   @Input() editingBook: any;
   @Input() addingBestSeller: any;
   @Input() identifiedBook = true;
+  @Output() bookUpdated = new EventEmitter<void>();
 
   protected books$: Observable<any[]>;
   protected bookInput$ = new ReplaySubject<string>(1);
@@ -105,7 +106,7 @@ export class BookFormComponent implements OnInit {
     }
   ];
 
-  constructor(private http: HttpClient, private systemMessageService: SystemMessageService, private modalService: NgbModal) {
+  constructor(private ngZone: NgZone, private http: HttpClient, private systemMessageService: SystemMessageService, private modalService: NgbModal) {
     this.books$ = this.bookInput$.pipe(
       tap(() => (this.isLoading = true)),
       debounceTime(200),
@@ -202,9 +203,12 @@ export class BookFormComponent implements OnInit {
     return `${date.year}-${month}-${day}`;
   }
 
-  onEditBook(book: any): void {
-    console.warn('edit form comp', book)
+  protected updateBook(): void {
+    console.warn('update in book form');
+    this.bookUpdated.emit();
   }
+
+
 
   onSubmit(): void{
     console.warn('form', this.form.controls)
@@ -237,12 +241,18 @@ export class BookFormComponent implements OnInit {
         .subscribe({
           next: (response) => {
             console.log('Book updated:', response);
-            this.isEditing = false;
             this.isSubmitting = false;
             this.modalService.dismissAll();
-            this.selectedBook = null;
+            // this.selectedBook = null;
             this.isManuallyAdding = false;
+            console.warn('EMIT')
+            // // this.bookUpdated.emit();
+            // this.ngZone.run(() => {
+            //   this.bookUpdated.emit(); // Ensure Angular detects this
+            // });
+            this.bookUpdated.emit();
             this.form.reset();
+            // this.isEditing = false;
             this.systemMessageService.showMessage(`Your changes to ${newBook.title} have been saved!`);
           },
           error: (error) => {
@@ -261,6 +271,7 @@ export class BookFormComponent implements OnInit {
             this.modalService.dismissAll();
             this.selectedBook = null;
             this.isManuallyAdding = false;
+            this.bookUpdated.emit();
             this.form.reset();
             this.systemMessageService.showMessage(`${newBook.title} has been added!`);
           },

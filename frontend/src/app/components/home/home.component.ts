@@ -3,12 +3,16 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { jwtDecode}  from 'jwt-decode';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+
+import { BookService } from 'src/app/services/book.service';
+import { Book } from 'src/app/models/book.model';
+
 import { BestsellersComponent } from '../bestsellers/bestsellers.component';
 import { BookFormComponent } from '../book-form/book-form.component';
 import { HeaderComponent } from '../header/header.component';
 import { BookItemComponent } from '../book-item/book-item.component';
 import { NavbarComponent } from '../navbar/navbar.component';
+
 
 @Component({
   selector: 'app-home',
@@ -20,12 +24,13 @@ import { NavbarComponent } from '../navbar/navbar.component';
 export class HomeComponent implements OnInit {
 
   protected isLoading = true;
-  protected currentBooks: any[] = [];
-  protected recentBooks: any[] = [];
+  protected currentBooks: Book[] = [];
+  protected recentBooks: Book[] = [];
   protected selectedBook: any;
   protected noBooks = false;
+  protected userId: string = '';
 
-  constructor(private http: HttpClient, private modalService: NgbModal) {}
+  constructor(private bookService: BookService, private modalService: NgbModal) {}
 
   ngOnInit(): void {
     // Retrieve the token from localStorage
@@ -34,37 +39,32 @@ export class HomeComponent implements OnInit {
 
     if(decodedToken) {
       const userId = decodedToken.sub;
+      this.userId = userId;
       console.log('Decoded user ID:', userId);
       this.fetchBooks(userId);
     }
   }
 
   protected fetchBooks(userId: string) {
-    // Set the Authorization header
-    const token = localStorage.getItem('auth_token_bookends');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    console.warn("FETCH")
     this.isLoading = true;
-    this.http
-    .get(`http://127.0.0.1:8000/books?user_id=${userId}`, { headers })
-    .subscribe({
-      next: (response: any) => {
-        this.currentBooks = response.filter((each: any) =>
+    this.bookService.getAllUserBooks(userId).subscribe({
+      next: (response: Book[]) => {
+        this.currentBooks = response.filter((each: Book) =>
           each.status === /*status.reading*/ 2
         );
         console.warn('curr', this.currentBooks);
-
-        this.recentBooks = response.filter((each: any) =>
+        this.recentBooks = response.filter((each: Book) =>
           each.status === 4
         ).sort((a: any, b: any) => b.end_date.localeCompare(a.end_date));
         console.warn('rec', this.recentBooks);
-
         this.noBooks = !this.recentBooks.length && !this.currentBooks.length;
         this.isLoading = false;
       },
       error: (err: any) => {
         console.error('Error fetching books:', err);
         this.isLoading = false;
-        this.noBooks = true; // Optionally handle empty state in case of error
+        this.noBooks = true;
       }
     });
   }
