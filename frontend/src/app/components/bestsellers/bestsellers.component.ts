@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -16,6 +16,7 @@ import { BookFormComponent } from '../book-form/book-form.component';
   providers: [DatePipe],
 })
 export class BestsellersComponent implements OnInit {
+  @Output() updateBooks = new EventEmitter<void>();
   protected isLoading = true;
   protected lastUpdated: string | null = null;
   protected fictionBooks: any[] = [];
@@ -74,6 +75,10 @@ export class BestsellersComponent implements OnInit {
       size: 'md',
       backdrop: 'static',
     });
+  }
+
+  updateBook(): void {
+    this.updateBooks.emit();
   }
 
   addBestSeller(contentForm: any, book: any): void {

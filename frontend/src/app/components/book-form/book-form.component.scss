@@ -30,13 +30,3 @@ input, textarea {
 .search-section {
   background-color: #f38ba2;
 }
-
-button.btn:not(.btn-outline-secondary) {
-  background-color:  $teal;
-  color: $ivory;
-  &:hover {
-    color:  $teal;
-    background-color: $ivory;
-    border: 1px solid  $teal;
-  }
-}

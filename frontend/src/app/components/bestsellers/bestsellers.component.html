@@ -203,6 +203,7 @@
       <app-book-form
         [addingBestSeller]="bookToAdd"
         [identifiedBook]="identifiedBook"
+        (bookUpdated)="updateBook()"
       />
     </div>
   </div>

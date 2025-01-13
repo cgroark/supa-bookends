@@ -28,16 +28,6 @@ input {
   }
 }
 
-button.btn:not(.password-toggle) {
-  background-color:  $teal;
-  color: $ivory;
-  &:hover {
-    color:  $teal;
-    background-color: $ivory;
-    border: 1px solid  $teal;
-  }
-}
-
 button.password-toggle {
   margin-left: -38px;
   background: transparent;

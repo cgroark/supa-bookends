@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Input, Output, NgZone } from '@angular/core';
+import { Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SystemMessageService } from '../../services/system-message.service';
 
@@ -8,7 +8,8 @@ import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgOptionHighlightModule } from '@ng-select/ng-option-highlight';
 import { jwtDecode}  from 'jwt-decode';
 import { Book} from 'src/app/models/book.model';
-import  {Observable, of, ReplaySubject} from 'rxjs'
+import  {Observable, of, ReplaySubject, Subject} from 'rxjs'
+import { takeUntil } from 'rxjs/operators';
 import {
   debounceTime,
   distinctUntilChanged,
@@ -60,6 +61,7 @@ export class BookFormComponent implements OnInit {
       value: 2,
     }
   ];
+  private destroyed$ = new Subject<void>();
   protected isEditing = false;
   protected isLoading = false;
   protected isSubmitting = false;
@@ -106,7 +108,10 @@ export class BookFormComponent implements OnInit {
     }
   ];
 
-  constructor(private ngZone: NgZone, private http: HttpClient, private systemMessageService: SystemMessageService, private modalService: NgbModal) {
+
+
+  constructor(private http: HttpClient, private systemMessageService: SystemMessageService, private modalService: NgbModal) {
+
     this.books$ = this.bookInput$.pipe(
       tap(() => (this.isLoading = true)),
       debounceTime(200),
@@ -130,14 +135,54 @@ export class BookFormComponent implements OnInit {
         );
       }),
     );
+
+    this.form.controls['status'].valueChanges
+      .pipe(
+        takeUntil(this.destroyed$),
+      )
+      .subscribe((status) => {
+        if (status === 4) {
+          const today = new Date();
+          const formattedDate = {
+            year: today.getFullYear(),
+            month: today.getMonth() + 1, // Months are 0-based
+            day: today.getDate(),
+          };
+          this.form.controls['rating'].setValidators(Validators.required);
+          this.form.controls['end'].setValidators(Validators.required);
+          this.form.patchValue({
+            end:formattedDate,
+          })
+        } else {
+          this.form.patchValue({
+            end: null,
+            rating: null,
+          })
+          this.form.controls['end'].clearValidators();
+          this.form.controls['end'].updateValueAndValidity();
+          this.form.controls['rating'].clearValidators();
+          this.form.controls['rating'].updateValueAndValidity();
+
+        }
+      });
    }
+
+  private convertToNgbDate(dateString: string): { year: number; month: number; day: number } {
+    const date = new Date(dateString);
+    return {
+      year: date.getFullYear(),
+      month: date.getMonth() + 1, // Months are 0-based in JS
+      day: date.getDate(),
+    };
+  }
 
   ngOnInit(): void {
     console.warn('adding', this.addingBestSeller)
     if(this.editingBook) {
-      console.warn('check editing', this.editingBook);
       this.isEditing = true;
       this.selectedBook = this.editingBook;
+      console.warn('check editing', this.selectedBook, this.selectedBook.end_date);
+
       this.form.patchValue(
         {
           title: this.selectedBook.title ?? null,
@@ -145,7 +190,7 @@ export class BookFormComponent implements OnInit {
           format: this.selectedBook.format ?? null,
           status: this.selectedBook.status ?? null,
           rating: this.selectedBook.rating ?? null,
-          end: this.selectedBook.end ?? null,
+          end: this.selectedBook.end_date ? this.convertToNgbDate(this.selectedBook.end_date) : null,
           comments: this.selectedBook.comments ?? null,
         }
       )
@@ -203,20 +248,13 @@ export class BookFormComponent implements OnInit {
     return `${date.year}-${month}-${day}`;
   }
 
-  protected updateBook(): void {
-    console.warn('update in book form');
-    this.bookUpdated.emit();
-  }
-
-
-
   onSubmit(): void{
     console.warn('form', this.form.controls)
-    this.isSubmitting = true;
     // Retrieve the token from localStorage
     const token = localStorage.getItem('auth_token_bookends');
     const decodedToken: any = token ? jwtDecode(token) : null;
     if (this.form.valid && decodedToken) {
+      this.isSubmitting = true;
       const userId = decodedToken.sub;
 
       const {title, author, format, status, rating, end, comments} = this.form.controls;
@@ -243,16 +281,13 @@ export class BookFormComponent implements OnInit {
             console.log('Book updated:', response);
             this.isSubmitting = false;
             this.modalService.dismissAll();
-            // this.selectedBook = null;
+            this.selectedBook = null;
             this.isManuallyAdding = false;
             console.warn('EMIT')
-            // // this.bookUpdated.emit();
-            // this.ngZone.run(() => {
-            //   this.bookUpdated.emit(); // Ensure Angular detects this
-            // });
+
             this.bookUpdated.emit();
             this.form.reset();
-            // this.isEditing = false;
+            this.isEditing = false;
             this.systemMessageService.showMessage(`Your changes to ${newBook.title} have been saved!`);
           },
           error: (error) => {

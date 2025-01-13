@@ -18,6 +18,15 @@ p, p > i {
 
 div.reading, div.read, div.connections {
   background-color: $light-black;
+  div.col-md-3 {
+    border-right: solid 3px $yellow;
+    @media screen and (max-width: 767px) {
+      border-right: none !important;
+      text-align: center;
+      border-bottom: solid 3px $yellow;
+      padding-bottom: 10px;
+    }
+  }
 }
 
 .add-button {

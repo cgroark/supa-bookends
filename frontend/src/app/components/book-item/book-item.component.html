@@ -3,11 +3,17 @@
     <div
       class="m-2 book-item px-1"
     >
-      <img
-        [src]="selectedBook.image_url"
-        [alt]="'book cover of '+ selectedBook.title"
+      @if(selectedBook.image_url) {
+          <img
+          [src]="selectedBook.image_url"
+          [alt]="'book cover of '+ selectedBook.title"
+          (click)="onOpenBook(contentBook, selectedBook)"
+        >
+      } @else {
+        <i class="bi bi-book no-image-icon d-block text-center"
         (click)="onOpenBook(contentBook, selectedBook)"
-      >
+        ></i>
+      }
       @if(editable) {
         <button
             class="btn edit-button rounded-5 px-2"
@@ -17,7 +23,7 @@
         </button>
       }
     </div>
-    @if(selectedBook.status === 2) {
+    @if(selectedBook.status === 2 || !selectedBook.image_url) {
       <div class="m-2 align-content-center">
         <h4 class="m-0">
           <em>

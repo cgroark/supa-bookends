@@ -35,20 +35,6 @@ main {
   }
 }
 
-
-
-button.login-button {
-  background-color: $teal;
-  color: $ivory;
-  &:hover {
-    background-color: $ivory;
-    color: $teal;
-    i {
-      color: $teal;
-    }
-  }
-}
-
 button.password-toggle {
   margin-left: -38px;
   background: transparent;

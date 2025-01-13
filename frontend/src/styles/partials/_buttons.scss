@@ -1,0 +1,15 @@
+@import '../variables';
+
+.main-teal-button {
+  background-color: $teal !important;
+  color: $ivory !important;
+  margin: auto !important;
+  display: block !important;
+  width: 50% !important;
+  &:hover {
+    background-color: $teal-hover !important;
+  }
+  @media screen and (max-width: 576px) {
+    width: 100% !important;
+  }
+}

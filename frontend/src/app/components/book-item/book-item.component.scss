@@ -3,6 +3,14 @@
 h4, p {
   color: $ivory;
 }
+
+.no-image-icon {
+  color: $ivory;
+  font-size: 75px;
+  &:hover {
+    cursor: pointer;
+  }
+}
 .edit-button {
   background-color: $salmon;
   margin-left: 100px;
