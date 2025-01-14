@@ -14,6 +14,8 @@ export class BookItemComponent {
   @Input() editable = false;
   @Output() bookUpdated = new EventEmitter<void>();
 
+  protected isExpanded = false;
+
   constructor(private modalService: NgbModal) {}
 
   onOpenForm(content: any, book: any):void {
@@ -30,6 +32,10 @@ export class BookItemComponent {
       backdrop: 'static',
     });
     this.selectedBook = book;
+  }
+
+  toggleView() {
+    this.isExpanded = !this.isExpanded;
   }
 
   protected fetchBooks() {

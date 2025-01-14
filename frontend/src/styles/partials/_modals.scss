@@ -1,0 +1,23 @@
+@import '../variables';
+
+.modal-body {
+  padding: 0;
+  background-color: $ivory;
+  border-radius: 5px;
+}
+
+.modal-header {
+  border-radius: 0 !important;
+  background-color: $light-black;
+  color: $ivory;
+  border-bottom: 0;
+  h4 {
+    margin-left: auto;
+  }
+  button {
+    color: $ivory;
+    i {
+      font-size: 24px;
+    }
+  }
+}

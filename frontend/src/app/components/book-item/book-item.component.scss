@@ -11,21 +11,6 @@ h4, p {
     cursor: pointer;
   }
 }
-.edit-button {
-  background-color: $salmon;
-  margin-left: 100px;
-  margin-top: -42px;
-  i {
-    color: $black;
-  }
-  &:hover {
-    background-color: $black;
-    border: solid 1px $salmon;
-    i {
-      color: $salmon;
-    }
-  }
-}
 
 .book-item {
   max-width: 136px;
@@ -35,4 +20,39 @@ h4, p {
       cursor: pointer;
     }
   }
+}
+
+.text-container {
+  position: relative;
+  overflow: hidden;
+  margin: 1rem 0;
+
+  .text-content {
+    transition: max-height 0.3s ease;
+    max-height: 200px;
+    overflow: hidden;
+
+    &.expanded {
+      max-height: none;
+    }
+  }
+
+  .fade-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4rem;
+    background: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0) 0%,
+      $ivory
+    );
+    pointer-events: none; // Ensure clicks pass through
+  }
+}
+
+button.btn-link {
+  margin-top: -25px;
+  color: $purple;
 }

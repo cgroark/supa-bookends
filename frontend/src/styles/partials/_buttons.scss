@@ -13,3 +13,24 @@
     width: 100% !important;
   }
 }
+
+.edit-button {
+  background-color: $salmon !important;
+  border-radius: 50% !important;
+  padding-right: .5rem !important;
+  padding-left: .5rem !important;
+  margin-left: auto;
+  display: block !important;
+  margin-top: 5px;
+  &.overlay {
+    display: inline-block !important;
+    margin-left: 100px;
+    margin-top: -42px;
+  }
+  i {
+    color: $black;
+  }
+  &:hover {
+    background-color: $salmon-hover !important;
+  }
+}

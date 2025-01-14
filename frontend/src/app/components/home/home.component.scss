@@ -40,19 +40,3 @@ div.reading, div.read, div.connections {
     }
   }
 }
-
-::ng-deep .modal-body {
-  padding: 0;
-}
-
-::ng-deep .modal-header {
-  background-color: $light-black;
-  color: $ivory;
-  border-bottom: 0;
-  button {
-    color: $ivory;
-    i {
-      font-size: 24px;
-    }
-  }
-}
