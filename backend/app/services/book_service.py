@@ -89,7 +89,7 @@ class BookService:
                 book.format,
                 book.status,
                 book.rating,
-                end_date,
+                book.end_date,
                 book.comments,
                 book.image_url,
                 book_id,

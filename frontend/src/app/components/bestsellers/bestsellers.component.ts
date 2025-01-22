@@ -26,7 +26,6 @@ export class BestsellersComponent implements OnInit {
   protected bookToAdd: any;
   private currentModal: any;
 
-
   constructor(private http: HttpClient, private modalService: NgbModal, private datePipe: DatePipe) {}
   ngOnInit(): void {
     if(!this.fictionBooks.length) {

@@ -17,7 +17,7 @@ export class LogoutComponent {
 
   protected  onOpenModal(content: any):void {
     this.modalService.open(content, {
-      size: 'sm',
+      size: 'md',
     });
   }
 

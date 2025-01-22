@@ -210,17 +210,20 @@
         </div>
       </div>
     }
-    <button class="btn main-teal-button mt-3" type="buton">
-      @if(isSubmitting) {
-        <span class="me-2">Saving</span>
-        <span class="spinner-border button" role="status">
-        </span>
-      } @else {
-        <span class="me-2">Save</span>
-        <i class="bi bi-save"></i>
-      }
-    </button>
+      <button class="btn main-teal-button mt-3"
+        type="submit"
+      >
+        @if(isSubmitting) {
+          <span class="me-2">Saving</span>
+          <span class="spinner-border button" role="status">
+          </span>
+        } @else {
+          <span class="me-2">Save</span>
+          <i class="bi bi-save"></i>
+        }
+      </button>
   </form>
   }
 </section>
+
 

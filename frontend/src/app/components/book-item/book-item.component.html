@@ -14,13 +14,26 @@
         (click)="onOpenBook(contentBook, selectedBook)"
         ></i>
       }
-      @if(editable) {
-        <button
-            class="btn edit-button overlay"
-            (click)="onOpenForm(content, selectedBook)"
-          >
+      @if(editable && selectedBook.image_url) {
+        <div ngbDropdown class="dropdown">
+          <button ngbDropdownToggle class="btn edit-button overlay dropdown-toggle">
             <i class="bi bi-pencil ms-1 fw-bold"></i>
-        </button>
+          </button>
+          <div ngbDropdownMenu>
+            <button
+              ngbDropdownItem
+              (click)="onOpenForm(content, selectedBook)"
+              >
+              <i class="bi bi-pencil me-1 fw-bold"></i>Edit
+            </button>
+            <button
+              ngbDropdownItem
+              (click)="onOpenDelete(deleteContent, selectedBook)"
+            >
+              <i class="bi bi-trash3 me-1 fw-bold"></i>Delete
+            </button>
+          </div>
+        </div>
       }
     </div>
     @if(selectedBook.status === 2 || !selectedBook.image_url) {
@@ -31,20 +44,41 @@
           </em>
         </h4>
         <p>{{ selectedBook.author }}</p>
+        @if(editable && !selectedBook.image_url) {
+          <div ngbDropdown class="dropdown">
+            <button ngbDropdownToggle class="btn edit-button dropdown-toggle">
+              <i class="bi bi-pencil ms-1 fw-bold"></i>
+            </button>
+            <div ngbDropdownMenu>
+              <button
+                ngbDropdownItem
+                (click)="onOpenForm(content, selectedBook)"
+                >
+                <i class="bi bi-pencil me-1 fw-bold"></i>Edit
+              </button>
+              <button
+                ngbDropdownItem
+                (click)="onOpenDelete(deleteContent, selectedBook)"
+              >
+                <i class="bi bi-trash3 me-1 fw-bold"></i>Delete
+              </button>
+            </div>
+          </div>
+        }
       </div>
     }
   </div>
 
   <ng-template
-  #contentBook
-  let-modal
->
+    #contentBook
+    let-modal
+  >
   <div class="modal-header">
     <h4
       class="modal-title"
       id="modal-basic-title"
     >
-      <i class="bi bi-book-half me-2"></i>
+      <i class="bi bi-book me-2"></i>
       <em>{{ selectedBook.title }}</em>
     </h4>
     <button
@@ -58,7 +92,9 @@
   </div>
   <div class="modal-body">
     <div class="row p-3">
-      <div class="col-8">
+      <div
+        [class.col-8]="selectedBook.image_url"
+      >
         @if(selectedBook.overview) {
           <div class="text-container">
             <div class="text-content" [class.expanded]="isExpanded">
@@ -67,19 +103,29 @@
             @if(!isExpanded) {
               <div class="fade-overlay"></div>
             }
-
           </div>
-          <button class="btn btn-link d-block mx-auto text-decoration-none" (click)="toggleView()">
+          <button
+            class="btn btn-link d-block mx-auto text-decoration-none"
+            (click)="toggleView()">
             {{ isExpanded ? 'View Less' : 'View More' }}
           </button>
         } @else {
-          <h4>
+          @if(!selectedBook.image_url) {
+            <h4 class="modal-text">
+              <i class="bi bi-book me-2"></i>
+              {{ selectedBook.title }}
+            </h4>
+            <p class="fw-bold modal-text">{{ selectedBook.author }}</p>
+          }
+          <p class="modal-text">
             <i class="bi bi-window-x me-2"></i>
             No summary available
-          </h4>
+          </p>
         }
       </div>
-      <div class="col-4">
+      <div
+        [class.col-4]="selectedBook.image_url"
+      >
         @if(selectedBook.image_url) {
           <img
             [src]="selectedBook.image_url"
@@ -88,12 +134,24 @@
           >
         }
         @if(editable) {
-          <button
+          <div class="d-flex"
+            [class.justify-content-end]="!selectedBook.image_url"
+          >
+            <button
+              class="btn delete-button"
+              [ngClass]="selectedBook.image_url ? 'me-auto' : 'me-2'"
+              (click)="onOpenDelete(deleteContent, selectedBook)"
+            >
+              <i class="bi bi-trash3 fw-bold"></i>
+            </button>
+            <button
               class="btn edit-button"
+              [class.ms-auto]="selectedBook.image_url"
               (click)="onOpenForm(content, selectedBook)"
             >
               <i class="bi bi-pencil ms-1 fw-bold"></i>
           </button>
+        </div>
         }
         @if(selectedBook.rating) {
           {{ selectedBook.rating }}
@@ -136,6 +194,59 @@
         [editingBook]="selectedBook"
         (bookUpdated)="fetchBooks()"
       />
+    </div>
+  </div>
+</ng-template>
+
+<ng-template
+  #deleteContent
+  let-modal
+>
+<div class="modal-header">
+  <div class="d-flex">
+    <h4 class="align-content-center">
+      <i class="bi bi-trash3 me-2"></i>
+    </h4>
+    <h4
+      class="modal-title align-content-center"
+      id="modal-basic-title"
+      >
+      Sure you want to delete {{ selectedBook.title }}?
+    </h4>
+  </div>
+  <button
+    class="btn ms-auto"
+    (click)="modal.dismiss('Cross click')"
+    type="button"
+    aria-label="Close"
+  >
+  <i class="bi bi-x-square-fill"></i>
+</button>
+</div>
+  <div class="modal-body align-content-center">
+    <div>
+      <div class="d-flex">
+        <button
+          class="btn main-purple-button me-1"
+          (click)="modal.dismiss('Cross click')"
+        >
+          Cancel
+          <i class="bi bi-x-lg ms-1"></i>
+        </button>
+        <button
+          class="btn main-red-button ms-1"
+          (click)="deleteBook(selectedBook.id)"
+          >
+          @if(isSubmitting) {
+            <span class="me-2">Deleting</span>
+            <span class="spinner-border button" role="status">
+            </span>
+          } @else {
+            <span class="me-2">Delete</span>
+            <i class="bi bi-trash3 ms-1"></i>
+          }
+        </button>
+      </div>
     </div>
   </div>
 </ng-template>

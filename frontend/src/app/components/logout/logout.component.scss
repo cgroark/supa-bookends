@@ -11,31 +11,5 @@ a {
 }
 
 ::ng-deep .modal-body {
-  padding: 15px;
-  .button-cancel {
-    background-color: $red;
-    color: $ivory;
-    width: 120px;
-    font-size: $font-size-base;
-    &:hover {
-      background-color: $ivory;
-      color: $red;
-      i {
-        color: $red;
-      }
-    }
-  }
-  .button-logout {
-    background-color: $purple;
-    color: $ivory;
-    width: 120px;
-    font-size: $font-size-base;
-    &:hover {
-      background-color: $ivory;
-      color: $purple;
-      i {
-        color: $purple;
-      }
-    }
-  }
+  min-height: 100px;
 }

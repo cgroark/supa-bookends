@@ -28,27 +28,20 @@ div.fiction, div.non-fiction {
   background: $light-black;
 }
 
-.add-button {
-  background-color: $teal;
-  margin-left: 56px;
-  margin-top: -45px;
-  color: $ivory;
-  &:hover {
-    background-color: $ivory;
-    border: solid 1px $teal;
-    i {
-      color: $teal;
+.each-book {
+  div {
+    height: 120px;
+    img {
+      max-width: 80px;
+      &:hover {
+        cursor: pointer;
+      }
     }
   }
-}
-
-.each-book {
-  height: 120px;
-  img {
-    max-width: 80px;
-    &:hover {
-      cursor: pointer;
-    }
+  &:hover {
+    transition: .4s;
+    -webkit-transform: scale(1.04);
+    transform: scale(1.04);
   }
 }
 

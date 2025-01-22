@@ -26,4 +26,12 @@ export class BookService {
       map((responses) => responses.map((response) => Book.fromApiResponse(response)))
     )
   }
+
+  deleteBook(bookId: number): Observable<any> {
+    console.warn('DELETE')
+    const token = localStorage.getItem('auth_token_bookends');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const url = `${this.apiUrl}/${bookId}`;
+    return this.http.delete(url, { headers });
+  }
 }

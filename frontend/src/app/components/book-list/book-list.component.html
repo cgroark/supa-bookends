@@ -14,11 +14,12 @@
         <app-book-item
           [selectedBook]="book"
           [editable]="true"
+          (bookUpdated)="fetchBooks(userId)"
         />
       }
     </div>
     <button
-      class="btn add-button mx-auto d-block"
+      class="btn btn main-teal-button"
       (click)="onOpenForm(content, null)"
     >
         Add a book
@@ -41,6 +42,7 @@
     </div>
     <app-book-form
       [noModal]="true"
+      (bookUpdated)="fetchBooks(userId)"
     />
   }
 </section>
@@ -58,11 +60,12 @@
             <app-book-item
               [selectedBook]="book"
               [editable]="true"
+              (bookUpdated)="fetchBooks(userId)"
             />
           }
         }
       </div>
-      @if(completed2025.length > 5) {
+      @if(completed2025.length > 6) {
         <div ngbAccordion>
           <div ngbAccordionItem class="mb-4">
             <div ngbAccordionHeader>
@@ -84,6 +87,7 @@
                       <app-book-item
                         [selectedBook]="book"
                         [editable]="true"
+                        (bookUpdated)="fetchBooks(userId)"
                       />
                     }
                   }
@@ -119,11 +123,12 @@
             <app-book-item
               [selectedBook]="book"
               [editable]="true"
+              (bookUpdated)="fetchBooks(userId)"
             />
           }
         }
       </div>
-      @if(completed2024.length > 5) {
+      @if(completed2024.length > 6) {
         <div ngbAccordion>
           <div ngbAccordionItem class="mb-4">
             <div ngbAccordionHeader>
@@ -146,6 +151,7 @@
                       <app-book-item
                         [selectedBook]="book"
                         [editable]="true"
+                        (bookUpdated)="fetchBooks(userId)"
                       />
                     }
                   }
@@ -168,11 +174,12 @@
             <app-book-item
               [selectedBook]="book"
               [editable]="true"
+              (bookUpdated)="fetchBooks(userId)"
             />
           }
         }
       </div>
-      @if(completed2023.length > 5) {
+      @if(completed2023.length > 6) {
         <div ngbAccordion>
           <div ngbAccordionItem class="mb-4">
             <div ngbAccordionHeader>
@@ -195,6 +202,7 @@
                       <app-book-item
                         [selectedBook]="book"
                         [editable]="true"
+                        (bookUpdated)="fetchBooks(userId)"
                       />
                     }
                   }
@@ -217,11 +225,12 @@
             <app-book-item
               [selectedBook]="book"
               [editable]="true"
+              (bookUpdated)="fetchBooks(userId)"
             />
           }
         }
       </div>
-      @if(completed2022.length > 5) {
+      @if(completed2022.length > 6) {
         <div ngbAccordion>
           <div ngbAccordionItem class="mb-4">
             <div ngbAccordionHeader>
@@ -244,6 +253,7 @@
                       <app-book-item
                         [selectedBook]="book"
                         [editable]="true"
+                        (bookUpdated)="fetchBooks(userId)"
                       />
                     }
                   }
@@ -266,11 +276,12 @@
             <app-book-item
               [selectedBook]="book"
               [editable]="true"
+              (bookUpdated)="fetchBooks(userId)"
             />
           }
         }
       </div>
-      @if(completed2021.length > 5) {
+      @if(completed2021.length > 6) {
         <div ngbAccordion>
           <div ngbAccordionItem class="mb-4">
             <div ngbAccordionHeader>
@@ -293,6 +304,7 @@
                       <app-book-item
                         [selectedBook]="book"
                         [editable]="true"
+                        (bookUpdated)="fetchBooks(userId)"
                       />
                     }
                   }
@@ -315,11 +327,12 @@
             <app-book-item
               [selectedBook]="book"
               [editable]="true"
+              (bookUpdated)="fetchBooks(userId)"
             />
           }
         }
       </div>
-      @if(completed2020.length > 5) {
+      @if(completed2020.length > 6) {
         <div ngbAccordion>
           <div ngbAccordionItem class="mb-4">
             <div ngbAccordionHeader>
@@ -342,6 +355,7 @@
                       <app-book-item
                         [selectedBook]="book"
                         [editable]="true"
+                        (bookUpdated)="fetchBooks(userId)"
                       />
                     }
                   }
@@ -367,11 +381,12 @@
           <app-book-item
           [selectedBook]="book"
           [editable]="true"
+          (bookUpdated)="fetchBooks(userId)"
         />
         }
       }
     </div>
-    @if(setAside.length > 5) {
+    @if(setAside.length > 6) {
       <div ngbAccordion>
         <div ngbAccordionItem class="mb-4">
           <div ngbAccordionHeader>
@@ -394,6 +409,7 @@
                     <app-book-item
                       [selectedBook]="book"
                       [editable]="true"
+                      (bookUpdated)="fetchBooks(userId)"
                     />
                   }
                 }
@@ -418,11 +434,12 @@
           <app-book-item
           [selectedBook]="book"
           [editable]="true"
+          (bookUpdated)="fetchBooks(userId)"
         />
         }
       }
     </div>
-    @if(wantToRead.length > 11) {
+    @if(wantToRead.length > 12) {
       <div ngbAccordion>
         <div ngbAccordionItem class="mb-4">
           <div ngbAccordionHeader>
@@ -445,6 +462,7 @@
                     <app-book-item
                       [selectedBook]="book"
                       [editable]="true"
+                      (bookUpdated)="fetchBooks(userId)"
                     />
                   }
                 }
@@ -474,7 +492,6 @@
         <i class="bi bi-pencil me-2"></i>
         Editing <em>{{ selectedBook.title }}</em>
       }
-
     </h4>
     <button
       class="btn ms-auto"
@@ -489,6 +506,7 @@
     <div>
       <app-book-form
         [editingBook]="selectedBook"
+        (bookUpdated)="fetchBooks(userId)"
       />
     </div>
   </div>

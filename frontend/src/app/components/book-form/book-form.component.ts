@@ -61,7 +61,7 @@ export class BookFormComponent implements OnInit {
       value: 2,
     }
   ];
-  private destroyed$ = new Subject<void>();
+
   protected isEditing = false;
   protected isLoading = false;
   protected isSubmitting = false;
@@ -107,8 +107,8 @@ export class BookFormComponent implements OnInit {
       value: 4,
     }
   ];
-
-
+  private destroyed$ = new Subject<void>();
+  private currentModal: any;
 
   constructor(private http: HttpClient, private systemMessageService: SystemMessageService, private modalService: NgbModal) {
 
@@ -221,7 +221,7 @@ export class BookFormComponent implements OnInit {
     }
   }
 
-  onBookChange(selected: any): void {
+  protected onBookChange(selected: any): void {
     console.log('Selected Book:', selected);
     this.selectedBook = selected;
     if(this.selectedBook ) {
@@ -238,17 +238,17 @@ export class BookFormComponent implements OnInit {
     }
   }
 
-  toggleManualAdd(): void {
+  protected toggleManualAdd(): void {
     this.isManuallyAdding = !this.isManuallyAdding;
   }
 
-  formatDate(date: { year: number, month: number, day: number }): string {
+  protected formatDate(date: { year: number, month: number, day: number }): string {
     const month = date.month.toString().padStart(2, '0');
     const day = date.day.toString().padStart(2, '0');
     return `${date.year}-${month}-${day}`;
   }
 
-  onSubmit(): void{
+  protected onSubmit(): void{
     console.warn('form', this.form.controls)
     // Retrieve the token from localStorage
     const token = localStorage.getItem('auth_token_bookends');
@@ -283,7 +283,7 @@ export class BookFormComponent implements OnInit {
             this.modalService.dismissAll();
             this.selectedBook = null;
             this.isManuallyAdding = false;
-            console.warn('EMIT')
+            console.warn('EMIT for edit')
 
             this.bookUpdated.emit();
             this.form.reset();
@@ -297,6 +297,7 @@ export class BookFormComponent implements OnInit {
           },
         });
       } else {
+        console.warn('oook to add', newBook)
         this.http
         .post('http://127.0.0.1:8000/books/', newBook)
         .subscribe({
@@ -306,6 +307,8 @@ export class BookFormComponent implements OnInit {
             this.modalService.dismissAll();
             this.selectedBook = null;
             this.isManuallyAdding = false;
+            console.warn('EMIT for add')
+
             this.bookUpdated.emit();
             this.form.reset();
             this.systemMessageService.showMessage(`${newBook.title} has been added!`);

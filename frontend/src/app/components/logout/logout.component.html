@@ -12,24 +12,33 @@
 >
 <div class="modal-header">
   <h4
-    class="modal-title text-center"
+    class="modal-title"
     id="modal-basic-title"
   >
+    <i class="bi bi-emoji-dizzy ms-1"></i>
     Sure you want to logout?
   </h4>
+  <button
+    class="btn ms-auto"
+    (click)="modal.dismiss('Cross click')"
+    type="button"
+    aria-label="Close"
+  >
+  <i class="bi bi-x-square-fill"></i>
+</button>
 </div>
-  <div class="modal-body rounded">
+  <div class="modal-body align-content-center">
     <div>
       <div class="d-flex">
         <button
-          class="btn button-cancel me-auto"
+          class="btn main-purple-button me-1"
           (click)="modal.dismiss('Cross click')"
         >
           Cancel
           <i class="bi bi-x-lg ms-1"></i>
         </button>
         <button
-          class="btn button-logout ms-auto"
+          class="btn main-red-button ms-1"
           (click)="logout()"
           >
           Sign Out

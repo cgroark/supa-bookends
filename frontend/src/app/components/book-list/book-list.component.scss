@@ -27,18 +27,6 @@ section.reading {
   background-color: $light-black;
 }
 
-.add-button {
-  background-color: $teal;
-  color: $ivory;
-  &:hover {
-    background-color: $ivory;
-    color: $teal;
-    i {
-      color: $teal;
-    }
-  }
-}
-
 .accordion-button {
   padding: 0;
   background: $black;

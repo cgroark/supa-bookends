@@ -4,21 +4,58 @@ h4, p {
   color: $ivory;
 }
 
+h4.modal-text, h4.modal-text i, p.modal-text {
+  color: $light-black;
+}
+
 .no-image-icon {
   color: $ivory;
   font-size: 75px;
   &:hover {
     cursor: pointer;
   }
+  &.modal-text {
+    color: $light-black;
+  }
 }
 
 .book-item {
   max-width: 136px;
+  &:hover {
+    z-index: 1000;
+    transition: .4s;
+    -webkit-transform: scale(1.04);
+    transform: scale(1.04);
+  }
   img {
     max-height: 192px;
     &:hover {
       cursor: pointer;
     }
+  }
+}
+
+div.dropdown-menu.show {
+  background-color: $ivory;
+  transform: translate(92px, 11px) !important;
+  min-width: unset;
+  button.dropdown-item:first-of-type {
+    &:hover {
+      background-color: $teal-hover;
+      color: $ivory;
+    }
+  }
+  button.dropdown-item:nth-of-type(2) {
+    &:hover {
+      background-color: $red-hover;
+      color: $ivory;
+    }
+  }
+}
+
+button.dropdown-toggle {
+  &::after {
+    display: none;
   }
 }
 

@@ -35,7 +35,7 @@ export class BookListComponent implements OnInit {
   protected wantToRead: Book[] = [];
   protected setAside: Book[] = [];
   protected selectedBook: any;
-
+  protected userId: string = '';
 
   constructor(private bookService: BookService, private modalService: NgbModal) { }
 
@@ -45,6 +45,7 @@ export class BookListComponent implements OnInit {
      const decodedToken: any = token ? jwtDecode(token) : null;
      if(decodedToken) {
       const userId = decodedToken.sub;
+      this.userId = userId;
       console.log('Decoded user ID:', userId);
       this.fetchBooks(userId);
     }
@@ -71,6 +72,7 @@ export class BookListComponent implements OnInit {
         this.completed2024 = response.filter((each: any) =>
           each.status === 4 &&  each.end_date >= '2024-01-01' && each.end_date < '2025-01-01')
           .sort((a: any, b: any) => b.end_date.localeCompare(a.end_date));
+          console.warn('COM22', this.completed2022)
         this.completed2025 = response.filter((each: any) =>
           each.status === 4 &&  each.end_date >= '2025-01-01')
           .sort((a: any, b: any) => b.end_date.localeCompare(a.end_date));
