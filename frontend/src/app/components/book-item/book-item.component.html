@@ -1,44 +1,17 @@
 
-  <div class="d-flex">
-    <div
-      class="m-2 book-item px-1"
-    >
-      @if(selectedBook.image_url) {
-          <img
-          [src]="selectedBook.image_url"
-          [alt]="'book cover of '+ selectedBook.title"
-          (click)="onOpenBook(contentBook, selectedBook)"
-        >
-      } @else {
-        <i class="bi bi-book no-image-icon d-block text-center"
-        (click)="onOpenBook(contentBook, selectedBook)"
-        ></i>
-      }
-      @if(editable && selectedBook.image_url) {
-        <div ngbDropdown class="dropdown">
-          <button ngbDropdownToggle class="btn edit-button overlay dropdown-toggle">
-            <i class="bi bi-pencil ms-1 fw-bold"></i>
-          </button>
-          <div ngbDropdownMenu>
-            <button
-              ngbDropdownItem
-              (click)="onOpenForm(content, selectedBook)"
-              >
-              <i class="bi bi-pencil me-1 fw-bold"></i>Edit
-            </button>
-            <button
-              ngbDropdownItem
-              (click)="onOpenDelete(deleteContent, selectedBook)"
-            >
-              <i class="bi bi-trash3 me-1 fw-bold"></i>Delete
-            </button>
-          </div>
-        </div>
-      }
-    </div>
+  <div
+    class="d-flex"
+    [class.wide-book-item]="selectedBook.status === 2"
+    [class.no-image-narrow-item]="selectedBook.status !== 2 && !selectedBook.image_url"
+  >
     @if(selectedBook.status === 2 || !selectedBook.image_url) {
-      <div class="m-2 align-content-center">
-        <h4 class="m-0">
+      <div
+        class="m-2 align-content-center book-item-details"
+        (click)="selectedBook.status !== 2 ? onOpenBook(contentBook, selectedBook) : null"
+        [class.hover]="selectedBook.status !== 2"
+        >
+        <h4 class="m-0"
+        >
           <em>
             {{selectedBook.title}}
           </em>
@@ -46,7 +19,46 @@
         <p>{{ selectedBook.author }}</p>
         @if(editable && !selectedBook.image_url) {
           <div ngbDropdown class="dropdown">
-            <button ngbDropdownToggle class="btn edit-button dropdown-toggle">
+            <button ngbDropdownToggle class="btn edit-button dropdown-toggle ms-auto">
+              <i class="bi bi-pencil ms-1 fw-bold"></i>
+            </button>
+            <div ngbDropdownMenu>
+              <button
+                ngbDropdownItem
+                (click)="onOpenForm(content, selectedBook)"
+                >
+                <i class="bi bi-pencil me-1 fw-bold"></i>Edit
+              </button>
+              <button
+                ngbDropdownItem
+                (click)="onOpenDelete(deleteContent, selectedBook)"
+              >
+                <i class="bi bi-trash3 me-1 fw-bold"></i>Delete
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    }
+    @if(selectedBook.image_url || selectedBook.status === 2) {
+      <div
+        class="m-2 book-item px-1"
+      >
+        @if(selectedBook.image_url) {
+          <img
+            [src]="selectedBook.image_url"
+            [alt]="'book cover of '+ selectedBook.title"
+            (click)="onOpenBook(contentBook, selectedBook)"
+          >
+        } @else {
+          <i
+            class="bi bi-book no-image-icon d-block text-center"
+            (click)="onOpenBook(contentBook, selectedBook)"
+          ></i>
+        }
+        @if(editable && selectedBook.image_url) {
+          <div ngbDropdown class="dropdown">
+            <button ngbDropdownToggle class="btn edit-button overlay dropdown-toggle">
               <i class="bi bi-pencil ms-1 fw-bold"></i>
             </button>
             <div ngbDropdownMenu>
@@ -90,7 +102,7 @@
     <i class="bi bi-x-square-fill"></i>
   </button>
   </div>
-  <div class="modal-body">
+  <div class="modal-body book-detail">
     <div class="row p-3">
       <div
         [class.col-8]="selectedBook.image_url"
@@ -130,9 +142,17 @@
           <img
             [src]="selectedBook.image_url"
             [alt]="'book cover of '+ selectedBook.title"
-            [style.max-width.px]="128"
           >
         }
+        <div class="text-center">
+          @if(selectedBook.rating) {
+            <span [innerHTML]="displayRating(selectedBook.rating)"></span>
+          }
+          @if(selectedBook.comments) {
+           <div class="text-decoration-underline">Comments</div>
+           <span class="fw-bold">{{ selectedBook.comments}}</span>
+          }
+        </div>
         @if(editable) {
           <div class="d-flex"
             [class.justify-content-end]="!selectedBook.image_url"
@@ -152,9 +172,6 @@
               <i class="bi bi-pencil ms-1 fw-bold"></i>
           </button>
         </div>
-        }
-        @if(selectedBook.rating) {
-          {{ selectedBook.rating }}
         }
       </div>
     </div>

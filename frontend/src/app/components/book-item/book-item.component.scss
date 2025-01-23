@@ -19,6 +19,17 @@ h4.modal-text, h4.modal-text i, p.modal-text {
   }
 }
 
+.no-image-narrow-item {
+  max-width: 136px;
+  div.hover {
+    cursor: pointer;
+  }
+}
+
+.wide-book-item {
+  max-width: 290px;
+}
+
 .book-item {
   max-width: 136px;
   &:hover {
@@ -37,7 +48,7 @@ h4.modal-text, h4.modal-text i, p.modal-text {
 
 div.dropdown-menu.show {
   background-color: $ivory;
-  transform: translate(92px, 11px) !important;
+  transform: translate(1px, 4px) !important;
   min-width: unset;
   button.dropdown-item:first-of-type {
     &:hover {
@@ -62,11 +73,11 @@ button.dropdown-toggle {
 .text-container {
   position: relative;
   overflow: hidden;
-  margin: 1rem 0;
+  margin-bottom: 1rem;
 
   .text-content {
     transition: max-height 0.3s ease;
-    max-height: 200px;
+    max-height: 270px;
     overflow: hidden;
 
     &.expanded {
@@ -92,4 +103,12 @@ button.dropdown-toggle {
 button.btn-link {
   margin-top: -25px;
   color: $purple;
+}
+
+.modal-body {
+  &.book-detail {
+    img {
+      max-width: 100%;;
+    }
+  }
 }

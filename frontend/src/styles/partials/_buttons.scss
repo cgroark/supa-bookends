@@ -71,9 +71,19 @@
   }
   i {
     color: $black;
+    @media screen and (max-width: 767px) {
+      font-size: 14px;
+      margin-top: -2px !important;
+      display: block;
+    }
   }
   &:hover {
     background-color: $salmon-hover !important;
+  }
+  @media screen and (max-width: 767px) {
+    width: 30px;
+    height: 30px;
+    padding-left: 0.3rem !important;
   }
 }
 
@@ -86,8 +96,18 @@
   margin-top: 5px;
   i {
     color: $red;
+    @media screen and (max-width: 767px) {
+      font-size: 14px;
+      margin-top: -2px !important;
+      display: block;
+    }
   }
   &:hover {
     background-color: $light-black !important;
+  }
+  @media screen and (max-width: 767px) {
+    width: 30px;
+    height: 30px;
+    padding-left: 0.5rem !important;
   }
 }

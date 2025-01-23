@@ -22,6 +22,7 @@ export class BookItemComponent {
   protected isSubmitting = false;
   private currentModal: any;
 
+
   constructor(private bookService: BookService, private modalService: NgbModal, private systemMessageService: SystemMessageService) {}
 
   protected onOpenForm(content: any, book: any):void {
@@ -58,6 +59,17 @@ export class BookItemComponent {
       backdrop: 'static',
     });
     this.selectedBook = book;
+  }
+
+  protected displayRating(rating: number): any {
+    let i = 0
+    let ratingSet = [];
+    while(i<rating) {
+      ratingSet.push('<i class="bi bi-star-fill me-1"></i>')
+      i++
+    }
+    console.warn('rating', ratingSet.join(''))
+    return ratingSet.join('')
   }
 
   protected deleteBook(bookId: number): void {

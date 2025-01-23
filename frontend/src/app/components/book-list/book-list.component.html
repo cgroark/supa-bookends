@@ -5,7 +5,7 @@
     <span class="spinner-border" role="status">
     </span>
   } @else if(reading.length) {
-    <h2 class="text-center text-sm-start">
+    <h2 class="text-center text-sm-start mb-4 mb-md-2">
       <i class="bi bi-body-text me-2"></i>
       Currently Reading
     </h2>
@@ -47,8 +47,8 @@
   }
 </section>
 @if(completed.length) {
-  <section class="py-3">
-    <h2 class="text-center text-sm-start">
+  <section class="py-3 mb-2">
+    <h2 class="text-center text-sm-start mb-4 mb-md-2">
       <i class="bi bi-bookmark-check-fill me-2"></i>
       Completed
     </h2>
@@ -370,12 +370,12 @@
   </section>
 }
 @if(setAside.length) {
-  <section class="py-3">
-    <h2 class="text-center text-sm-start">
+  <section class="py-3 mb-2">
+    <h2 class="text-center text-sm-start mb-4 mb-md-2">
       <i class="bi bi-book-half me-2"></i>
       Set Aside
     </h2>
-    <div class="d-flex flex-wrap">
+    <div class="d-flex flex-wrap justify-content-between">
       @for (book of setAside; track book.id; let index = $index) {
         @if(index < 6) {
           <app-book-item
@@ -423,12 +423,12 @@
   </section>
 }
 @if (wantToRead.length) {
-  <section class="py-3">
-    <h2 class="text-center text-sm-start">
+  <section class="py-3 mb-2">
+    <h2 class="text-center text-sm-start mb-4 mb-md-2">
       <i class="bi bi-bookmark-star me-2"></i>
       Reading List
     </h2>
-    <div class="d-flex flex-wrap">
+    <div class="d-flex flex-wrap justify-content-between">
       @for (book of wantToRead; track book.id; let index = $index) {
         @if(index < 12) {
           <app-book-item

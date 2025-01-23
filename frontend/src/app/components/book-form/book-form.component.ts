@@ -68,23 +68,23 @@ export class BookFormComponent implements OnInit {
   protected isManuallyAdding = false;
   protected ratingOptions = [
     {
-      label: '⭐️',
+      label: `<i class="bi bi-star-fill me-1"></i>`,
       value: 1,
     },
     {
-      label: '⭐️ ⭐️' ,
+      label: `<i class="bi bi-star-fill me-1"></i><i class="bi bi-star-fill me-1"></i>` ,
       value: 2,
     },
     {
-      label: '⭐️ ⭐️ ⭐️',
+      label: `<i class="bi bi-star-fill me-1"></i><i class="bi bi-star-fill me-1"></i><i class="bi bi-star-fill me-1"></i>` ,
       value: 3,
     },
     {
-      label: '⭐️ ⭐️ ⭐️ ⭐️',
+      label: `<i class="bi bi-star-fill me-1"></i><i class="bi bi-star-fill me-1"></i><i class="bi bi-star-fill me-1"></i><i class="bi bi-star-fill me-1"></i>` ,
       value: 4,
     },
     {
-      label: '⭐️ ⭐️ ⭐️ ⭐️ ⭐️',
+      label: `<i class="bi bi-star-fill me-1"></i><i class="bi bi-star-fill me-1"></i><i class="bi bi-star-fill me-1"></i><i class="bi bi-star-fill me-1"></i><i class="bi bi-star-fill me-1"></i>` ,
       value: 5,
     }
   ];
