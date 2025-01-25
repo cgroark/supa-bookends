@@ -108,7 +108,7 @@
         [class.col-8]="selectedBook.image_url"
       >
         @if(selectedBook.overview) {
-          <div class="text-container">
+          <div class="text-container small">
             <div class="text-content" [class.expanded]="isExpanded">
               {{ selectedBook.overview }}
             </div>
@@ -149,8 +149,8 @@
             <span [innerHTML]="displayRating(selectedBook.rating)"></span>
           }
           @if(selectedBook.comments) {
-           <div class="text-decoration-underline">Comments</div>
-           <span class="fw-bold">{{ selectedBook.comments}}</span>
+           <div class="text-decoration-underline fw-bold">Comments</div>
+           <span class="small">{{ selectedBook.comments}}</span>
           }
         </div>
         @if(editable) {

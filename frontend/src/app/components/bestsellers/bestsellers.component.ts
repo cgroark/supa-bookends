@@ -17,7 +17,9 @@ import { BookFormComponent } from '../book-form/book-form.component';
 })
 export class BestsellersComponent implements OnInit {
   @Output() updateBooks = new EventEmitter<void>();
+  protected addingTitle: string | null = null;
   protected isLoading = true;
+  protected isAdding = false;
   protected lastUpdated: string | null = null;
   protected fictionBooks: any[] = [];
   protected nonFictionBooks: any[] = [];
@@ -27,6 +29,7 @@ export class BestsellersComponent implements OnInit {
   private currentModal: any;
 
   constructor(private http: HttpClient, private modalService: NgbModal, private datePipe: DatePipe) {}
+
   ngOnInit(): void {
     if(!this.fictionBooks.length) {
       const fictionCall$ = this.http
@@ -81,6 +84,8 @@ export class BestsellersComponent implements OnInit {
   }
 
   addBestSeller(contentForm: any, book: any): void {
+    this.addingTitle = book.title;
+    this.isAdding = true;
     const isbns = [
       book.isbns[1]?.isbn10,
       book.isbns[1]?.isbn13,
@@ -94,6 +99,7 @@ export class BestsellersComponent implements OnInit {
           title: book.title ? book.title : 'Unknown title',
           author: book.author ? book.author : 'Unknown author',
         };
+        this.isAdding = false;
         this.onOpenForm(contentForm);
         return;
       }
@@ -107,6 +113,7 @@ export class BestsellersComponent implements OnInit {
               this.bookToAdd = response.items[0];
               this.identifiedBook = true;
               this.onOpenForm(contentForm);
+              // this.isAdding = false;
             } else {
               searchBookByISBN(index + 1);
             }
@@ -114,6 +121,7 @@ export class BestsellersComponent implements OnInit {
           error: (err) => {
             console.error(`Error searching for ISBN: ${isbn}`, err);
             searchBookByISBN(index + 1);
+            this.isAdding = false;
           },
         });
     };

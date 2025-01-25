@@ -120,7 +120,12 @@
       class="btn circle-teal-button"
       (click)="addBestSeller(contentForm, book)"
       >
-      <i class="bi bi-bookmark-plus fw-bold"></i>
+      @if(isAdding && addingTitle === book.title) {
+        <span class="spinner-border button" role="status">
+        </span>
+      } @else {
+        <i class="bi bi-bookmark-plus fw-bold"></i>
+      }
     </button>
   </div>
 </ng-template>
@@ -134,7 +139,7 @@
       class="modal-title"
       id="modal-basic-title"
     >
-      <i class="bi bi-book-half me-2"></i>
+      <i class="bi bi-book me-2"></i>
       <em>{{ selectedBook.title }}</em>
     </h4>
     <button
@@ -146,35 +151,8 @@
     <i class="bi bi-x-square-fill"></i>
   </button>
   </div>
-  <div class="modal-body">
-    <!-- <div class="row p-3">
-      <div class="col-9">
-        @if(selectedBook.description) {
-          {{ selectedBook.description }}
-        } @else {
-          <h4>
-            <i class="bi bi-window-x me-2"></i>
-            No summary available
-          </h4>
-        }
-      </div>
-      <div class="col-3">
-        @if(selectedBook.book_image) {
-          <img
-            [src]="selectedBook.book_image"
-            [alt]="'book cover of '+ selectedBook.title"
-          >
-        }
-        <button
-          class="btn add-button w-100 my-1 p-1"
-          (click)="addBestSeller(contentForm, selectedBook)"
-        >
-          Add
-          <i class="bi bi-bookmark-plus ms-1"></i>
-        </button>
-      </div>
-    </div> -->
-  <div class="row p-3">
+  <div class="modal-body book-detail">
+    <div class="row p-3">
       <div
         [class.col-8]="selectedBook.book_image"
       >
@@ -201,17 +179,21 @@
           <img
             [src]="selectedBook.book_image"
             [alt]="'book cover of '+ selectedBook.title"
-            [style.max-width.px]="128"
           >
         }
         <button
-          class="btn circle-teal-button wider"
+          class="btn main-teal-button mt-2 full-width"
           (click)="addBestSeller(contentForm, selectedBook)"
         >
-          <i class="bi bi-bookmark-plus fw-bold"></i>
+          Add Book
+          @if(isAdding) {
+            <span class="spinner-border button" role="status">
+            </span>
+          } @else {
+            <i class="bi bi-bookmark-plus fw-bold ms-1"></i>
+          }
         </button>
       </div>
-
     </div>
   </div>
 </ng-template>

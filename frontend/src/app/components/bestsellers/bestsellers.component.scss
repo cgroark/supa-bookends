@@ -45,6 +45,21 @@ div.fiction, div.non-fiction {
   }
 }
 
+.spinner-border.button {
+  margin-right: 0 !important;
+  margin-top: 3px !important;
+  width: 17px !important;
+  height: 17px !important;
+}
+
+.modal-body {
+  &.book-detail {
+    img {
+      max-width: 100%;;
+    }
+  }
+}
+
 
 h3 {
   color: $ivory;

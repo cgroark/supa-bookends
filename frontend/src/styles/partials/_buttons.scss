@@ -6,6 +6,9 @@
   margin: auto !important;
   display: block !important;
   width: 50% !important;
+  &.full-width {
+    width: 100% !important;
+  }
   &:hover {
     background-color: $teal-hover !important;
   }
@@ -44,7 +47,7 @@
 
 .circle-teal-button {
   background-color: $teal !important;
-  margin-left: 56px;
+  margin-left: 50px;
   margin-top: -45px;
   color: $ivory !important;
   padding: .25rem .5rem !important;
