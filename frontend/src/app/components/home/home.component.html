@@ -10,23 +10,65 @@
             <span class="spinner-border" role="status">
             </span>
           } @else {
-            @if(this.currentBooks.length) {
-              <div class="col-md-3 align-content-center">
+            @if(currentBooks.length) {
+              <div class="col-md-3 ps-0 align-content-center">
                   <h2>
-                    <i class="bi bi-body-text me-2"></i>
+                    <i class="bi bi-body-text me-1"></i>
                     Reading
                   </h2>
               </div>
-              <div class="col-md-9">
-                  <div class="d-flex flex-wrap justify-content-center justify-content-md-start mt-md-0 mt-3">
-                    @for(book of this.currentBooks; track book.id) {
-                      <app-book-item
+              <div class="col-md-9 pe-0">
+                  <div class="d-flex flex-wrap justify-content-between mt-md-0 mt-3">
+                   <div>
+                    @for(book of currentBooks; track book.id; let index = $index) {
+                      @if(index < 2) {
+                        <app-book-item
                         [selectedBook]="book"
                         [editable]="true"
                         (bookUpdated)="fetchBooks(userId)"
                       />
+                      }
                     }
+                   </div>
+                    <div class="align-content-center text-center goals">
+                      <app-user-stats
+                        [currentBookCount]="completed2025.length"
+                      />
+                    </div>
                   </div>
+                  @if(currentBooks.length > 2) {
+                    <div ngbAccordion>
+                      <div ngbAccordionItem class="mb-4">
+                        <div ngbAccordionHeader>
+                          <button
+                            ngbAccordionButton
+                          >
+                            View More
+                          </button>
+                        </div>
+                        <div ngbAccordionCollapse>
+                          <div
+                            ngbAccordionBody
+                            class="px-0"
+                          >
+                            <ng-template>
+                              <div class="d-flex flex-wrap">
+                              @for(book of currentBooks; track book.id; let index = $index) {
+                                @if(index > 1) {
+                                  <app-book-item
+                                    [selectedBook]="book"
+                                    [editable]="true"
+                                    (bookUpdated)="fetchBooks(userId)"
+                                  />
+                                }
+                              }
+                              </div>
+                            </ng-template>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  }
                   <button
                     class="btn main-teal-button"
                     (click)="onOpenForm(content, null)"
@@ -59,17 +101,17 @@
             }
           }
         </div>
-        @if(this.recentBooks.length && !isLoading) {
+        @if(recentBooks.length && !isLoading) {
           <div class="row mb-3 py-3 px-1 px-md-3 rounded read">
-            <div class="col-md-3 align-content-center">
+            <div class="col-md-3 ps-0 align-content-center">
               <h2>
-                <i class="bi bi-bookmark-check-fill me-2"></i>
+                <i class="bi bi-bookmark-check-fill me-1"></i>
                 Latest
               </h2>
             </div>
-            <div class="col-md-9">
-              <div class="d-flex flex-wrap justify-content-center justify-content-md-start mt-md-0 mt-3">
-                @for(book of this.recentBooks; track book.id; let index = $index) {
+            <div class="col-md-9 pe-0">
+              <div class="d-flex flex-wrap justify-content-between mt-md-0 mt-3">
+                @for(book of recentBooks; track book.id; let index = $index) {
                   @if(index < 3 && book.image_url) {
                     <app-book-item
                       [selectedBook]="book"
@@ -89,14 +131,14 @@
             </div>
           </div>
         }
-        <!-- @if(this.recentBooks.length && !isLoading) {
+        <!-- @if(recentBooks.length && !isLoading) {
           <div class="row mb-3 py-3 px-1 px-md-3 rounded connections">
-            <div class="col-md-3 align-content-center">
+            <div class="col-md-3 ps-0 align-content-center">
               <h2>Friends' Books</h2>
             </div>
-            <div class="col-md-9">
-              <div class="d-flex flex-wrap justify-content-center justify-content-md-start mt-md-0 mt-3 mb-3">
-                @for(book of this.recentBooks; track book.id; let index = $index) {
+            <div class="col-md-9 pe-0">
+              <div class="d-flex flex-wrap justify-content-between mt-md-0 mt-3 mb-3">
+                @for(book of recentBooks; track book.id; let index = $index) {
                   @if(index < 6 && book.image_url) {
                     <app-book-item
                       [selectedBook]="book"

@@ -37,11 +37,35 @@
   margin: auto !important;
   display: block !important;
   width: 50% !important;
+  &.wider {
+    width: 100% !important;
+  }
   &:hover {
     background-color: $purple-hover !important;
   }
   @media screen and (max-width: 576px) {
     width: 100% !important;
+  }
+}
+
+.outline-purple-button {
+  background-color: $ivory !important;
+  color: $black !important;
+  margin: auto !important;
+  display: block !important;
+  width: 50% !important;
+  border: 1px solid $purple !important;
+  &.wider {
+    width: 100% !important;
+  }
+  &:hover {
+    background-color: $ivory-hover !important;
+  }
+  @media screen and (max-width: 576px) {
+    width: 100% !important;
+  }
+  i {
+    color: $black !important;
   }
 }
 

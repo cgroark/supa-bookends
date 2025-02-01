@@ -1,0 +1,28 @@
+@import '../../../styles/variables';
+
+h3, h4, p, i, label, .small {
+  color: $ivory;
+}
+
+h3 {
+  font-size: $font-size-medium;
+}
+
+input {
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  min-height: 36px;
+  &:focus-visible {
+    outline: none;
+  }
+  &.is-invalid {
+    border: solid $red 1px;
+  }
+}
+
+button.save {
+  width: 75% !important;
+}
+button.cancel {
+  width: 22% !important;
+}

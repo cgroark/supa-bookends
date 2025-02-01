@@ -19,7 +19,7 @@ export class UserService {
     );
   }
 
-  getUserById(userId: number): Observable<User> {
+  getUserById(userId: string): Observable<User> {
     return this.http.get<User>(`${this.apiUrl}/${userId}`).pipe(
       map((response) => User.fromApiResponse(response))
     );
@@ -31,7 +31,7 @@ export class UserService {
     );
   }
 
-  updateUser(userId: number, userData: Partial<User>): Observable<any> {
+  updateUser(userId: string, userData: Partial<User>): Observable<any> {
     return this.http.put(`${this.apiUrl}/${userId}`, userData);
   }
 

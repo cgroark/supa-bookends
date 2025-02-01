@@ -1,0 +1,79 @@
+<h4>
+  <i class="bi bi-bar-chart me-1"></i>
+  {{currentYear}} Goal
+</h4>
+@if(isLoading) {
+  <span class="spinner-border" role="status">
+  </span>
+} @else {
+  @if(goalForCurrentYear) {
+    <p>{{(currentBookCount / goalForCurrentYear) * 100 }}% progress on your goal of {{goalForCurrentYear}} books this year</p>
+    @if(!showForm) {
+      <button
+        class="btn main-purple-button wider"
+        (click)="toggleGoalForm()"
+      >
+        Upate Goal
+        <i class="bi bi-trophy ms-1"></i>
+      </button>
+    }
+  } @else {
+    @if(!showForm) {
+      <p>No goal set</p>
+      <button
+        class="btn main-purple-button wider"
+        (click)="toggleGoalForm()"
+      >
+      Set a {{currentYear}} Goal
+      <i class="bi bi-trophy ms-1"></i>
+    </button>
+    }
+  }
+  @if(showForm) {
+    <form
+    #ngForm="ngForm"
+    [formGroup]="form"
+    (ngSubmit)="onSubmit()">
+        @if(form.controls['goal']; as goal) {
+          <div class="mb-2">
+            <label class="d-block" for="goal">
+              <i class="bi bi-trophy me-1"></i>
+              {{currentYear}} Goal
+            </label>
+            <input
+              [class.is-invalid]="
+                (!goal.valid && goal.touched) ||
+              (!goal.valid && ngForm.submitted)"
+              class="w-100 text-center"
+              type="number"
+              formControlName="goal"
+              id="goal"
+            />
+            <div class="small helper-text">How many books do you want to read this year?</div>
+          </div>
+        }
+        <button
+          type="button"
+          class="btn outline-purple-button d-inline-block me-1 cancel px-0"
+          (click)="toggleGoalForm()"
+        >
+          <i class="bi bi-x-square"></i>
+        </button>
+        <button class="btn main-purple-button d-inline-block save">
+          @if(isSubmitting) {
+            <span class="me-2">Saving</span>
+            <span class="spinner-border button" role="status">
+            </span>
+          } @else {
+            <span class="me-2">Save</span>
+            <i class="bi bi-floppy ms-1"></i>
+          }
+        </button>
+
+
+  </form>
+  }
+}
+
+
+

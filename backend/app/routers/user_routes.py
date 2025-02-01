@@ -20,6 +20,8 @@ async def create_user(user: User):
 @router.get("/{user_id}", response_model=User)
 async def get_user(user_id: UUID):
     user = await UserService.get_user_by_id(user_id)
+    print("User being returned:", user)  # Ensure this prints the correct data
+
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user

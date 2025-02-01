@@ -1,9 +1,14 @@
+export interface Goal {
+  year: number;
+  goal: number;
+}
+
 export class User {
   id: string;
   created_at: string;
   first: string;
   last: string;
-  goal: number;
+  goals: Goal[];
   connections: string[];
   username: string;
 
@@ -12,7 +17,7 @@ export class User {
     this.created_at = data.created_at || new Date().toISOString();
     this.first = data.first || '';
     this.last = data.last || '';
-    this.goal = data.goal || 0;
+    this.goals = data.goals ? data.goals.map(goal => goal) : [];
     this.connections = data.connections || [];
     this.username = data.username || '';
   }
@@ -27,6 +32,10 @@ export class User {
       created_at: response.created_at,
       first: response.first,
       last: response.last,
+      goals: response.goals ? response.goals.map((goal: any) => ({
+        year: goal.year,
+        goal: goal.goal
+      })) : [],
       connections: response.connections || [],
       username: response.username,
     });

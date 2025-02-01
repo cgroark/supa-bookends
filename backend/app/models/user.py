@@ -3,13 +3,17 @@ from typing import List, Optional
 from datetime import datetime
 from uuid import UUID  # Import UUID
 
+class Goal(BaseModel):
+    year: int
+    goal: int
+
 class UserBase(BaseModel):
     first: str
     last: str
     connections: Optional[List[str]] = []
     username: str
     email: Optional[str] = None
-    goal: Optional[int] = None
+    goals: Optional[List[Goal]] = None
 
 class User(UserBase):
     id: UUID
