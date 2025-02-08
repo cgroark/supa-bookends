@@ -2,16 +2,16 @@
   <span class="spinner-border" role="status">
   </span>
 } @else if(fictionBooks.length) {
-    <h2 class="m-0">
+    <h2 class="m-0 text-lg-start text-center">
       <i class="bi bi-award me-1"></i>
       Best Sellers
     </h2>
-    <p>New York Times, updated {{ lastUpdated }}</p>
+    <p class="text-lg-start text-center">New York Times, updated {{ lastUpdated }}</p>
   <div class="fiction p-3 rounded mb-3">
-    <h3>Fiction</h3>
+    <h3 class="text-lg-start text-center">Fiction</h3>
     <div class="d-flex flex-wrap justify-content-between">
       @for(book of fictionBooks; track book.primary_isbn10; let index = $index) {
-        @if(index < 8) {
+        @if(index < 6) {
         <ng-container
             *ngTemplateOutlet="
               bestsellerItem;
@@ -36,9 +36,9 @@
             class="px-0"
           >
             <ng-template>
-              <div class="d-flex flex-wrap">
+              <div class="d-flex flex-wrap justify-content-between">
               @for(book of fictionBooks; track book.primary_isbn10; let index = $index) {
-                @if(index >= 8) {
+                @if(index >= 6) {
                 <ng-container
                     *ngTemplateOutlet="
                       bestsellerItem;
@@ -56,10 +56,10 @@
   </div>
 
   <div class="non-fiction p-3 rounded mb-3">
-    <h3>Non-Fiction</h3>
+    <h3 class="text-lg-start text-center">Non-Fiction</h3>
     <div class="d-flex flex-wrap justify-content-between">
       @for(book of nonFictionBooks; track book.primary_isbn10; let index = $index) {
-        @if(index < 8) {
+        @if(index < 6) {
         <ng-container
             *ngTemplateOutlet="
               bestsellerItem;
@@ -84,9 +84,9 @@
             class="px-0"
           >
             <ng-template>
-              <div class="d-flex flex-wrap">
+              <div class="d-flex flex-wrap justify-content-between">
               @for(book of nonFictionBooks; track book.primary_isbn10; let index = $index) {
-                @if(index >= 8) {
+                @if(index >= 6) {
                 <ng-container
                     *ngTemplateOutlet="
                       bestsellerItem;
@@ -212,7 +212,7 @@
     </h4>
     <button
       class="btn ms-auto"
-      (click)="modal.dismiss('Cross click')"
+      (click)="closeAddingModal()"
       type="button"
       aria-label="Close"
     >

@@ -191,8 +191,17 @@
         <i class="bi bi-bookmark-plus me-2"></i>
         Add to your library
       } @else {
-        <i class="bi bi-pencil me-2"></i>
-        Editing <em>{{ selectedBook.title }}</em>
+        <div class="d-flex">
+          <h4 class="align-content-center">
+            <i class="bi bi-pencil me-2"></i>
+          </h4>
+          <h4
+            class="modal-title align-content-center"
+            id="modal-basic-title"
+            >
+            Editing <em>{{ selectedBook.title }}</em>
+          </h4>
+        </div>
       }
 
     </h4>

@@ -1,54 +1,60 @@
 <app-header />
 <app-navbar />
-<section class="my-3 p-4 rounded reading">
-  @if(isLoading) {
-    <span class="spinner-border" role="status">
-    </span>
-  } @else if(reading.length) {
-    <h2 class="text-center text-sm-start mb-4 mb-md-2">
-      <i class="bi bi-body-text me-2"></i>
-      Currently Reading
-    </h2>
-    <div class="d-flex flex-wrap justify-content-between">
-      @for (book of reading; track book.id; let index = $index) {
-        <app-book-item
-          [selectedBook]="book"
-          [editable]="true"
+<div class="row">
+  <div class="col-md-9">
+    <section class="my-3 p-4 rounded reading">
+      @if(isLoading) {
+        <span class="spinner-border" role="status">
+        </span>
+      } @else if(reading.length) {
+        <h2 class="text-center text-md-start mb-4 mb-md-2 pb-3">
+          <i class="bi bi-body-text me-2"></i>
+          Currently Reading
+        </h2>
+        <div class="d-flex flex-wrap justify-content-between">
+          @for (book of reading; track book.id; let index = $index) {
+            <app-book-item
+              [selectedBook]="book"
+              [editable]="true"
+              (bookUpdated)="fetchBooks(userId)"
+            />
+          }
+        </div>
+        <button
+          class="btn btn main-teal-button"
+          (click)="onOpenForm(content, null)"
+        >
+            Add a book
+            <i class="bi bi-bookmark-plus ms-1"></i>
+        </button>
+      } @else {
+            <h2 class="no-books">
+              <i class="bi bi-bookmark-x-fill me-2"></i>
+              No current books
+            </h2>
+            <p>
+              <i class="bi bi-search me-2"></i>
+              Search for books to add to your library
+            </p>
+        <app-book-form
+          [noModal]="true"
           (bookUpdated)="fetchBooks(userId)"
         />
       }
-    </div>
-    <button
-      class="btn btn main-teal-button"
-      (click)="onOpenForm(content, null)"
-    >
-        Add a book
-        <i class="bi bi-bookmark-plus ms-1"></i>
-    </button>
-  } @else {
-    <div class="d-flex">
-      <h2 class="align-content-center">
-        <i class="bi bi-bookmark-x-fill me-2"></i>
-      </h2>
-      <div class="align-content-center">
-        <h2>
-          You're not currently reading any books
-        </h2>
-        <p>
-          <i class="bi bi-search me-2"></i>
-          Search for books and add them to your library
-        </p>
+    </section>
+  </div>
+  <div class="col-md-3">
+    <div class="text-center my-3 goals p-md-0 p-4 rounded">
+      <app-user-stats
+        [currentBookCount]="completed2025.length"
+      />
       </div>
-    </div>
-    <app-book-form
-      [noModal]="true"
-      (bookUpdated)="fetchBooks(userId)"
-    />
-  }
-</section>
+  </div>
+</div>
+
 @if(completed.length) {
   <section class="py-3 mb-2">
-    <h2 class="text-center text-sm-start mb-4 mb-md-2">
+    <h2 class="text-center text-md-start mb-4 mb-md-2 pb-3"pb-3>
       <i class="bi bi-bookmark-check-fill me-2"></i>
       Completed
     </h2>
@@ -371,7 +377,7 @@
 }
 @if(setAside.length) {
   <section class="py-3 mb-2">
-    <h2 class="text-center text-sm-start mb-4 mb-md-2">
+    <h2 class="text-center text-md-start mb-4 mb-md-2 pb-3"pb-3>
       <i class="bi bi-book-half me-2"></i>
       Set Aside
     </h2>
@@ -424,7 +430,7 @@
 }
 @if (wantToRead.length) {
   <section class="py-3 mb-2">
-    <h2 class="text-center text-sm-start mb-4 mb-md-2">
+    <h2 class="text-center text-md-start mb-4 mb-md-2 pb-3"pb-3>
       <i class="bi bi-bookmark-star me-2"></i>
       Reading List
     </h2>

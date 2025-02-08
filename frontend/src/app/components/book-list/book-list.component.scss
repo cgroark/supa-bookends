@@ -4,8 +4,9 @@ h2, h3, h4, p, i {
   color: $ivory;
 }
 
-h2 {
+h2:not(.no-books) {
   font-size: $font-size-medium;
+  border-bottom: solid 3px $yellow;
 }
 
 p, p > i {
@@ -17,10 +18,6 @@ h3.year {
 }
 h4.year-stats {
   background-color: $light-black;
-}
-
-section:not(.reading) {
-  border-bottom: solid 10px $yellow;
 }
 
 section.reading {
@@ -47,4 +44,10 @@ section.reading {
 .accordion-item {
   border: none;
   background: $black;
+}
+
+.goals {
+  @media screen and (max-width: 767px) {
+    background-color: $light-black;
+  }
 }

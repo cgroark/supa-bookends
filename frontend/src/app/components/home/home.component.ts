@@ -32,6 +32,7 @@ export class HomeComponent implements OnInit {
   protected selectedBook: any;
   protected noBooks = false;
   protected userId: string = '';
+  protected fullWidth = false;
 
   constructor(private bookService: BookService, private modalService: NgbModal) {}
 
@@ -90,4 +91,8 @@ export class HomeComponent implements OnInit {
     this.selectedBook = book;
   }
 
+  protected fullWidthBooks(): void {
+    console.warn('full width')
+    this.fullWidth = true;
+  }
 }

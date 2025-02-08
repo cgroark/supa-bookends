@@ -6,7 +6,6 @@ h1, h2, h3, p, i {
 
 h2 {
   font-size: $font-size-medium;
-
 }
 
 p, p > i {
@@ -51,7 +50,6 @@ div.reading, div.read, div.connections {
   }
   &::after, &.collapsed::after {
     background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23f9f4da'><path%20fill-rule='evenodd'%20d='M1.646%204.646a.5.5%200%200%201%20.708%200L8%2010.293l5.646-5.647a.5.5%200%200%201%20.708.708l-6%206a.5.5%200%200%201-.708%200l-6-6a.5.5%200%200%201%200-.708z'/></svg>");
-    margin-left: 5px;
   }
 }
 
@@ -61,5 +59,7 @@ div.reading, div.read, div.connections {
 }
 
 .goals {
-  max-width: 165px;
+  @media screen and (min-width: 576px) {
+    max-width: 165px;
+  }
 }

@@ -1,7 +1,7 @@
-<h4>
+<h2>
   <i class="bi bi-bar-chart me-1"></i>
   {{currentYear}} Goal
-</h4>
+</h2>
 @if(isLoading) {
   <span class="spinner-border" role="status">
   </span>
@@ -31,9 +31,11 @@
   }
   @if(showForm) {
     <form
-    #ngForm="ngForm"
-    [formGroup]="form"
-    (ngSubmit)="onSubmit()">
+      #ngForm="ngForm"
+      class="d-block mx-auto"
+      [style.max-width.px]="290"
+      [formGroup]="form"
+      (ngSubmit)="onSubmit()">
         @if(form.controls['goal']; as goal) {
           <div class="mb-2">
             <label class="d-block" for="goal">
@@ -44,33 +46,31 @@
               [class.is-invalid]="
                 (!goal.valid && goal.touched) ||
               (!goal.valid && ngForm.submitted)"
-              class="w-100 text-center"
+              class="w-100 text-center d-block mx-auto"
               type="number"
               formControlName="goal"
               id="goal"
             />
-            <div class="small helper-text">How many books do you want to read this year?</div>
+            <div class="small helper-text mb-2">How many books do you want to read this year?</div>
           </div>
         }
-        <button
-          type="button"
-          class="btn outline-purple-button d-inline-block me-1 cancel px-0"
-          (click)="toggleGoalForm()"
-        >
-          <i class="bi bi-x-square"></i>
-        </button>
-        <button class="btn main-purple-button d-inline-block save">
-          @if(isSubmitting) {
-            <span class="me-2">Saving</span>
-            <span class="spinner-border button" role="status">
-            </span>
-          } @else {
-            <span class="me-2">Save</span>
-            <i class="bi bi-floppy ms-1"></i>
-          }
-        </button>
-
-
+      <button
+        type="button"
+        class="btn outline-purple-button d-inline-block me-1 cancel px-0"
+        (click)="toggleGoalForm()"
+      >
+        <i class="bi bi-x-square"></i>
+      </button>
+      <button class="btn main-purple-button d-inline-block save">
+        @if(isSubmitting) {
+          <span class="me-2">Saving</span>
+          <span class="spinner-border button" role="status">
+          </span>
+        } @else {
+          <span class="me-2">Save</span>
+          <i class="bi bi-floppy ms-1"></i>
+        }
+      </button>
   </form>
   }
 }

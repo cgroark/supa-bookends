@@ -17,6 +17,7 @@ import { BookFormComponent } from '../book-form/book-form.component';
 })
 export class BestsellersComponent implements OnInit {
   @Output() updateBooks = new EventEmitter<void>();
+  @Output() noBestsellers = new EventEmitter<void>();
   protected addingTitle: string | null = null;
   protected isLoading = true;
   protected isAdding = false;
@@ -47,12 +48,17 @@ export class BestsellersComponent implements OnInit {
         error: (err: any) => {
           console.error('Error fetching books:', err);
           this.isLoading = false;
-          // Optionally, handle error state here, e.g., show an error message to the user
+          this.noBestsellers.emit();
         },
       });
     } else {
       this.isLoading = false;
     }
+  }
+
+  protected closeAddingModal(): void {
+    this.isAdding = false;
+    this.currentModal.close();
   }
 
   onOpenBook(contentBook: any, book: any):void {
@@ -113,7 +119,7 @@ export class BestsellersComponent implements OnInit {
               this.bookToAdd = response.items[0];
               this.identifiedBook = true;
               this.onOpenForm(contentForm);
-              // this.isAdding = false;
+              this.isAdding = false;
             } else {
               searchBookByISBN(index + 1);
             }

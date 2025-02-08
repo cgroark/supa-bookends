@@ -11,13 +11,14 @@ import { HeaderComponent } from '../header/header.component';
 import { BookFormComponent } from '../book-form/book-form.component';
 import { BookItemComponent } from '../book-item/book-item.component';
 import { NavbarComponent } from '../navbar/navbar.component';
+import { UserStatsComponent } from '../user-stats/user-stats.component';
 
 @Component({
   selector: 'app-book-list',
   standalone: true,
   templateUrl: './book-list.component.html',
   styleUrls: ['./book-list.component.scss'],
-  imports: [BookItemComponent, BookFormComponent, HeaderComponent, NavbarComponent, CommonModule, NgbAccordionModule]
+  imports: [BookItemComponent, BookFormComponent, UserStatsComponent, HeaderComponent, NavbarComponent, CommonModule, NgbAccordionModule]
 })
 export class BookListComponent implements OnInit {
 
