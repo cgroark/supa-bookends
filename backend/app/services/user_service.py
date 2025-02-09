@@ -28,17 +28,6 @@ class UserService:
             )
             return User(**dict(row))
 
-
-
-    # @staticmethod
-    # async def get_user_by_id(user_id: int):
-    #     async with (await db.get_pool()).acquire() as conn:
-    #         query = "SELECT * FROM users WHERE id = $1"
-    #         row = await conn.fetchrow(query, user_id)
-    #         if row:
-    #             return User(**dict(row))
-    #         return None
-
     @staticmethod
     async def get_user_by_id(user_id: UUID):
         async with (await db.get_pool()).acquire() as conn:
@@ -55,13 +44,23 @@ class UserService:
 
             return User(**user_data)  # Pass the deserialized data to the Pydantic model
 
-
     @staticmethod
     async def get_all_users():
         async with (await db.get_pool()).acquire() as conn:
             query = "SELECT * FROM users"
             rows = await conn.fetch(query)
             return [User(**dict(row)) for row in rows]
+
+    @staticmethod
+    async def search_users(query: str):
+        async with (await db.get_pool()).acquire() as conn:
+            query_str = """
+            SELECT * FROM users
+            WHERE first ILIKE $1 OR last ILIKE $1
+            """
+            rows = await conn.fetch(query_str, f"%{query}%")
+            return [User(**dict(row)) for row in rows]
+
 
     # @staticmethod
     # async def update_user(user_id: int, user_data: dict):

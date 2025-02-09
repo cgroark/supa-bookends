@@ -1,21 +1,19 @@
-from fastapi import APIRouter, Depends, HTTPException
-from app.utils.auth import validate_token
+from fastapi import APIRouter, HTTPException, Query
+from typing import List
 from app.models.user import User
 from app.services.user_service import UserService
 from uuid import UUID
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
-# @router.get("/profile")
-# async def get_user_profile(token_data: dict = Depends(validate_token)):
-#     # Protected route: Return user profile based on token data
-#     return {"message": "User is authenticated", "token_data": token_data}
-
-
 @router.post("/", response_model=User)
 async def create_user(user: User):
     print('user in route', user)
     return await UserService.create_user(user)
+
+@router.get("/search", response_model=List[User])
+async def search_users(query: str = Query(..., min_length=1)):
+    return await UserService.search_users(query)
 
 @router.get("/{user_id}", response_model=User)
 async def get_user(user_id: UUID):

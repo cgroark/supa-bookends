@@ -6,11 +6,13 @@ import { HomeComponent } from './components/home/home.component';
 import { UserFormComponent } from './components/user-form/user-form.component';
 import { LoginFormComponent } from './components/login-form/login-form.component';
 import { AuthGuard } from './guards/auth.guard';
+import { ConnectionsComponent } from './components/connections/connections.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
   { path: 'add-book', component: BookFormComponent },
   { path: 'books', component: BookListComponent, canActivate: [AuthGuard]},
+  { path: 'connections', component: ConnectionsComponent, canActivate: [AuthGuard]},
   { path: 'sign-up', component: UserFormComponent},
   { path: 'login', component: LoginFormComponent},
   { path: '', redirectTo: 'home', pathMatch: 'full' },

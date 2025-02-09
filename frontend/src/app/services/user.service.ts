@@ -38,4 +38,10 @@ export class UserService {
   deleteUser(userId: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${userId}`);
   }
+
+  searchUsers(query: string): Observable<User[]> {
+    return this.http.get<User[]>(`${this.apiUrl}/search`, { params: { query } }).pipe(
+      map((responses) => responses.map((response) => User.fromApiResponse(response)))
+    );
+  }
 }
