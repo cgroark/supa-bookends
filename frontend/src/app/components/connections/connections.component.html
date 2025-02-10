@@ -1,6 +1,10 @@
 <app-header />
 <app-navbar />
-<div class="py-4 px-3 search-section rounded">
+<h2>
+  <i class="bi bi-person-add me-1"></i>
+  Find and Add Connections
+</h2>
+<div class="py-4 px-3 search-section rounded mb-4">
   <ng-select
     [items]="connections$ | async"
     [typeahead]="connectionInput$"
@@ -8,7 +12,7 @@
     loadingText="Searching..."
     [(ngModel)]="selectedConnection"
     (change)="onChange($event)"
-    placeholder="Type book title and author to search..."
+    placeholder="Search connections by name..."
   >
   <ng-template
     ng-label-tmp
@@ -26,10 +30,11 @@
       <div class="d-flex align-items-center gap-1">
         <span [ngOptionHighlight]="search">{{ item.first }} {{ item.last }}</span>
         <button
-          class="btn btn-primary"
+          class="btn main-teal-button px-2 py-0 ms-2"
           (click)="addConnection(item.id)"
           >
           Add {{ item.first }}
+          <i class="bi bi-person-add ms-1"></i>
         </button>
       </div>
     </ng-template>
@@ -39,3 +44,21 @@
   <span class="spinner-border" role="status">
   </span>
 }
+
+@if(existingConnections.length) {
+  <section>
+    <h2>
+      <i class="bi bi-people-fill me-1"></i>
+      Your Connections
+    </h2>
+    @if(isLoadingConnections) {
+      <span class="spinner-border" role="status">
+      </span>
+    } @else {
+      @for(each of existingConnections; track each) {
+        {{each.first}}
+      }
+    }
+  </section>
+}
+

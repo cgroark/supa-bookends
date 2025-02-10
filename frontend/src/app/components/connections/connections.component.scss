@@ -1,0 +1,15 @@
+@import '../../../styles/variables';
+
+h2 {
+  font-size: $font-size-medium;
+  color: $ivory;
+}
+
+.search-section {
+  background-color: #f38ba2;
+  max-width: 700px;
+}
+
+.btn.main-teal-button {
+  width: fit-content !important;
+}
