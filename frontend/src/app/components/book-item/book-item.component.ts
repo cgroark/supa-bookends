@@ -68,7 +68,6 @@ export class BookItemComponent {
       ratingSet.push('<i class="bi bi-star-fill me-1"></i>')
       i++
     }
-    console.warn('rating', ratingSet.join(''))
     return ratingSet.join('')
   }
 
@@ -76,7 +75,6 @@ export class BookItemComponent {
     this.isSubmitting = true;
     this.bookService.deleteBook(bookId).subscribe({
       next: (response) => {
-        console.log('Book deleted successfully:', response);
         this.isSubmitting = false;
         this.currentModal.close();
         this.systemMessageService.showMessage(`${this.selectedBook.title} has been deleted!`);
@@ -84,7 +82,6 @@ export class BookItemComponent {
       },
       error: (error) => {
         this.isSubmitting = false;
-        console.error('Error deleting book:', error);
         this.currentModal.close();
       },
     });
@@ -95,7 +92,6 @@ export class BookItemComponent {
   }
 
   protected fetchBooks() {
-    console.warn('fetch in item')
     this.bookUpdated.emit();
   }
 }

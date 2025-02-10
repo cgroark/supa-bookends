@@ -31,6 +31,24 @@
   }
 }
 
+.outline-red-button {
+  background-color: $ivory !important;
+  color: $black !important;
+  margin: auto !important;
+  display: block !important;
+  width: 50% !important;
+  border: 2px solid $red !important;
+  &:hover {
+    background-color: $ivory-hover !important;
+  }
+  @media screen and (max-width: 576px) {
+    width: 100% !important;
+  }
+  i {
+    color: $black !important;
+  }
+}
+
 .main-purple-button {
   background-color: $purple !important;
   color: $ivory !important;
@@ -54,7 +72,7 @@
   margin: auto !important;
   display: block !important;
   width: 50% !important;
-  border: 1px solid $purple !important;
+  border: 2px solid $purple !important;
   &.wider {
     width: 100% !important;
   }
@@ -78,6 +96,9 @@
   border-radius: 50% !important;
   &.wider {
     margin-left: 100px;
+  }
+  &.higher {
+    margin-top: -100px;
   }
   &:hover {
     background-color: $teal-hover !important;

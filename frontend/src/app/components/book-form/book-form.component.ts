@@ -33,6 +33,7 @@ export class BookFormComponent implements OnInit {
   @Input() editingBook: any;
   @Input() addingBestSeller: any;
   @Input() identifiedBook = true;
+  @Input() scrubBook = false;
   @Output() bookUpdated = new EventEmitter<void>();
 
   protected books$: Observable<any[]>;
@@ -145,7 +146,7 @@ export class BookFormComponent implements OnInit {
           const today = new Date();
           const formattedDate = {
             year: today.getFullYear(),
-            month: today.getMonth() + 1, // Months are 0-based
+            month: today.getMonth() + 1,
             day: today.getDate(),
           };
           this.form.controls['rating'].setValidators(Validators.required);
@@ -177,25 +178,21 @@ export class BookFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.warn('adding', this.addingBestSeller)
     if(this.editingBook) {
-      this.isEditing = true;
+      this.isEditing = !this.scrubBook;
       this.selectedBook = this.editingBook;
-      console.warn('check editing', this.selectedBook, this.selectedBook.end_date);
-
       this.form.patchValue(
         {
           title: this.selectedBook.title ?? null,
           author: this.selectedBook.author ?? null,
-          format: this.selectedBook.format ?? null,
-          status: this.selectedBook.status ?? null,
-          rating: this.selectedBook.rating ?? null,
-          end: this.selectedBook.end_date ? this.convertToNgbDate(this.selectedBook.end_date) : null,
-          comments: this.selectedBook.comments ?? null,
+          format: (this.selectedBook.format && !this.scrubBook) ? this.selectedBook.format : null,
+          status: (this.selectedBook.status && !this.scrubBook) ? this.selectedBook.status : null,
+          rating: (this.selectedBook.rating && !this.scrubBook) ? this.selectedBook.rating : null,
+          end: (this.selectedBook.end_date && !this.scrubBook) ? this.convertToNgbDate(this.selectedBook.end_date) : null,
+          comments: (this.selectedBook.comments && !this.scrubBook) ? this.selectedBook.comments : null,
         }
       )
     } else if(this.addingBestSeller && this.identifiedBook) {
-      console.warn('form check', this.addingBestSeller)
       this.selectedBook = {
         title: this.addingBestSeller.volumeInfo?.title || 'Unknown Title',
         authors: this.addingBestSeller.volumeInfo?.authors || ['Unknown Author'],
@@ -209,20 +206,16 @@ export class BookFormComponent implements OnInit {
         }
       )
     } else if(this.addingBestSeller && !this.identifiedBook) {
-      console.warn('no book', this.addingBestSeller);
       this.selectedBook = {
         title: this.addingBestSeller.title || 'Unknown Title',
         authors: this.addingBestSeller.author || 'Unknown Author',
       }
       const searchTerm = `${this.addingBestSeller.title || ''} ${this.addingBestSeller.author || ''}`.trim();
       this.bookInput$.next(searchTerm); // Push the term into the ReplaySubject
-      console.warn('Search term pushed:', searchTerm);
-      console.warn('se', this.selectedBook)
     }
   }
 
   protected onBookChange(selected: any): void {
-    console.log('Selected Book:', selected);
     this.selectedBook = selected;
     if(this.selectedBook ) {
       this.form.patchValue({
@@ -256,7 +249,7 @@ export class BookFormComponent implements OnInit {
     if (this.form.valid && decodedToken) {
       this.isSubmitting = true;
       const userId = decodedToken.sub;
-
+      console.warn('userID submit', userId)
       const {title, author, format, status, rating, end, comments} = this.form.controls;
 
       const newBook = {
@@ -271,50 +264,44 @@ export class BookFormComponent implements OnInit {
         image_url: this.selectedBook?.image_url ?? null,
         user_id: userId,
       }
-      console.warn('book to send', newBook)
 
       if (this.isEditing) {
+        console.warn('yes editing')
+
         this.http
         .patch(`http://127.0.0.1:8000/books/${this.selectedBook.id}/`, newBook)
         .subscribe({
           next: (response) => {
-            console.log('Book updated:', response);
             this.isSubmitting = false;
             this.modalService.dismissAll();
             this.selectedBook = null;
             this.isManuallyAdding = false;
-            console.warn('EMIT for edit')
-
             this.bookUpdated.emit();
             this.form.reset();
             this.isEditing = false;
             this.systemMessageService.showMessage(`Your changes to ${newBook.title} have been saved!`);
           },
           error: (error) => {
-            console.error('Error updating book:', error);
             this.isSubmitting = false;
             this.isEditing = false;
           },
         });
       } else {
-        console.warn('oook to add', newBook)
+        console.warn('not editing')
         this.http
         .post('http://127.0.0.1:8000/books/', newBook)
         .subscribe({
           next: (response) => {
-            console.log('Item added:', response);
             this.isSubmitting = false;
             this.modalService.dismissAll();
             this.selectedBook = null;
             this.isManuallyAdding = false;
-            console.warn('EMIT for add')
 
             this.bookUpdated.emit();
             this.form.reset();
             this.systemMessageService.showMessage(`${newBook.title} has been added!`);
           },
           error: (error) => {
-            console.error('Error adding item:', error);
             this.isSubmitting = false;
           }
         });

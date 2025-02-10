@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { jwtDecode}  from 'jwt-decode';
+import { SystemMessageService } from '../../services/system-message.service';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgOptionHighlightModule } from '@ng-select/ng-option-highlight';
 
@@ -17,12 +18,13 @@ import { FormsModule } from '@angular/forms';
 import { UserService } from 'src/app/services/user.service';
 import { HeaderComponent } from '../header/header.component';
 import { NavbarComponent } from '../navbar/navbar.component';
+import  { EachConnectionComponent } from '../each-connection/each-connection.component';
 import { User } from 'src/app/models/user.model';
 
 @Component({
   selector: 'app-connections',
   standalone: true,
-  imports: [HeaderComponent, NavbarComponent, NgSelectModule, CommonModule, NgOptionHighlightModule, FormsModule],
+  imports: [HeaderComponent, NavbarComponent, EachConnectionComponent, NgSelectModule, CommonModule, NgOptionHighlightModule, FormsModule],
   templateUrl: './connections.component.html',
   styleUrl: './connections.component.scss'
 })
@@ -37,7 +39,7 @@ export class ConnectionsComponent implements OnInit {
   protected userId: string = '';
   protected user: any;
 
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService, private systemMessageService: SystemMessageService) {
     this.connections$ = this.connectionInput$.pipe(
       tap(() => (this.isLoading = true)),
       debounceTime(200),
@@ -115,6 +117,7 @@ export class ConnectionsComponent implements OnInit {
       next: (response) => {
         console.warn('res', response);
         this.isAdding = false;
+        this.systemMessageService.showMessage(`New connection added!`);
         this.fetchConnections(this.userId)
       },
       error: (error) => {
@@ -122,7 +125,22 @@ export class ConnectionsComponent implements OnInit {
         this.isAdding = false;
       },
     })
+  }
 
-
+  protected removeConnection(id: string): void {
+    console.warn('REMOVE', id);
+    console.warn('ID', id, this.user.connections );
+    const removed = this.user.connections.filter((each: string) => each !== id);
+    const connections = {connections: [...removed]};
+    this.userService.updateUser(this.userId, connections).subscribe({
+      next: (response) => {
+        console.warn('res', response);
+        this.fetchConnections(this.userId);
+        this.systemMessageService.showMessage(`Connection removed!`);
+      },
+      error: (error) => {
+        console.error('Error updating user in backend:', error);
+      },
+    })
   }
 }

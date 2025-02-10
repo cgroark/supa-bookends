@@ -1,10 +1,10 @@
 <app-header />
 <app-navbar />
-<h2>
+<h2 class="text-center">
   <i class="bi bi-person-add me-1"></i>
   Find and Add Connections
 </h2>
-<div class="py-4 px-3 search-section rounded mb-4">
+<div class="py-4 px-3 search-section rounded mb-4 mx-auto">
   <ng-select
     [items]="connections$ | async"
     [typeahead]="connectionInput$"
@@ -47,7 +47,7 @@
 
 @if(existingConnections.length) {
   <section>
-    <h2>
+    <h2 class="text-center mb-3">
       <i class="bi bi-people-fill me-1"></i>
       Your Connections
     </h2>
@@ -55,8 +55,11 @@
       <span class="spinner-border" role="status">
       </span>
     } @else {
-      @for(each of existingConnections; track each) {
-        {{each.first}}
+      @for(each of existingConnections; track each.id) {
+        <app-each-connection
+          [connection]="each"
+          (unfollow)="removeConnection(each.id)"
+        />
       }
     }
   </section>

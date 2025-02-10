@@ -76,6 +76,17 @@
               </button>
             </div>
           </div>
+        } @else if(!editable) {
+          @if(selectedBook.rating) {
+            <div class="rating" [innerHTML]="displayRating(selectedBook.rating)"></div>
+          }
+          <button
+            class="btn circle-teal-button wider"
+            [class.higher]="selectedBook.rating"
+            (click)="onOpenForm(content, selectedBook)"
+            >
+            <i class="bi bi-bookmark-plus fw-bold"></i>
+          </button>
         }
       </div>
     }
@@ -183,13 +194,26 @@
   let-modal
 >
   <div class="modal-header">
-    <h4
-      class="modal-title"
-      id="modal-basic-title"
-    >
       @if(!selectedBook) {
-        <i class="bi bi-bookmark-plus me-2"></i>
-        Add to your library
+        <h4
+          class="modal-title"
+          id="modal-basic-title"
+        >
+          <i class="bi bi-bookmark-plus me-2"></i>
+          Add to your reading list
+        </h4>
+      } @else if (!editable) {
+        <div class="d-flex">
+          <h4 class="align-content-center">
+            <i class="bi bi-bookmark-plus me-2"></i>
+          </h4>
+          <h4
+            class="modal-title align-content-center"
+            id="modal-basic-title"
+            >
+            Add <em>{{ selectedBook.title }}</em> to your reading list
+          </h4>
+        </div>
       } @else {
         <div class="d-flex">
           <h4 class="align-content-center">
@@ -203,8 +227,6 @@
           </h4>
         </div>
       }
-
-    </h4>
     <button
       class="btn ms-auto"
       (click)="modal.dismiss('Cross click')"
@@ -218,6 +240,7 @@
     <div>
       <app-book-form
         [editingBook]="selectedBook"
+        [scrubBook]="!editable"
         (bookUpdated)="fetchBooks()"
       />
     </div>
