@@ -7,7 +7,8 @@ h2, h3, p, i {
 h2 {
   font-size: $font-size-medium;
   &.name {
-    background-color: $teal;
+    background-color: $salmon;
+    color: $light-black;
     margin-right: -15px;
     margin-left: -15px;
     margin-top: -15px;
@@ -28,4 +29,14 @@ h3 {
 
 section {
   background-color: $light-black;
+  &.constrain {
+    width: 49%;
+    display: inline-block;
+    margin: 10px 4px;
+    vertical-align: top !important;
+    @media screen and (max-width: 875px) {
+      width: 100%;
+      margin: 10px 0;
+    }
+  }
 }

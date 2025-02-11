@@ -116,39 +116,36 @@
               </div>
               <button
                 class="btn main-teal-button"
-                [routerLink]="['/books']"
-              >
+                [routerLink]="['/books', userId]">
                   All Books
                   <i class="bi bi-bookmarks ms-1"></i>
               </button>
             </div>
           </div>
         }
-        <!-- @if(recentBooks.length && !isLoading) {
-          <div class="row mb-3 py-3 px-1 px-md-3 rounded connections">
-            <div class="col-md-3 ps-0 align-content-center">
-              <h2>Friends' Books</h2>
-            </div>
-            <div class="col-md-9">
-              <div class="d-flex flex-wrap justify-content-between mt-md-0 mt-3 mb-3">
-                @for(book of recentBooks; track book.id; let index = $index) {
-                  @if(index < 6 && book.image_url) {
-                    <app-book-item
-                      [selectedBook]="book"
-                    />
-                  }
+        @if(existingConnections.length) {
+          <section>
+            <h2 class="text-center mb-3">
+              <i class="bi bi-people-fill me-1"></i>
+              Your Connections
+            </h2>
+            @if(isLoadingConnections) {
+              <span class="spinner-border" role="status">
+              </span>
+            } @else {
+              <div>
+                @for(each of existingConnections; track each.id) {
+                  <app-each-connection
+                    [connection]="each"
+                    [connectionsCount]="existingConnections.length"
+                    [allowRemoval]="false"
+                  />
                 }
               </div>
-              <button
-                class="btn main-teal-button"
-                [routerLink]="['/book-list']"
-              >
-                  Find Friends
-                  <i class="bi bi-people ms-1"></i>
-              </button>
-            </div>
-          </div>
-        } -->
+
+            }
+          </section>
+        }
     </div>
     <div
     [ngClass]="noBooks ? '' : 'col-lg-3 pt-4'"

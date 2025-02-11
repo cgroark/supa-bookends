@@ -4,9 +4,12 @@ import { RouterModule } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 import { jwtDecode}  from 'jwt-decode';
+import  { forkJoin } from 'rxjs'
 
 import { BookService } from 'src/app/services/book.service';
+import { UserService } from 'src/app/services/user.service';
 import { Book } from 'src/app/models/book.model';
+import { User } from 'src/app/models/user.model';
 
 import { BestsellersComponent } from '../bestsellers/bestsellers.component';
 import { BookFormComponent } from '../book-form/book-form.component';
@@ -14,27 +17,30 @@ import { HeaderComponent } from '../header/header.component';
 import { BookItemComponent } from '../book-item/book-item.component';
 import { UserStatsComponent } from '../user-stats/user-stats.component';
 import { NavbarComponent } from '../navbar/navbar.component';
-
+import { EachConnectionComponent } from '../each-connection/each-connection.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [BestsellersComponent, BookItemComponent, BookFormComponent, HeaderComponent, NavbarComponent, UserStatsComponent, CommonModule, RouterModule, NgbAccordionModule],
+  imports: [EachConnectionComponent, BestsellersComponent, BookItemComponent, BookFormComponent, HeaderComponent, NavbarComponent, UserStatsComponent, CommonModule, RouterModule, NgbAccordionModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
 export class HomeComponent implements OnInit {
 
   protected isLoading = true;
+  protected isLoadingConnections = false;
   protected currentBooks: Book[] = [];
   protected recentBooks: Book[] = [];
   protected completed2025: Book[] = [];
   protected selectedBook: any;
   protected noBooks = false;
   protected userId: string = '';
+  protected user: any;
+  protected existingConnections: User[] = [];
   protected fullWidth = false;
 
-  constructor(private bookService: BookService, private modalService: NgbModal) {}
+  constructor(private userService: UserService, private bookService: BookService, private modalService: NgbModal) {}
 
   ngOnInit(): void {
     // Retrieve the token from localStorage
@@ -46,7 +52,38 @@ export class HomeComponent implements OnInit {
       this.userId = userId;
       console.log('Decoded user ID:', userId);
       this.fetchBooks(userId);
+      this.fetchConnections(userId)
     }
+  }
+
+  protected fetchConnections(userId: string): void {
+    this.isLoadingConnections = true;
+    this.userService.getUserById(userId).subscribe({
+      next: (response) => {
+        console.warn("RES", response);
+        this.user = response;
+        if (this.user.connections?.length) {
+          const userRequests = this.user.connections.map((id: string) => this.userService.getUserById(id));
+          forkJoin<User[]>(userRequests).subscribe({
+            next: (users: User[]) => {
+              this.existingConnections = users;
+              console.warn('Fetched Connected Users:', this.existingConnections);
+              this.isLoadingConnections = false;
+            },
+            error: (error) => {
+              console.error('Error fetching connected users:', error);
+              this.isLoadingConnections = false;
+            }
+          });
+        } else {
+          this.isLoadingConnections = false;
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching user in backend:', error);
+        this.isLoadingConnections = false;
+      }
+    });
   }
 
   protected fetchBooks(userId: string) {

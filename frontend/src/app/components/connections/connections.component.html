@@ -55,12 +55,16 @@
       <span class="spinner-border" role="status">
       </span>
     } @else {
-      @for(each of existingConnections; track each.id) {
-        <app-each-connection
-          [connection]="each"
-          (unfollow)="removeConnection(each.id)"
-        />
-      }
+      <div>
+        @for(each of existingConnections; track each.id) {
+          <app-each-connection
+            [connection]="each"
+            (unfollow)="removeConnection(each.id)"
+            [connectionsCount]="existingConnections.length"
+          />
+        }
+      </div>
+
     }
   </section>
 }

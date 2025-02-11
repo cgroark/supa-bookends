@@ -14,6 +14,8 @@ import { BookService } from 'src/app/services/book.service';
 })
 export class EachConnectionComponent implements OnInit {
   @Input() connection: any;
+  @Input() connectionsCount: number = 0;
+  @Input() allowRemoval = true;
   @Output() unfollow = new EventEmitter<void>();
 
 
