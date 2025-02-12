@@ -37,7 +37,6 @@ class UserService:
                 raise HTTPException(status_code=404, detail="User not found")
 
             user_data = dict(result)
-            print("DATA", user_data, user_data["goals"])
             # Deserialize JSON strings in goals to Python dictionaries
             if user_data.get("goals"):
                 user_data["goals"] = [json.loads(goal) for goal in user_data["goals"]]
@@ -59,7 +58,20 @@ class UserService:
             WHERE first ILIKE $1 OR last ILIKE $1
             """
             rows = await conn.fetch(query_str, f"%{query}%")
-            return [User(**dict(row)) for row in rows]
+
+            users = []
+            for row in rows:
+                user_data = dict(row)
+                # Deserialize JSON strings in goals to Python dictionaries
+                if user_data.get("goals"):
+                    user_data["goals"] = [
+                        json.loads(goal) for goal in user_data["goals"]
+                    ]
+
+                users.append(User(**user_data))  # Convert to Pydantic model
+
+            return users
+
 
 
     # @staticmethod
