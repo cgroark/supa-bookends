@@ -72,7 +72,7 @@
     (ngSubmit)="onSubmit()">
     <div class="row">
       <div
-        [ngClass]="selectedBook?.image_url ? 'col-8' : ''"
+        [ngClass]="selectedBook?.image_url || selectedBook?.overview ? 'col-8' : ''"
       >
         @if(form.controls['title']; as title) {
           <div class="mb-2">
@@ -144,17 +144,7 @@
             </ng-select>
           </div>
         }
-      </div>
-      @if(selectedBook?.image_url) {
-        <div class="col-4 mt-4">
-          <img [src]="selectedBook.image_url" alt="book cover" class="w-100">
-        </div>
-      }
-    </div>
-
-    @if(form.controls['status'].value === 4) {
-      <div class="row">
-        <div class="col-8">
+        @if(form.controls['status'].value === 4) {
           @if(form.controls['rating']; as rating) {
             <div class="mb-2">
               <label class="d-block text-secondary" for="rating">
@@ -212,21 +202,44 @@
               id="comments"
             ></textarea>
           </div>
-        </div>
-      </div>
-    }
-      <button class="btn main-teal-button mt-3"
-        type="submit"
-      >
-        @if(isSubmitting) {
-          <span class="me-2">Saving</span>
-          <span class="spinner-border button" role="status">
-          </span>
-        } @else {
-          <span class="me-2">Save</span>
-          <i class="bi bi-save"></i>
         }
-      </button>
+        <button class="btn main-teal-button mt-3"
+          type="submit"
+        >
+          @if(isSubmitting) {
+            <span class="me-2">Saving</span>
+            <span class="spinner-border button" role="status">
+            </span>
+          } @else {
+            <span class="me-2">Save</span>
+            <i class="bi bi-save"></i>
+          }
+        </button>
+      </div>
+      @if(selectedBook?.image_url || selectedBook?.overview) {
+        <div class="col-4 mt-4">
+          @if(selectedBook?.image_url) {
+            <img [src]="selectedBook.image_url" alt="book cover" class="w-100">
+          }
+          @if(selectedBook?.overview) {
+            <div class="text-container small">
+              <div class="text-content" [class.expanded]="isExpanded">
+                {{ selectedBook.overview }}
+              </div>
+              @if(!isExpanded) {
+                <div class="fade-overlay"></div>
+              }
+            </div>
+            <button
+              type="button"
+              class="btn btn-link d-block mx-auto text-decoration-none"
+              (click)="toggleView()">
+              {{ isExpanded ? 'View Less' : 'View More' }}
+            </button>
+          }
+        </div>
+      }
+    </div>
   </form>
   }
 </section>

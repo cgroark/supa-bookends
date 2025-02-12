@@ -5,6 +5,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { jwtDecode}  from 'jwt-decode';
 import { BookService } from 'src/app/services/book.service';
+import { UserService } from 'src/app/services/user.service';
+import { User } from 'src/app/models/user.model';
 import { Book} from 'src/app/models/book.model';
 
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
@@ -38,9 +40,10 @@ export class BookListComponent implements OnInit {
   protected setAside: Book[] = [];
   protected selectedBook: any;
   protected userId: string = '';
+  protected user: any;
   protected userIsSelf = false;
 
-  constructor(private bookService: BookService, private modalService: NgbModal, private route: ActivatedRoute) { }
+  constructor(private bookService: BookService, private modalService: NgbModal, private route: ActivatedRoute, private userService: UserService) { }
 
   ngOnInit(): void {
      // Retrieve the token from localStorage
@@ -54,6 +57,19 @@ export class BookListComponent implements OnInit {
         if(decodedToken) {
           const selfId = decodedToken.sub;
           this.userIsSelf = selfId === this.userId;
+          if(!this.userIsSelf) {
+            this.isLoading = true;
+            this.userService.getUserById(this.userId).subscribe({
+              next: (response: User) => {
+                this.user = response;
+                this.isLoading = false;
+              },
+              error: (err: any) => {
+                console.error('Error fetching user:', err);
+                this.isLoading = false;
+              }
+            })
+          }
         }
       }
     });

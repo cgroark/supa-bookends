@@ -18,6 +18,41 @@ input, textarea {
   }
 }
 
+.text-container {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 1rem;
+
+  .text-content {
+    transition: max-height 0.3s ease;
+    max-height: 70px;
+    overflow: hidden;
+
+    &.expanded {
+      max-height: none;
+    }
+  }
+
+  .fade-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4rem;
+    background: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0) 0%,
+      $ivory
+    );
+    pointer-events: none; // Ensure clicks pass through
+  }
+}
+
+button.btn-link {
+  margin-top: -25px;
+  color: $purple;
+}
+
 .ng-select {
   &.is-invalid {
     border: solid $red 1px;

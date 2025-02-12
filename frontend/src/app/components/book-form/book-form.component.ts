@@ -38,6 +38,7 @@ export class BookFormComponent implements OnInit {
 
   protected books$: Observable<any[]>;
   protected bookInput$ = new ReplaySubject<string>(1);
+  protected isExpanded = false;
 
   protected form: FormGroup = new FormGroup({
     title: new FormControl<string>('',{
@@ -92,7 +93,7 @@ export class BookFormComponent implements OnInit {
   protected selectedBook: any;
   protected statusOptions = [
     {
-      label: 'Add to reading list',
+      label: 'Want to read',
       value: 1,
     },
     {
@@ -239,6 +240,10 @@ export class BookFormComponent implements OnInit {
     const month = date.month.toString().padStart(2, '0');
     const day = date.day.toString().padStart(2, '0');
     return `${date.year}-${month}-${day}`;
+  }
+
+  protected toggleView() {
+    this.isExpanded = !this.isExpanded;
   }
 
   protected onSubmit(): void{

@@ -99,7 +99,7 @@ export class HomeComponent implements OnInit {
           each.status === 4
         ).sort((a: any, b: any) => b.end_date.localeCompare(a.end_date));
         console.warn('rec', this.recentBooks);
-        this.noBooks = !this.recentBooks.length && !this.currentBooks.length;
+        this.noBooks = !this.recentBooks.length;
         this.completed2025 = response.filter((each: any) =>
           each.status === 4 &&  each.end_date >= '2025-01-01');
         this.isLoading = false;

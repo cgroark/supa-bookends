@@ -1,5 +1,10 @@
 <app-header />
 <app-navbar />
+@if(!userIsSelf) {
+  <h2 class="mb-4 mb-md-2 pb-3">
+    <i class="bi bi-file-earmark-person me-2"></i>
+    {{user.first}}'s Book List</h2>
+}
 <div class="row">
   <div
     [ngClass]="userIsSelf ? 'col-md-9' : ''"
@@ -67,8 +72,12 @@
       Completed
     </h2>
     @if (completed2025.length) {
-      <!-- <h3 class="text-center">2025</h3> -->
-      <div class="d-flex flex-wrap justify-content-between">
+      <h3 class="year px-4 py-1 w-50 ms-end">
+        2025
+      </h3>
+      <div class="d-flex flex-wrap"
+        [class.justify-content-evenly]="completed2025.length > 1"
+      >
         @for (book of completed2025; track book.id; let index = $index) {
           @if(index < 6)  {
             <app-book-item
@@ -95,8 +104,10 @@
                 class="px-0"
               >
                 <ng-template>
-                  <div class="d-flex flex-wrap">
-                  @for(book of completed2025; track book.id; let index = $index) {
+                  <div class="d-flex flex-wrap"
+                  [class.justify-content-evenly]="completed2025.length > 7"
+                >
+                @for(book of completed2025; track book.id; let index = $index) {
                     @if(index > 5) {
                       <app-book-item
                         [selectedBook]="book"
@@ -118,20 +129,9 @@
       <h3 class="year px-4 py-1 w-50 ms-auto">
         2024
       </h3>
-      <!-- <h4 class="text-start year-stats px-4 pb-1 pt-2 w-50 d-inline-block">
-        {{ completed2024.length}} <i class="bi bi-book-half ms-1 me-3"></i>
-        @if(completed2023.length) {
-          {{ ((completed2024.length - completed2023.length) / completed2023.length) * 100 }}%
-          @if(completed2024.length > completed2023.length) {
-            <i class="bi bi-arrow-up ms-1"></i>
-          } @else if(completed2024.length === completed2023.length) {
-            <i class="bi bi-arrow-down-up ms-1"></i>
-          } @else {
-            <i class="bi bi-arrow-down"></i>
-          }
-        }
-      </h4> -->
-      <div class="d-flex flex-wrap justify-content-between">
+      <div class="d-flex flex-wrap"
+        [class.justify-content-evenly]="completed2024.length > 1"
+      >
         @for (book of completed2024; track book.id; let index = $index) {
           @if(index < 6)  {
             <app-book-item
@@ -159,7 +159,9 @@
                 class="px-0"
               >
                 <ng-template>
-                  <div class="d-flex flex-wrap justify-content-between">
+                  <div class="d-flex flex-wrap"
+                    [class.justify-content-evenly]="completed2024.length > 7"
+                  >
                   @for(book of completed2024; track book.id; let index = $index) {
                     @if(index > 5) {
                       <app-book-item
@@ -182,7 +184,9 @@
       <h3 class="text-end year px-4 py-1 w-50 mt-2">
         2023
       </h3>
-      <div class="d-flex flex-wrap justify-content-between">
+      <div class="d-flex flex-wrap"
+        [class.justify-content-evenly]="completed2023.length > 1"
+      >
         @for (book of completed2023; track book.id; let index = $index) {
           @if(index < 6)  {
             <app-book-item
@@ -210,7 +214,9 @@
                 class="px-0"
               >
                 <ng-template>
-                  <div class="d-flex flex-wrap justify-content-between">
+                  <div class="d-flex flex-wrap"
+                    [class.justify-content-evenly]="completed2023.length > 7"
+                  >
                   @for(book of completed2023; track book.id; let index = $index) {
                     @if(index > 5) {
                       <app-book-item
@@ -233,7 +239,9 @@
       <h3 class="year px-4 py-1 w-50 ms-auto">
         2022
       </h3>
-      <div class="d-flex flex-wrap justify-content-between">
+      <div class="d-flex flex-wrap"
+        [class.justify-content-evenly]="completed2022.length > 1"
+      >
         @for (book of completed2022; track book.id; let index = $index) {
           @if(index < 6)  {
             <app-book-item
@@ -261,7 +269,9 @@
                 class="px-0"
               >
                 <ng-template>
-                  <div class="d-flex flex-wrap justify-content-between">
+                  <div class="d-flex flex-wrap"
+                    [class.justify-content-evenly]="completed2022.length > 7"
+                  >
                   @for(book of completed2022; track book.id; let index = $index) {
                     @if(index > 5) {
                       <app-book-item
@@ -284,7 +294,9 @@
       <h3 class="text-end year px-4 py-1 w-50 mt-2">
         2021
       </h3>
-      <div class="d-flex flex-wrap justify-content-between">
+      <div class="d-flex flex-wrap"
+        [class.justify-content-evenly]="completed2021.length > 1"
+      >
         @for (book of completed2021; track book.id; let index = $index) {
           @if(index < 6)  {
             <app-book-item
@@ -312,7 +324,9 @@
                 class="px-0"
               >
                 <ng-template>
-                  <div class="d-flex flex-wrap justify-content-between">
+                  <div class="d-flex flex-wrap"
+                    [class.justify-content-evenly]="completed2021.length > 7"
+                  >
                   @for(book of completed2021; track book.id; let index = $index) {
                     @if(index > 5) {
                       <app-book-item
@@ -335,7 +349,9 @@
       <h3 class="year px-4 py-1 w-50 ms-auto">
         2020
       </h3>
-      <div class="d-flex flex-wrap justify-content-between">
+      <div class="d-flex flex-wrap"
+        [class.justify-content-evenly]="completed2020.length > 1"
+      >
         @for (book of completed2020; track book.id; let index = $index) {
           @if(index < 6)  {
             <app-book-item
@@ -363,7 +379,9 @@
                 class="px-0"
               >
                 <ng-template>
-                  <div class="d-flex flex-wrap justify-content-between">
+                  <div class="d-flex flex-wrap"
+                    [class.justify-content-evenly]="completed2020.length > 7"
+                  >
                   @for(book of completed2020; track book.id; let index = $index) {
                     @if(index > 5) {
                       <app-book-item
@@ -389,7 +407,9 @@
       <i class="bi bi-book-half me-2"></i>
       Set Aside
     </h2>
-    <div class="d-flex flex-wrap justify-content-between">
+    <div class="d-flex flex-wrap"
+      [class.justify-content-evenly]="setAside.length > 1"
+    >
       @for (book of setAside; track book.id; let index = $index) {
         @if(index < 6) {
           <app-book-item
@@ -417,7 +437,9 @@
               class="px-0"
             >
               <ng-template>
-                <div class="d-flex flex-wrap justify-content-between">
+                <div class="d-flex flex-wrap"
+                [class.justify-content-evenly]="setAside.length > 7"
+              >
                 @for(book of setAside; track book.id; let index = $index) {
                   @if(index > 5) {
                     <app-book-item
@@ -442,7 +464,9 @@
       <i class="bi bi-bookmark-star me-2"></i>
       Reading List
     </h2>
-    <div class="d-flex flex-wrap justify-content-between">
+    <div class="d-flex flex-wrap"
+      [class.justify-content-evenly]="wantToRead.length > 1"
+    >
       @for (book of wantToRead; track book.id; let index = $index) {
         @if(index < 12) {
           <app-book-item
@@ -470,7 +494,9 @@
               class="px-0"
             >
               <ng-template>
-                <div class="d-flex flex-wrap justify-content-between">
+                <div class="d-flex flex-wrap"
+                  [class.justify-content-evenly]="wantToRead.length > 13"
+                >
                 @for(book of wantToRead; track book.id; let index = $index) {
                   @if(index > 11) {
                     <app-book-item
