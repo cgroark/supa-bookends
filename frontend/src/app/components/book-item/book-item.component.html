@@ -170,6 +170,15 @@
            <span class="small">{{ selectedBook.comments}}</span>
           }
         </div>
+        @if(!editable) {
+          <button
+            class="btn main-teal-button mt-2 full-width"
+            (click)="onOpenForm(content, selectedBook)"
+          >
+            Add
+            <i class="bi bi-bookmark-plus ms-1 fw-bold"></i>
+          </button>
+        }
         @if(editable) {
           <div class="d-flex"
             [class.justify-content-end]="!selectedBook.image_url"
@@ -187,8 +196,8 @@
               (click)="onOpenForm(content, selectedBook)"
             >
               <i class="bi bi-pencil ms-1 fw-bold"></i>
-          </button>
-        </div>
+            </button>
+          </div>
         }
       </div>
     </div>

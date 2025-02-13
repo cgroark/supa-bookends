@@ -14,29 +14,37 @@
     (change)="onChange($event)"
     placeholder="Search by name..."
   >
-  <ng-template
-    ng-label-tmp
-    let-item="item"
-    >
-    <div class="d-flex align-items-center gap-1">
-      <span>{{ item.first }}</span> <span>{{ item.last }}</span>
-    </div>
-    </ng-template>
     <ng-template
       ng-option-tmp
       let-item="item"
       let-search="searchTerm"
       >
-      <div class="d-flex align-items-center gap-1">
-        <span [ngOptionHighlight]="search">{{ item.first }} {{ item.last }}</span>
-        <button
-          class="btn main-teal-button px-2 py-0 ms-2"
-          (click)="addConnection(item.id)"
-          >
-          Add {{ item.first }}
-          <i class="bi bi-person-add ms-1"></i>
-        </button>
-      </div>
+      <span class="ng-value-label">
+        <div class="d-flex align-items-center gap-1"
+          [style.cursor]="item.disabled ? 'default' : null"
+        >
+          <span [ngOptionHighlight]="search">{{ item.first }} {{ item.last }}</span>
+          @if(alreadyAdded(item.id)) {
+            <span
+              class="badge text-bg-secondary text-uppercase ms-2"
+              i18n
+            >
+              Already added
+            </span>
+          }
+          @else {
+            <button
+              class="btn main-teal-button px-2 py-0 ms-2"
+              (click)="addConnection(item.id)"
+              >
+              Add {{ item.first }}
+              <i class="bi bi-person-add ms-1"></i>
+            </button>
+          }
+
+        </div>
+      </span>
+
     </ng-template>
   </ng-select>
 </div>

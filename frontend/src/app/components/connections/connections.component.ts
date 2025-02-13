@@ -49,14 +49,14 @@ export class ConnectionsComponent implements OnInit {
           this.isLoading = false;
           return of([]);
         }
-
         return this.userService.searchUsers(term).pipe(
           map((users) =>
             users.map((user) => ({
               first: user.first,
               last: user.last,
               id: user.id,
-            }))
+              disabled: this.alreadyAdded(user.id),
+            })).filter((user) => user.id !== this.user.id)
           ),
           tap(() => (this.isLoading = false))
         );
@@ -104,9 +104,14 @@ export class ConnectionsComponent implements OnInit {
     });
   }
 
+  protected alreadyAdded(id: string): boolean {
+    return this.existingConnections.some(each => each.id === id);
+  }
+
   protected onChange(selected: any): void {
     console.log('Selected:', selected);
     this.selectedConnection = selected;
+    this.addConnection(selected.id)
   }
 
   protected addConnection(id: string): void {
