@@ -4,6 +4,12 @@ h4, p, .rating {
   color: $ivory;
 }
 
+.rating{
+  &.narrow {
+    font-size: 11px;
+  }
+}
+
 h4.modal-text, h4.modal-text i, p.modal-text {
   color: $light-black;
 }
@@ -44,6 +50,15 @@ h4.modal-text, h4.modal-text i, p.modal-text {
     max-height: 192px;
     &:hover {
       cursor: pointer;
+    }
+  }
+  &.narrow {
+    max-width: 80px;
+    img {
+      max-height: 110px;
+      &:hover {
+        cursor: pointer;
+      }
     }
   }
 }
@@ -98,7 +113,7 @@ button.dropdown-toggle {
       rgba(255, 255, 255, 0) 0%,
       $ivory
     );
-    pointer-events: none; // Ensure clicks pass through
+    pointer-events: none;
   }
 }
 

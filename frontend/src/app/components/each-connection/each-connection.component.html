@@ -4,51 +4,56 @@
 }@else{
   <section
     class="rounded mb-4 p-3"
+    [class.minimize]="minimize"
     [class.constrain]="connectionsCount > 1"
   >
-    <h2 class="text-center name py-2">
+    <h3 class="text-center name py-2">
       <i class="bi bi-file-earmark-person me-1"></i>
       {{connection.first}} {{connection.last}}
-    </h2>
+    </h3>
     @if(currentBooks.length) {
-      <h3 class="text-center my-3 py-2">
+      <h4 class="text-center my-3 py-2">
         <i class="bi bi-body-text me-1"></i>
-        Currently Reading
-      </h3>
+        Reading
+      </h4>
       <div class="d-flex flex-wrap justify-content-center mt-md-0 mt-3">
           @for(book of currentBooks; track book.id) {
             <app-book-item
               [selectedBook]="book"
               [editable]="false"
+              [minimize]="minimize"
+              (bookUpdated)="fetchBooks()"
             />
           }
       </div>
     } @else {
-      <h3 class="text-center no-underline">
+      <h4 class="text-center no-underline">
         <i class="bi bi-bookmark-x-fill me-2"></i>
         No current books
-      </h3>
+      </h4>
     }
     @if(recentBooks.length) {
-      <h3 class="text-center my-3 py-2">
-        <i class="bi bi-body-text me-1"></i>
-        Recently Read
-      </h3>
+      <h4 class="text-center my-3 py-2">
+        <i class="bi bi-bookmark-check-fill me-1"></i>
+        Latest
+      </h4>
         <div class="d-flex flex-wrap justify-content-center mt-md-0 mt-3">
             @for(book of recentBooks; track book.id; let index = $index) {
-              @if(index < 4) {
+              @if(index < 2) {
                 <app-book-item
-                [selectedBook]="book"
-                [editable]="false"
-              />
+                  [selectedBook]="book"
+                  [editable]="false"
+                  [minimize]="minimize"
+                  (bookUpdated)="fetchBooks()"
+                />
               }
             }
       </div>
     } @else {
-      <h3 class="text-center no-underline">
+      <h4 class="text-center no-underline">
         <i class="bi bi-bookmark-x-fill me-2"></i>
         No recent books
-      </h3>
+      </h4>
     }
     <div class="d-flex">
       @if(allowRemoval) {
@@ -63,8 +68,9 @@
       }
       <button
         class="btn main-teal-button ms-1"
+        [class.full-width]="minimize"
+        [class.limit-width]="!minimize"
         [routerLink]="['/books', connection.id]"
-        [style.max-width.px]="200"
       >
         All Books
         <i class="bi bi-bookmarks ms-1"></i>

@@ -13,10 +13,9 @@ $red-hover: #b7172d;
 $purple: #7b5ea6;
 $purple-hover: #554174;
 
-
 // Font Sizes
-$font-size-small: clamp(0.8rem, 0.7rem + 0.6vw, 1rem);
-$font-size-base: clamp(0.9rem, 0.8rem + 0.6vw, 1.1rem);
+$font-size-small: clamp(1.1rem, calc(0.1rem + 0.9vw), 1rem);
+$font-size-base: clamp(1.3rem, calc(0.1rem + 0.9vw), 1.2rem);
 $font-size-medium: clamp(1.6rem, calc(1.1rem + 0.9vw), 1.8rem);
 $font-size-large: clamp(2rem, calc(2.5rem + 1.5vw), 3rem);
 

@@ -9,6 +9,9 @@
   &.full-width {
     width: 100% !important;
   }
+  &.limit-width {
+    max-width: 200px;
+  }
   &:hover {
     background-color: $teal-hover !important;
   }

@@ -16,7 +16,9 @@ export class EachConnectionComponent implements OnInit {
   @Input() connection: any;
   @Input() connectionsCount: number = 0;
   @Input() allowRemoval = true;
+  @Input() minimize = false;
   @Output() unfollow = new EventEmitter<void>();
+  @Output() bookUpdated = new EventEmitter<void>();
 
 
   protected isLoading = true;
@@ -48,7 +50,12 @@ export class EachConnectionComponent implements OnInit {
       }
     });
   }
-  removeConnection() {
+  protected removeConnection():void {
     this.unfollow.emit(this.connection.id);
   }
+
+  protected fetchBooks() {
+    this.bookUpdated.emit();
+  }
+
 }

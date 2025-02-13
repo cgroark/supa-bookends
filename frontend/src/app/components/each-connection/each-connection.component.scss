@@ -1,11 +1,11 @@
 @import '../../../styles/variables';
 
-h2, h3, p, i {
+h2, h3, h4, p, i {
   color: $ivory;
 }
 
-h2 {
-  font-size: $font-size-medium;
+h3 {
+  font-size: $font-size-base;
   &.name {
     background-color: $salmon;
     color: $light-black;
@@ -20,8 +20,8 @@ h2 {
   }
 }
 
-h3 {
-  font-size: $font-size-medium;
+h4 {
+  font-size: $font-size-base;
   border-bottom: solid 3px $salmon;
   margin-right: -15px;
   margin-left: -15px;
@@ -32,14 +32,19 @@ h3 {
 
 section {
   background-color: $light-black;
-  &.constrain {
-    width: 49%;
-    display: inline-block;
-    margin: 10px 4px;
-    vertical-align: top !important;
-    @media screen and (max-width: 875px) {
-      width: 100%;
-      margin: 10px 0;
+
+    &.constrain {
+      width: 48%;
+      display: inline-block;
+      margin: 10px 4px;
+      vertical-align: top !important;
+      @media screen and (max-width: 875px) {
+        width: 100%;
+        margin: 10px 0;
+      }
     }
+    &.minimize {
+      background-color: $black;
+
   }
 }

@@ -124,27 +124,39 @@
           </div>
         }
         @if(existingConnections.length) {
-          <section>
-            <h2 class="text-center mb-3">
-              <i class="bi bi-people-fill me-1"></i>
-              Your Connections
-            </h2>
-            @if(isLoadingConnections) {
+          <div class="row mb-3 py-3 px-1 px-md-3 rounded connections">
+            <div class="col-md-3 ps-0">
+              <h2>
+                <i class="bi bi-people-fill me-1"></i>
+                Friends
+              </h2>
+            </div>
+            <div class="col-md-9">
+              @if(isLoadingConnections) {
               <span class="spinner-border" role="status">
               </span>
-            } @else {
-              <div>
-                @for(each of existingConnections; track each.id) {
-                  <app-each-connection
-                    [connection]="each"
-                    [connectionsCount]="existingConnections.length"
-                    [allowRemoval]="false"
-                  />
-                }
-              </div>
+              } @else {
+                <div>
+                  @for(each of existingConnections; track each.id) {
+                    <app-each-connection
+                      [connection]="each"
+                      [connectionsCount]="existingConnections.length"
+                      [allowRemoval]="false"
+                      [minimize]="true"
+                      (bookUpdated)="fetchBooks(userId)"
+                    />
+                  }
+                </div>
+              }
+              <button
+                class="btn main-teal-button"
+                [routerLink]="['/connections']">
+                  View All
+                  <i class="bi bi-people-fill ms-1"></i>
+              </button>
+            </div>
 
-            }
-          </section>
+          </div>
         }
     </div>
     <div

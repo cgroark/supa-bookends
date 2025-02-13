@@ -7,53 +7,53 @@
       Best Sellers
     </h2>
     <p class="text-lg-start text-center">New York Times, updated {{ lastUpdated }}</p>
-  <div class="fiction p-3 rounded mb-3">
-    <h3 class="text-lg-start text-center">Fiction</h3>
-    <div class="d-flex flex-wrap justify-content-between">
-      @for(book of fictionBooks; track book.primary_isbn10; let index = $index) {
-        @if(index < 6) {
-        <ng-container
-            *ngTemplateOutlet="
-              bestsellerItem;
-              context: {each: book}
-            "
-          />
+    <div class="fiction p-3 rounded mb-3">
+      <h3 class="text-lg-start text-center">Fiction</h3>
+      <div class="d-flex flex-wrap justify-content-between">
+        @for(book of fictionBooks; track book.primary_isbn10; let index = $index) {
+          @if(index < 6) {
+          <ng-container
+              *ngTemplateOutlet="
+                bestsellerItem;
+                context: {each: book}
+              "
+            />
+          }
         }
-      }
-    </div>
-    <div ngbAccordion>
-      <div ngbAccordionItem>
-        <div ngbAccordionHeader>
-          <button
-            ngbAccordionButton
-          >
-            View More
-          </button>
-        </div>
-        <div ngbAccordionCollapse>
-          <div
-            ngbAccordionBody
-            class="px-0"
-          >
-            <ng-template>
-              <div class="d-flex flex-wrap justify-content-between">
-              @for(book of fictionBooks; track book.primary_isbn10; let index = $index) {
-                @if(index >= 6) {
-                <ng-container
-                    *ngTemplateOutlet="
-                      bestsellerItem;
-                      context: {each: book}
-                    "
-                  />
-                }
-              }
-              </div>
-            </ng-template>
+      </div>
+      <div ngbAccordion>
+        <div ngbAccordionItem>
+          <div ngbAccordionHeader>
+            <button
+              ngbAccordionButton
+            >
+              View More
+            </button>
+          </div>
+          <div ngbAccordionCollapse>
+            <div
+              ngbAccordionBody
+              class="px-0"
+            >
+              <ng-template>
+                <div class="d-flex flex-wrap justify-content-between">
+                  @for(book of fictionBooks; track book.primary_isbn10; let index = $index) {
+                    @if(index >= 6) {
+                    <ng-container
+                        *ngTemplateOutlet="
+                          bestsellerItem;
+                          context: {each: book}
+                        "
+                      />
+                    }
+                  }
+                </div>
+              </ng-template>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
   <div class="non-fiction p-3 rounded mb-3">
     <h3 class="text-lg-start text-center">Non-Fiction</h3>

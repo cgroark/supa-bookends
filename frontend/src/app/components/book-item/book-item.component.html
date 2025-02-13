@@ -1,12 +1,12 @@
 
   <div
     class="d-flex"
-    [class.wide-book-item]="selectedBook.status === 2"
+    [class.wide-book-item]="selectedBook.status === 2 && !minimize"
     [class.no-image-narrow-item]="selectedBook.status !== 2 && !selectedBook.image_url"
   >
-    @if(selectedBook.status === 2 || !selectedBook.image_url) {
+    @if((selectedBook.status === 2 && !minimize) || !selectedBook.image_url) {
       <div
-        class="m-2 align-content-center book-item-details"
+        class="m-2 align-content-center"
         (click)="selectedBook.status !== 2 ? onOpenBook(contentBook, selectedBook) : null"
         [class.hover]="selectedBook.status !== 2"
         >
@@ -43,6 +43,7 @@
     @if(selectedBook.image_url || selectedBook.status === 2) {
       <div
         class="m-2 book-item px-1"
+        [class.narrow]="minimize"
       >
         @if(selectedBook.image_url) {
           <img
@@ -78,10 +79,15 @@
           </div>
         } @else if(!editable) {
           @if(selectedBook.rating) {
-            <div class="rating" [innerHTML]="displayRating(selectedBook.rating)"></div>
+            <span
+              class="rating"
+              [class.narrow]="minimize"
+              [innerHTML]="displayRating(selectedBook.rating)">
+            </span>
           }
           <button
-            class="btn circle-teal-button wider"
+            class="btn circle-teal-button"
+            [class.wider]="!minimize"
             [class.higher]="selectedBook.rating"
             (click)="onOpenForm(content, selectedBook)"
             >

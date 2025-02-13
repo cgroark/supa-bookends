@@ -16,6 +16,7 @@ import { BookService } from 'src/app/services/book.service';
 export class BookItemComponent {
   @Input() selectedBook: any;
   @Input() editable = false;
+  @Input() minimize = false;
   @Output() bookUpdated = new EventEmitter<void>();
 
   protected isExpanded = false;

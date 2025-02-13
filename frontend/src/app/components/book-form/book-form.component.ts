@@ -301,7 +301,6 @@ export class BookFormComponent implements OnInit {
             this.modalService.dismissAll();
             this.selectedBook = null;
             this.isManuallyAdding = false;
-
             this.bookUpdated.emit();
             this.form.reset();
             this.systemMessageService.showMessage(`${newBook.title} has been added!`);
