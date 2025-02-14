@@ -34,6 +34,7 @@ export class BookFormComponent implements OnInit {
   @Input() addingBestSeller: any;
   @Input() identifiedBook = true;
   @Input() scrubBook = false;
+  @Input() allUserBooks: Book[] = []
   @Output() bookUpdated = new EventEmitter<void>();
 
   protected books$: Observable<any[]>;
@@ -130,13 +131,15 @@ export class BookFormComponent implements OnInit {
               title: item.volumeInfo?.title || 'Unknown Title',
               authors: item.volumeInfo?.authors || ['Unknown Author'],
               image_url: item.volumeInfo?.imageLinks?.thumbnail,
-              overview: item.volumeInfo?.description
+              overview: item.volumeInfo?.description,
+              disabled: this.alreadyAdded(item.volumeInfo?.title, item.volumeInfo?.authors),
             })) || []
           ),
           tap(() => (this.isLoading = false)),
         );
       }),
     );
+
 
     this.form.controls['status'].valueChanges
       .pipe(
@@ -214,6 +217,10 @@ export class BookFormComponent implements OnInit {
       const searchTerm = `${this.addingBestSeller.title || ''} ${this.addingBestSeller.author || ''}`.trim();
       this.bookInput$.next(searchTerm); // Push the term into the ReplaySubject
     }
+  }
+
+  protected alreadyAdded(title: string, authors: any): boolean {
+    return this.allUserBooks.some(each => each.title === title && each.author === authors[0] );
   }
 
   protected onBookChange(selected: any): void {

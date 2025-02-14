@@ -125,7 +125,7 @@
         }
         @if(existingConnections.length) {
           <div class="row mb-3 py-3 px-1 px-md-3 rounded connections">
-            <div class="col-md-3 ps-0">
+            <div class="col-md-3 ps-0 mb-md-0 mb-3">
               <h2>
                 <i class="bi bi-people-fill me-1"></i>
                 Friends
@@ -195,6 +195,7 @@
     <div>
       <app-book-form
         (bookUpdated)="fetchBooks(userId)"
+        [allUserBooks]="allUserBooks"
       />
     </div>
   </div>

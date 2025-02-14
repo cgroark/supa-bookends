@@ -25,7 +25,7 @@ import { UserStatsComponent } from '../user-stats/user-stats.component';
 })
 export class BookListComponent implements OnInit {
 
-  // protected bookItems: Book[] = [];
+  protected allUserBooks: Book[] = [];
   protected isLoading = true;
   protected noBooks = false;
   protected completed: Book[] = [];
@@ -79,6 +79,7 @@ export class BookListComponent implements OnInit {
   protected fetchBooks(userId: string) {
     this.bookService.getAllUserBooks(userId).subscribe({
       next: (response: Book[]) => {
+        this.allUserBooks = response;
         this.noBooks = !response.length
         this.completed = response.filter((each: Book) => each.status === 4);
         console.warn('COM', this.completed)

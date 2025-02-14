@@ -25,6 +25,7 @@ export class LoginFormComponent implements OnInit {
 
   protected fromSignup = false;
   protected isSubmitting = false;
+  protected loginError: string | null = null;
 
   constructor(private systemMessageService: SystemMessageService, private activatedRoute: ActivatedRoute, private authService: AuthService, private router: Router, private supabaseService: SupabaseService){}
 
@@ -33,7 +34,6 @@ export class LoginFormComponent implements OnInit {
       console.warn('params', params)
       const from = params['from'];
       if(from === 'signup') {
-        console.log('from signup');
         this.fromSignup = true;
       }
     })
@@ -57,15 +57,17 @@ export class LoginFormComponent implements OnInit {
     this.supabaseService
       .login(credentials.email, credentials.password)
       .then((response) => {
-        console.log('Login successful:', response);
         this.isSubmitting = false;
         this.form.reset();
+        this.loginError = null;
         this.authService.saveToken(response.session.access_token);
         this.systemMessageService.showMessage(`You've successfully logged in!`);
         this.router.navigate(['/']);
       })
       .catch((error) => {
         console.error('Login failed:', error.message);
+        this.loginError = error.message;
+        this.systemMessageService.showMessage(`Login failed: ${error.message}`);
         this.isSubmitting = false;
     });
   }

@@ -78,27 +78,24 @@ export class ConnectionsComponent implements OnInit {
     this.isLoadingConnections = true;
     this.userService.getUserById(userId).subscribe({
       next: (response) => {
-        console.warn("RES", response);
         this.user = response;
         if (this.user.connections?.length) {
           const userRequests = this.user.connections.map((id: string) => this.userService.getUserById(id));
           forkJoin<User[]>(userRequests).subscribe({
             next: (users: User[]) => {
               this.existingConnections = users;
-              console.warn('Fetched Connected Users:', this.existingConnections);
               this.isLoadingConnections = false;
             },
             error: (error) => {
-              console.error('Error fetching connected users:', error);
               this.isLoadingConnections = false;
             }
           });
         } else {
           this.isLoadingConnections = false;
+          this.existingConnections = [];
         }
       },
       error: (error) => {
-        console.error('Error fetching user in backend:', error);
         this.isLoadingConnections = false;
       }
     });
@@ -109,18 +106,15 @@ export class ConnectionsComponent implements OnInit {
   }
 
   protected onChange(selected: any): void {
-    console.log('Selected:', selected);
     this.selectedConnection = selected;
     this.addConnection(selected.id)
   }
 
   protected addConnection(id: string): void {
-    console.warn('ID', id);
     this.isAdding = true;
     const connections = {connections: [...this.user.connections, id]};
     this.userService.updateUser(this.userId, connections).subscribe({
-      next: (response) => {
-        console.warn('res', response);
+      next: () => {
         this.isAdding = false;
         this.systemMessageService.showMessage(`New connection added!`);
         this.fetchConnections(this.userId)
@@ -133,13 +127,10 @@ export class ConnectionsComponent implements OnInit {
   }
 
   protected removeConnection(id: string): void {
-    console.warn('REMOVE', id);
-    console.warn('ID', id, this.user.connections );
     const removed = this.user.connections.filter((each: string) => each !== id);
     const connections = {connections: [...removed]};
     this.userService.updateUser(this.userId, connections).subscribe({
-      next: (response) => {
-        console.warn('res', response);
+      next: () => {
         this.fetchConnections(this.userId);
         this.systemMessageService.showMessage(`Connection removed!`);
       },

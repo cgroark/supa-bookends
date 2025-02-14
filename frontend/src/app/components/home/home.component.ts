@@ -33,6 +33,7 @@ export class HomeComponent implements OnInit {
   protected currentBooks: Book[] = [];
   protected recentBooks: Book[] = [];
   protected completed2025: Book[] = [];
+  protected allUserBooks: Book[] = []
   protected selectedBook: any;
   protected noBooks = false;
   protected userId: string = '';
@@ -50,7 +51,6 @@ export class HomeComponent implements OnInit {
     if(decodedToken) {
       const userId = decodedToken.sub;
       this.userId = userId;
-      console.log('Decoded user ID:', userId);
       this.fetchBooks(userId);
       this.fetchConnections(userId)
     }
@@ -60,14 +60,12 @@ export class HomeComponent implements OnInit {
     this.isLoadingConnections = true;
     this.userService.getUserById(userId).subscribe({
       next: (response) => {
-        console.warn("RES", response);
         this.user = response;
         if (this.user.connections?.length) {
           const userRequests = this.user.connections.map((id: string) => this.userService.getUserById(id));
           forkJoin<User[]>(userRequests).subscribe({
             next: (users: User[]) => {
               this.existingConnections = users;
-              console.warn('Fetched Connected Users:', this.existingConnections);
               this.isLoadingConnections = false;
             },
             error: (error) => {
@@ -87,18 +85,16 @@ export class HomeComponent implements OnInit {
   }
 
   protected fetchBooks(userId: string) {
-    console.warn("FETCH")
     this.isLoading = true;
     this.bookService.getAllUserBooks(userId).subscribe({
       next: (response: Book[]) => {
+        this.allUserBooks = response;
         this.currentBooks = response.filter((each: Book) =>
           each.status === /*status.reading*/ 2
         );
-        console.warn('curr', this.currentBooks);
         this.recentBooks = response.filter((each: Book) =>
           each.status === 4
         ).sort((a: any, b: any) => b.end_date.localeCompare(a.end_date));
-        console.warn('rec', this.recentBooks);
         this.noBooks = !this.recentBooks.length;
         this.completed2025 = response.filter((each: any) =>
           each.status === 4 &&  each.end_date >= '2025-01-01');
@@ -129,7 +125,6 @@ export class HomeComponent implements OnInit {
   }
 
   protected fullWidthBooks(): void {
-    console.warn('full width')
     this.fullWidth = true;
   }
 }
