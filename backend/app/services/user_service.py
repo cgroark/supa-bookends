@@ -1,5 +1,4 @@
-import os
-import httpx
+import re
 import json
 from app.db.database import db
 from uuid import UUID
@@ -53,24 +52,28 @@ class UserService:
     @staticmethod
     async def search_users(query: str):
         async with (await db.get_pool()).acquire() as conn:
+            # Trim leading/trailing spaces and replace multiple spaces with a single space
+            query = re.sub(r"\s+", " ", query.strip())
+
             query_str = """
             SELECT * FROM users
-            WHERE first ILIKE $1 OR last ILIKE $1
+            WHERE first ILIKE $1
+            OR last ILIKE $1
+            OR (first || ' ' || last) ILIKE $1
             """
             rows = await conn.fetch(query_str, f"%{query}%")
 
             users = []
             for row in rows:
                 user_data = dict(row)
-                # Deserialize JSON strings in goals to Python dictionaries
                 if user_data.get("goals"):
-                    user_data["goals"] = [
-                        json.loads(goal) for goal in user_data["goals"]
-                    ]
+                    user_data["goals"] = [json.loads(goal) for goal in user_data["goals"]]
 
-                users.append(User(**user_data))  # Convert to Pydantic model
+                users.append(User(**user_data))
 
             return users
+
+
 
 
 

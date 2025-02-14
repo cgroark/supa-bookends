@@ -1,5 +1,8 @@
 @import '../../../styles/variables';
 
+form {
+  background-color: $ivory;
+}
 section.form-section {
   @media screen and (max-width: 768px) {
     width: 100% !important;
