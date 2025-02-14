@@ -37,6 +37,20 @@ yarn-error.log
 testem.log
 /typings
 
+# Ignore environment files
+/backend/.env
+**/.env
+/frontend/src/environments/environment.prod.ts
+/frontend/src/environments/environment.ts
+/frontend/src/environments/*
+!/frontend/src/environments/environment.example.ts
+
 # System files
 .DS_Store
 Thumbs.db
+
+.supabase/
+supabase/.temp/
+supabase/.branches/
+supabase/.config/
+supabase/migrations/
