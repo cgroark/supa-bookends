@@ -1,13 +1,13 @@
 {
   "name": "frontend",
   "version": "0.0.0",
-  "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build --configuration production",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test"
-  },
+"scripts": {
+  "ng": "ng",
+  "start": "ng serve",
+  "build": "npx ng build --configuration production",
+  "watch": "ng build --watch --configuration development",
+  "test": "ng test"
+},
   "private": true,
   "dependencies": {
     "@angular/animations": "^18.2.13",
@@ -43,5 +43,8 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.0.0",
     "typescript": "~5.4.5"
+  },
+  "engines": {
+    "node": "16.x"
   }
 }
