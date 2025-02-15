@@ -17,9 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": {
-              "base": "dist/frontend"
-            },
+            "outputPath": "dist/frontend",
             "index": "src/index.html",
             "polyfills": [
               "src/polyfills.ts"
@@ -44,6 +42,7 @@
           },
           "configurations": {
             "production": {
+              "baseHref": "/",
               "budgets": [
                 {
                   "type": "initial",
