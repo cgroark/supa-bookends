@@ -38,6 +38,8 @@ testem.log
 /typings
 
 # Ignore environment files
+/frontend/.env
+/frontend/src/assets/env.json
 /backend/.env
 **/.env
 /frontend/src/environments/environment.prod.ts

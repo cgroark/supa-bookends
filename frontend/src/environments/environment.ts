@@ -1,11 +1,16 @@
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
+declare global {
+  interface Window {
+    __env?: Record<string, string>;
+  }
+}
 
 export const environment = {
   production: false,
-  supabaseUrl: "https://yrvpfjwryrkdbsuqoisn.supabase.co",
-  supabaseKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlydnBmandyeXJrZGJzdXFvaXNuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQxOTIyOTAsImV4cCI6MjA0OTc2ODI5MH0.T4eMLzdxTErZLahYivvEM9tT7ulwgdDbVTZPjtVdX5s"
+  supabaseUrl: window.__env?.['SUPABASE_URL'] ?? '',
+  supabaseKey: window.__env?.['SUPABASE_KEY'] ?? ''
 };
 
 /*

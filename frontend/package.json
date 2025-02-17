@@ -1,13 +1,13 @@
 {
   "name": "frontend",
   "version": "0.0.0",
-"scripts": {
-  "ng": "ng",
-  "start": "ng serve",
-  "build": "npx ng build --configuration production",
-  "watch": "ng build --watch --configuration development",
-  "test": "ng test"
-},
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "npx ng build --configuration production",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test"
+  },
   "private": true,
   "dependencies": {
     "@angular/animations": "^18.2.13",
@@ -25,7 +25,6 @@
     "@supabase/supabase-js": "^2.47.10",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
-    "dotenv": "^16.4.7",
     "jwt-decode": "^4.0.0",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
@@ -36,6 +35,7 @@
     "@angular/cli": "~18.2.12",
     "@angular/compiler-cli": "^18.2.13",
     "@types/jasmine": "~4.0.0",
+    "dotenv": "^16.4.7",
     "jasmine-core": "~4.3.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.1.0",
