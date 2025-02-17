@@ -61,10 +61,6 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
-              "definitions": {
-                  "process.env.SUPABASE_URL": "process.env.SUPABASE_URL",
-                  "process.env.SUPABASE_KEY": "process.env.SUPABASE_KEY"
-                },
               "outputHashing": "all"
             },
             "development": {
