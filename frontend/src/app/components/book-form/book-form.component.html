@@ -48,7 +48,7 @@
                 @for(author of item.authors; track $index ) {
                   <span
                     [ngOptionHighlight]="search"
-                    class="small badge bg-secondary"
+                    class="small badge bg-black"
                   >
                     {{ author }}
                   </span
@@ -58,7 +58,6 @@
               @if(alreadyAdded(item.title, item?.authors)) {
                 <span
                   class="badge text-bg-secondary text-uppercase ms-2"
-                  i18n
                 >
                   Already added
                 </span>
