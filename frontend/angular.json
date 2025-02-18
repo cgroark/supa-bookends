@@ -64,10 +64,6 @@
                 {
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.prod.ts"
-                },
-                {
-                  "replace": "src/_redirects",
-                  "with": "dist/frontend/_redirects"
                 }
               ],
               "outputHashing": "all"
