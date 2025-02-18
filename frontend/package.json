@@ -7,7 +7,7 @@
     "build": "npx ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "postbuild": "cp dist/frontend/assets/_redirects dist/frontend/",
+    "postbuild": "cp dist/frontend/assets/_redirects dist/frontend/"
   },
   "private": true,
   "dependencies": {
