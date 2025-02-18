@@ -116,11 +116,13 @@ export class ConnectionsComponent implements OnInit {
     this.userService.updateUser(this.userId, connections).subscribe({
       next: () => {
         this.isAdding = false;
+        this.selectedConnection = null;
         this.systemMessageService.showMessage(`New connection added!`);
         this.fetchConnections(this.userId)
       },
       error: (error) => {
         console.error('Error updating user in backend:', error);
+        this.selectedConnection = null;
         this.isAdding = false;
       },
     })

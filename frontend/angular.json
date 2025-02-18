@@ -31,7 +31,8 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
-              "src/env.js"
+              "src/env.js",
+              "src/_redirects"
             ],
             "styles": [
               "src/styles.scss",
