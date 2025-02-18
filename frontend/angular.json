@@ -20,6 +20,7 @@
             "customWebpackConfig": {
               "path": "webpack.config.js"
             },
+            "main": "src/main.ts",
             "outputPath": "dist/frontend",
             "index": "src/index.html",
             "polyfills": [
