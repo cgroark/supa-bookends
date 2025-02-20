@@ -84,7 +84,7 @@ export class BookListComponent implements OnInit {
         this.completed = response.filter((each: Book) => each.status === 4);
         console.warn('COM', this.completed)
         this.completed2020 = response.filter((each: any) =>
-          each.status === 4 &&  each.end_date >= '2020-01-01' && each.end_date < '2021-01-01')
+          each.status === 4 && each.end_date < '2021-01-01')
           .sort((a: any, b: any) => b.end_date.localeCompare(a.end_date));
         this.completed2021 = response.filter((each: any) =>
           each.status === 4 &&  each.end_date >= '2021-01-01' && each.end_date < '2022-01-01')
