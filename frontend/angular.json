@@ -47,6 +47,8 @@
           },
           "configurations": {
             "production": {
+              "optimization": true,
+              "inlineStyleLanguage": "scss",
               "baseHref": "./",
               "budgets": [
                 {
