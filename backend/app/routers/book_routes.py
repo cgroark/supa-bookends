@@ -19,16 +19,6 @@ async def update_book(book_id: int, book: BookCreate):
         raise HTTPException(status_code=404, detail="Book not found")
     return updated_book
 
-# @router.get("/", response_model=list[Book])
-# async def get_books(token_data: dict = Depends(validate_token)):
-#     books = await BookService.get_books()
-#     return books
-
-# @router.get("/", response_model=list[Book])
-# async def get_books():
-#     books = await BookService.get_books()
-#     return books
-
 @router.get("/", response_model=list[Book])
 async def get_books(user_id: str = Query(..., description="ID of the user to fetch books for")):
     books = await BookService.get_books_by_user_id(user_id)

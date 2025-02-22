@@ -15,6 +15,8 @@ export class SupabaseService {
   }
 
   async login(email: string, password: string): Promise<any> {
+      console.warn('SUPA', this.supabase);
+
     const { data, error } = await this.supabase.auth.signInWithPassword({
       email,
       password,

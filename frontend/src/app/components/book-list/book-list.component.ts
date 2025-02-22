@@ -25,6 +25,7 @@ import { UserStatsComponent } from '../user-stats/user-stats.component';
 })
 export class BookListComponent implements OnInit {
 
+  protected booksError: string = '';
   protected allUserBooks: Book[] = [];
   protected isLoading = true;
   protected noBooks = false;
@@ -114,6 +115,7 @@ export class BookListComponent implements OnInit {
       },
       error: (err: any) => {
         console.error('Error fetching books:', err);
+        this.booksError = err;
         this.isLoading = false;
       }
     })

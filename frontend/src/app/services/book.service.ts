@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+import { jwtDecode}  from 'jwt-decode';
+
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Book } from '../models/book.model';
@@ -9,29 +12,52 @@ import { Book } from '../models/book.model';
 })
 
 export class BookService {
-  private apiUrl = 'http://127.0.0.1:8000/books'
-
   constructor(private http: HttpClient) {}
-
   getAllUserBooks(userId: string): Observable<Book[]> {
-    const params: any = {};
-    params.user_id = userId;
-    console.warn('get all in user service');
-    const token = localStorage.getItem('auth_token_bookends');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.get<Book[]>(
-      this.apiUrl,
-      {params, headers}
-    ).pipe(
+    // const token = localStorage.getItem('auth_token_bookends');
+    const url = `${environment.supabaseUrl}/rest/v1/books?user_id=eq.${userId}`;
+    const headers = new HttpHeaders({
+      'apikey': environment.supabaseKey,
+      // 'Authorization': `Bearer ${token}`, // Required for authenticated requests
+      'Content-Type': 'application/json',
+      'Prefer': 'return=representation'
+    });
+
+    return this.http.get<Book[]>(url, { headers }).pipe(
       map((responses) => responses.map((response) => Book.fromApiResponse(response)))
-    )
+    );
   }
 
   deleteBook(bookId: number): Observable<any> {
-    console.warn('DELETE')
-    const token = localStorage.getItem('auth_token_bookends');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    const url = `${this.apiUrl}/${bookId}`;
+    const url = `${environment.supabaseUrl}/rest/v1/books?id=eq.${bookId}`;
+
+    const headers = new HttpHeaders({
+      'apikey': environment.supabaseKey, // Supabase API key
+      'Content-Type': 'application/json'
+    });
+
     return this.http.delete(url, { headers });
+  }
+
+  createBook(book: any): Observable<Book> {
+    const url = `${environment.supabaseUrl}/rest/v1/books`;
+    const headers = new HttpHeaders({
+      'apikey': environment.supabaseKey,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=representation' // Ensures response returns created data
+    });
+
+    return this.http.post<Book>(url, book, { headers });
+  }
+
+  updateBook(bookId: number, book: any): Observable<Book> {
+    const url = `${environment.supabaseUrl}/rest/v1/books?id=eq.${bookId}`;
+    const headers = new HttpHeaders({
+      'apikey': environment.supabaseKey,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=representation'
+    });
+
+    return this.http.patch<Book>(url, book, { headers });
   }
 }
