@@ -114,9 +114,10 @@
                   }
                 }
               </div>
+              <!-- [routerLink]="['/books', userId]"> -->
               <button
                 class="btn main-teal-button"
-                [routerLink]="['/books', userId]">
+                [routerLink]="['/books']" [queryParams]="{ user: userId }">
                   All Books
                   <i class="bi bi-bookmarks ms-1"></i>
               </button>

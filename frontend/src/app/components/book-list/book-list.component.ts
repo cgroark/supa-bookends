@@ -49,9 +49,9 @@ export class BookListComponent implements OnInit {
      // Retrieve the token from localStorage
      const token = localStorage.getItem('auth_token_bookends');
      const decodedToken: any = token ? jwtDecode(token) : null;
-     this.route.paramMap.subscribe(params => {
-      const userId = params.get('userId');
-      console.warn("PARAM", userId)
+     this.route.queryParams.subscribe(params => {
+      const userId = params['user'];
+      console.log(userId); // Use the userId as needed
       if (userId) {
         this.userId = userId;
         this.fetchBooks(userId);

@@ -66,12 +66,12 @@
           <i class="bi bi-person-fill-x ms-1"></i>
         </button>
       }
+      <!-- [routerLink]="['/books', connection.id]" -->
       <button
         class="btn main-teal-button ms-1"
         [class.full-width]="minimize"
         [class.limit-width]="!minimize"
-        [routerLink]="['/books', connection.id]"
-      >
+        [routerLink]="['/books']" [queryParams]="{ user: connection.id }">
         All Books
         <i class="bi bi-bookmarks ms-1"></i>
       </button>

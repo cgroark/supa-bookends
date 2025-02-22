@@ -5,9 +5,11 @@
         Home <i class="bi bi-house ms-1"></i>
       </a>
     </li>
+    <!-- [routerLink]="['/books', userId]" -->
     <li class="ms-3">
-      <a class="pb-1" [routerLink]="['/books', userId]"
-      [class.active]="router.url.startsWith('/books/')"
+      <a class="pb-1"
+      [routerLink]="['/books']" [queryParams]="{ user: userId }"
+      [class.active]="router.url.startsWith('/books')"
       >
         Book List <i class="bi bi-bookmarks ms-1"></i>
       </a>

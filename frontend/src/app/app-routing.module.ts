@@ -11,7 +11,7 @@ import { ConnectionsComponent } from './components/connections/connections.compo
 const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
   { path: 'add-book', component: BookFormComponent },
-  { path: 'books/:userId', component: BookListComponent, canActivate: [AuthGuard]},
+  { path: 'books', component: BookListComponent, canActivate: [AuthGuard]},
   { path: 'connections', component: ConnectionsComponent, canActivate: [AuthGuard]},
   { path: 'sign-up', component: UserFormComponent},
   { path: 'login', component: LoginFormComponent},
