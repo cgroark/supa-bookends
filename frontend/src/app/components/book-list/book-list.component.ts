@@ -51,6 +51,7 @@ export class BookListComponent implements OnInit {
      const decodedToken: any = token ? jwtDecode(token) : null;
      this.route.paramMap.subscribe(params => {
       const userId = params.get('userId');
+      console.warn("PARAM", userId)
       if (userId) {
         this.userId = userId;
         this.fetchBooks(userId);
