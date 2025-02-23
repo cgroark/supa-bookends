@@ -79,6 +79,7 @@ export class ConnectionsComponent implements OnInit {
     this.userService.getUserById(userId).subscribe({
       next: (response) => {
         this.user = response;
+        console.warn('RES', response)
         if (this.user.connections?.length) {
           const userRequests = this.user.connections.map((id: string) => this.userService.getUserById(id));
           forkJoin<User[]>(userRequests).subscribe({

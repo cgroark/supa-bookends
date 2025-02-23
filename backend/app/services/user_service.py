@@ -73,33 +73,6 @@ class UserService:
 
             return users
 
-
-
-
-
-    # @staticmethod
-    # async def update_user(user_id: int, user_data: dict):
-    #     async with (await db.get_pool()).acquire() as conn:
-    #         fields = ", ".join(f"{key} = ${i+1}" for i, key in enumerate(user_data.keys()))
-    #         query = f"UPDATE users SET {fields} WHERE id = ${len(user_data) + 1}"
-    #         values = list(user_data.values()) + [user_id]
-    #         await conn.execute(query, *values)
-
-    # @staticmethod
-    # async def update_user(user_id: int, user_data: dict):
-    #     async with (await db.get_pool()).acquire() as conn:
-    #         # Ensure goals are converted to JSONB[]
-    #         if "goals" in user_data:
-    #             user_data["goals"] = [json.dumps(goal) for goal in user_data["goals"]]  # Flatten list of JSON strings
-
-    #         fields = ", ".join(f"{key} = ${i+1}" for i, key in enumerate(user_data.keys()))
-    #         query = f"UPDATE users SET {fields} WHERE id = ${len(user_data) + 1}"
-    #         values = list(user_data.values()) + [user_id]
-    #         print("Query:", query)
-    #         print("Values:", values)
-
-    #         await conn.execute(query, *values)
-
     @staticmethod
     async def update_user(user_id: int, user_data: dict):
         async with (await db.get_pool()).acquire() as conn:
