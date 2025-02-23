@@ -135,13 +135,18 @@
   let-modal
 >
   <div class="modal-header">
-    <h4
-      class="modal-title"
-      id="modal-basic-title"
-    >
-      <i class="bi bi-book me-2"></i>
-      <em>{{ selectedBook.title }}</em>
-    </h4>
+    <div class="d-flex">
+      <h4
+        class="modal-title align-content-center">
+        <i class="bi bi-book me-2"></i>
+      </h4>
+      <h4
+        class="modal-title align-content-center"
+        id="modal-basic-title"
+        >
+        <em>{{ selectedBook.title }}</em>
+      </h4>
+    </div>
     <button
       class="btn ms-auto"
       (click)="modal.dismiss('Cross click')"
@@ -203,13 +208,18 @@
   let-modal
 >
   <div class="modal-header">
-    <h4
-      class="modal-title"
-      id="modal-basic-title"
-    >
+    <div class="d-flex">
+      <h4
+        class="modal-title align-content-center">
         <i class="bi bi-bookmark-plus me-2"></i>
+      </h4>
+      <h4
+        class="modal-title align-content-center"
+        id="modal-basic-title"
+        >
         Add <em>{{ identifiedBook ? bookToAdd.volumeInfo.title : '' }}</em>
-    </h4>
+      </h4>
+    </div>
     <button
       class="btn ms-auto"
       (click)="closeAddingModal()"

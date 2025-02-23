@@ -103,13 +103,18 @@
     let-modal
   >
   <div class="modal-header">
-    <h4
-      class="modal-title"
-      id="modal-basic-title"
-    >
-      <i class="bi bi-book me-2"></i>
-      <em>{{ selectedBook.title }}</em>
-    </h4>
+    <div class="d-flex">
+      <h4
+        class="modal-title align-content-center">
+        <i class="bi bi-book me-2"></i>
+      </h4>
+      <h4
+        class="modal-title align-content-center"
+        id="modal-basic-title"
+        >
+        <em>{{ selectedBook.title }}</em>
+      </h4>
+    </div>
     <button
       class="btn ms-auto"
       (click)="modal.dismiss('Cross click')"
@@ -134,7 +139,7 @@
             }
           </div>
           <button
-            class="btn btn-link d-block mx-auto text-decoration-none"
+            class="px-0 btn btn-link d-block mx-auto text-decoration-none"
             (click)="toggleView()">
             {{ isExpanded ? 'View Less' : 'View More' }}
           </button>
@@ -163,7 +168,7 @@
         }
         <div class="text-center">
           @if(selectedBook.rating) {
-            <span [innerHTML]="displayRating(selectedBook.rating)"></span>
+            <span class="rating-modal" [innerHTML]="displayRating(selectedBook.rating)"></span>
           }
           @if(selectedBook.comments) {
            <div class="text-decoration-underline fw-bold">Comments</div>
@@ -172,7 +177,7 @@
         </div>
         @if(!editable) {
           <button
-            class="btn main-teal-button mt-2 full-width"
+            class="btn main-teal-button mt-3 full-width"
             (click)="onOpenForm(content, selectedBook)"
           >
             Add
@@ -219,7 +224,8 @@
         </h4>
       } @else if (!editable) {
         <div class="d-flex">
-          <h4 class="align-content-center">
+          <h4
+            class="modal-title align-content-center">
             <i class="bi bi-bookmark-plus me-2"></i>
           </h4>
           <h4
@@ -231,7 +237,8 @@
         </div>
       } @else {
         <div class="d-flex">
-          <h4 class="align-content-center">
+          <h4
+            class="modal-title align-content-center">
             <i class="bi bi-pencil me-2"></i>
           </h4>
           <h4
@@ -268,7 +275,8 @@
 >
 <div class="modal-header">
   <div class="d-flex">
-    <h4 class="align-content-center">
+    <h4
+        class="modal-title align-content-center">
       <i class="bi bi-trash3 me-2"></i>
     </h4>
     <h4

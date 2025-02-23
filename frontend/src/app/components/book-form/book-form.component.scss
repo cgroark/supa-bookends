@@ -66,3 +66,19 @@ button.btn-link {
 .search-section {
   background-color: #f38ba2;
 }
+
+input[type="date"] {
+  width: 100% !important;
+  color: black !important;
+
+}
+
+/* For WebKit (iOS Safari, Chrome, etc.) */
+input[type="date"]::-webkit-datetime-edit {
+  color: black !important;
+}
+
+/* For Firefox */
+input[type="date"]::-moz-datetime-edit {
+  color: black !important;
+}
