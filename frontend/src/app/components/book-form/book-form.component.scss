@@ -71,16 +71,19 @@ input[type="date"] {
   width: 100% !important;
   color: black !important;
   background-color: white !important;
-  min-width: 100% !important;
   text-align: left !important;
 }
 
 /* For WebKit (iOS Safari, Chrome, etc.) */
 input[type="date"]::-webkit-datetime-edit {
   color: black !important;
+  text-align: left !important;
+
 }
 
 /* For Firefox */
 input[type="date"]::-moz-datetime-edit {
   color: black !important;
+  text-align: left !important;
+
 }
