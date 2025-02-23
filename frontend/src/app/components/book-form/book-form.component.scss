@@ -70,7 +70,8 @@ button.btn-link {
 input[type="date"] {
   width: 100% !important;
   color: black !important;
-
+  background-color: white !important;
+  min-width: 187px !important;;
 }
 
 /* For WebKit (iOS Safari, Chrome, etc.) */
