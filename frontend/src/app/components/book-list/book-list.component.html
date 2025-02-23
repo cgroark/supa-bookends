@@ -42,10 +42,14 @@
           No current books
         </h2>
         @if(userIsSelf) {
-          <p>
-            <i class="bi bi-search me-2"></i>
-            Search for books to add to your library
-          </p>
+          <div class="d-flex">
+            <div class="align-content-center">
+              <p><i class="bi bi-search me-2"></i></p>
+            </div>
+            <div class="align-content-center">
+              <p>Search for books to add</p>
+            </div>
+          </div>
           <app-book-form
             [noModal]="true"
             (bookUpdated)="fetchBooks(userId)"
