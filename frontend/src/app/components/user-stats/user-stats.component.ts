@@ -28,7 +28,6 @@ export class UserStatsComponent implements OnInit {
   constructor(private userService: UserService) {}
 
   ngOnInit(): void {
-    // Retrieve the token from localStorage
     const token = localStorage.getItem('auth_token_bookends');
     const decodedToken: any = token ? jwtDecode(token) : null;
 
@@ -36,7 +35,6 @@ export class UserStatsComponent implements OnInit {
       const userId = decodedToken.sub;
       this.userId = userId;
       this.currentYear = new Date().getFullYear();
-      console.log('Decoded user ID:', userId, this.currentYear);
       this.fetchGoal();
     }
   }
@@ -44,11 +42,9 @@ export class UserStatsComponent implements OnInit {
   fetchGoal(): void {
     this.userService.getUserById(this.userId).subscribe({
       next: (response: User) => {
-        console.warn('got user', response);
         this.user = response;
         this.goalForCurrentYear = this.user.goals.find((goal: any) => goal?.year === this.currentYear)
           && this.user.goals.find((goal: any) => goal?.year === this.currentYear).goal;
-        console.warn('user set', this.user, this.goalForCurrentYear);
         this.isLoading = false;
       },
       error: (err: any) => {
@@ -66,10 +62,8 @@ export class UserStatsComponent implements OnInit {
 
   onSubmit(): void {
     if (this.form.invalid) {
-      console.warn('Form is invalid');
       return;
     }
-    console.warn('form', this.form);
     this.isSubmitting = this.isLoading = true;
     const goal = {
       year: this.currentYear,
@@ -77,17 +71,14 @@ export class UserStatsComponent implements OnInit {
     };
 
     const updatedGoals = this.user.goals.map((g:any) => g.year === goal.year ? goal : g);
-    console.warn('updated', updatedGoals)
     if (!updatedGoals.some((g: any) => g.year === goal.year)) {
       updatedGoals.push(goal);
     }
-    console.warn('updated push', updatedGoals)
 
     const updatedUser = { goals: updatedGoals };
 
     this.userService.updateUser(this.userId, updatedUser).subscribe({
       next: (response) => {
-        console.warn('res', response);
         this.isSubmitting = false;
         this.showForm = !this.showForm;
         this.fetchGoal();

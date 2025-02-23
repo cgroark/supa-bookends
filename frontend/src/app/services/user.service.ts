@@ -27,7 +27,6 @@ export class UserService {
   }
 
   getUserById(userId: string): Observable<User> {
-    console.warn('GET USER', userId);
     const url = `${environment.supabaseUrl}/rest/v1/users?id=eq.${userId}`;
     const headers = new HttpHeaders({
       'apikey': environment.supabaseKey,

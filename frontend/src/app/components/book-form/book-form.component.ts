@@ -254,83 +254,13 @@ export class BookFormComponent implements OnInit {
     this.isExpanded = !this.isExpanded;
   }
 
-  // protected onSubmit(): void{
-  //   console.warn('form', this.form.controls)
-  //   // Retrieve the token from localStorage
-  //   const token = localStorage.getItem('auth_token_bookends');
-  //   const decodedToken: any = token ? jwtDecode(token) : null;
-  //   if (this.form.valid && decodedToken) {
-  //     this.isSubmitting = true;
-  //     const userId = decodedToken.sub;
-  //     console.warn('userID submit', userId)
-  //     const {title, author, format, status, rating, end, comments} = this.form.controls;
-
-  //     const newBook = {
-  //       title: title.value,
-  //       author: author.value,
-  //       overview:  this.selectedBook ? this.selectedBook.overview : null,
-  //       format: format.value,
-  //       status: status.value,
-  //       rating: rating.value,
-  //       end_date: end.value ? this.formatDate(end.value) : null,
-  //       comments: comments.value,
-  //       image_url: this.selectedBook?.image_url ?? null,
-  //       user_id: userId,
-  //     }
-
-  //     if (this.isEditing) {
-  //       console.warn('yes editing')
-
-  //       this.http
-  //       .patch(`http://127.0.0.1:8000/books/${this.selectedBook.id}/`, newBook)
-  //       .subscribe({
-  //         next: (response) => {
-  //           this.isSubmitting = false;
-  //           this.modalService.dismissAll();
-  //           this.selectedBook = null;
-  //           this.isManuallyAdding = false;
-  //           this.bookUpdated.emit();
-  //           this.form.reset();
-  //           this.isEditing = false;
-  //           this.systemMessageService.showMessage(`Your changes to ${newBook.title} have been saved!`);
-  //         },
-  //         error: (error) => {
-  //           this.isSubmitting = false;
-  //           this.isEditing = false;
-  //         },
-  //       });
-  //     } else {
-  //       console.warn('not editing')
-  //       this.http
-  //       .post('http://127.0.0.1:8000/books/', newBook)
-  //       .subscribe({
-  //         next: (response) => {
-  //           this.isSubmitting = false;
-  //           this.modalService.dismissAll();
-  //           this.selectedBook = null;
-  //           this.isManuallyAdding = false;
-  //           this.bookUpdated.emit();
-  //           this.form.reset();
-  //           this.systemMessageService.showMessage(`${newBook.title} has been added!`);
-  //         },
-  //         error: (error) => {
-  //           this.isSubmitting = false;
-  //         }
-  //       });
-  //     }
-  //   }
-  // }
   protected onSubmit(): void {
-    console.warn('form', this.form.controls);
-
     const token = localStorage.getItem('auth_token_bookends');
     const decodedToken: any = token ? jwtDecode(token) : null;
 
     if (this.form.valid && decodedToken) {
       this.isSubmitting = true;
       const userId = decodedToken.sub;
-      console.warn('userID submit', userId);
-
       const { title, author, format, status, rating, end, comments } = this.form.controls;
 
       const newBook = {
@@ -347,7 +277,6 @@ export class BookFormComponent implements OnInit {
       };
 
       if (this.isEditing && this.selectedBook) {
-        console.warn('yes editing');
         this.bookService.updateBook(this.selectedBook.id, newBook).subscribe({
           next: (response) => {
             this.isSubmitting = false;
@@ -366,7 +295,6 @@ export class BookFormComponent implements OnInit {
           },
         });
       } else {
-        console.warn('not editing');
         this.bookService.createBook(newBook).subscribe({
           next: (response) => {
             this.isSubmitting = false;

@@ -52,7 +52,6 @@ export class BookListComponent implements OnInit {
      const decodedToken: any = token ? jwtDecode(token) : null;
      this.route.queryParams.subscribe(params => {
       const userId = params['user'];
-      console.log(userId); // Use the userId as needed
       if (userId) {
         this.userId = userId;
         this.fetchBooks(userId);
@@ -84,7 +83,6 @@ export class BookListComponent implements OnInit {
         this.allUserBooks = response;
         this.noBooks = !response.length
         this.completed = response.filter((each: Book) => each.status === 4);
-        console.warn('COM', this.completed)
         this.completed2020 = response.filter((each: any) =>
           each.status === 4 && each.end_date < '2021-01-01')
           .sort((a: any, b: any) => b.end_date.localeCompare(a.end_date));
@@ -100,7 +98,6 @@ export class BookListComponent implements OnInit {
         this.completed2024 = response.filter((each: any) =>
           each.status === 4 &&  each.end_date >= '2024-01-01' && each.end_date < '2025-01-01')
           .sort((a: any, b: any) => b.end_date.localeCompare(a.end_date));
-          console.warn('COM22', this.completed2022)
         this.completed2025 = response.filter((each: any) =>
           each.status === 4 &&  each.end_date >= '2025-01-01')
           .sort((a: any, b: any) => b.end_date.localeCompare(a.end_date));

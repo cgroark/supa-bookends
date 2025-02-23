@@ -71,8 +71,6 @@ export class UserFormComponent {
 
     this.supabaseService.createUser(supabaseUser.email, supabaseUser.password)
     .then((authUser) => {
-      console.log('Supabase user created successfully:', authUser);
-
       // Prepare data for your backend
       const backendUser = {
         id: authUser.id, // Pass the Supabase user ID
@@ -81,11 +79,9 @@ export class UserFormComponent {
         last,
         username,
       };
-      console.log('backend user to create', backendUser)
       // Call your backend API to store user profile information
       this.userService.createUser(backendUser).subscribe({
         next: (user) => {
-          console.log('Backend user created successfully:', user);
           this.isSubmitting = false;
           this.systemMessageService.showMessage(`You've successfully created an account!`);
           this.router.navigate(['/login'], { queryParams: { from: 'signup' } });

@@ -28,18 +28,14 @@ export class EachConnectionComponent implements OnInit {
   constructor(private bookService: BookService) {}
 
   ngOnInit(): void {
-    console.warn('connection id', this.connection.id)
     this.bookService.getAllUserBooks(this.connection.id).subscribe({
       next: (response: Book[]) => {
-        console.warn('response', response)
         this.currentBooks = response.filter((each: Book) =>
           each.status === /*status.reading*/ 2
         );
-        console.warn('curr', this.currentBooks);
         this.recentBooks = response.filter((each: Book) =>
           each.status === 4
         ).sort((a: any, b: any) => b.end_date.localeCompare(a.end_date));
-        console.warn('rec', this.recentBooks);
         this.noBooks = !this.recentBooks.length && !this.currentBooks.length;
         this.isLoading = false;
       },

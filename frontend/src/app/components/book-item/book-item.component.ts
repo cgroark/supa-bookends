@@ -73,7 +73,6 @@ export class BookItemComponent {
   }
 
   protected deleteBook(bookId: number): void {
-    console.warn('del')
     this.isSubmitting = true;
     this.bookService.deleteBook(bookId).subscribe({
       next: (response) => {

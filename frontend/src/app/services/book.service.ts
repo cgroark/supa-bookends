@@ -43,7 +43,7 @@ export class BookService {
     const headers = new HttpHeaders({
       'apikey': environment.supabaseKey,
       'Content-Type': 'application/json',
-      'Prefer': 'return=representation' // Ensures response returns created data
+      'Prefer': 'return=representation'
     });
 
     return this.http.post<Book>(url, book, { headers });
