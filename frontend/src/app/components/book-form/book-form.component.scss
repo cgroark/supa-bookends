@@ -78,12 +78,12 @@ input[type="date"] {
 input[type="date"]::-webkit-datetime-edit {
   color: black !important;
   text-align: left !important;
-
+  min-width: 100% !important;
 }
 
 /* For Firefox */
 input[type="date"]::-moz-datetime-edit {
   color: black !important;
   text-align: left !important;
-
+  min-width: 100% !important;
 }
