@@ -1,6 +1,7 @@
 @import '../variables';
 
 .main-teal-button {
+  font-family: $font-saira;
   background-color: $teal !important;
   color: $ivory !important;
   margin: auto !important;
@@ -21,6 +22,7 @@
 }
 
 .main-red-button {
+  font-family: $font-saira;
   background-color: $red !important;
   color: $ivory !important;
   margin: auto !important;
@@ -35,6 +37,7 @@
 }
 
 .outline-red-button {
+  font-family: $font-saira;
   background-color: $ivory !important;
   color: $black !important;
   margin: auto !important;
@@ -53,6 +56,7 @@
 }
 
 .main-purple-button {
+  font-family: $font-saira;
   background-color: $purple !important;
   color: $ivory !important;
   margin: auto !important;
@@ -70,6 +74,7 @@
 }
 
 .outline-purple-button {
+  font-family: $font-saira;
   background-color: $ivory !important;
   color: $black !important;
   margin: auto !important;
@@ -91,6 +96,7 @@
 }
 
 .circle-teal-button {
+  font-family: $font-saira;
   background-color: $teal !important;
   margin-left: 50px;
   margin-top: -45px;
@@ -109,6 +115,7 @@
 }
 
 .edit-button {
+  font-family: $font-saira;
   background-color: $salmon !important;
   border-radius: 50% !important;
   padding-right: .5rem !important;
@@ -139,6 +146,7 @@
 }
 
 .delete-button {
+  font-family: $font-saira;
   background-color: $black !important;
   border-radius: 50% !important;
   padding-right: .6rem !important;

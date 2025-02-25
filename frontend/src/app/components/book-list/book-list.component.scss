@@ -4,9 +4,14 @@ h2, h3, h4, p, i {
   color: $ivory;
 }
 
+h4 {
+  font-family: $font-saira;
+}
+
 h2:not(.no-books) {
   font-size: $font-size-medium;
   border-bottom: solid 3px $yellow;
+  font-family: $font-saira;
 }
 
 p, p > i {
@@ -15,9 +20,7 @@ p, p > i {
 
 h3.year {
   background-color: $purple;
-}
-h4.year-stats {
-  background-color: $light-black;
+  font-family: $font-saira;
 }
 
 section.reading {
@@ -29,7 +32,8 @@ section.reading {
   background: $black;
   color: $ivory;
   font-size: 20px;
-  font-family: $font-ubuntu;
+  // font-family: $font-ubuntu;
+  font-family: $font-saira;
   border-top-left-radius: 0 !important;
   border-top-right-radius: 0 !important;
   &:focus {

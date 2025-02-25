@@ -7,8 +7,9 @@ h1, h2, p, i, a {
 h1 {
   font-size: $font-size-large;
   margin-bottom: 0;
+  font-family: $font-bungee;
 }
 
-h2 {
-  font-size: $font-size-medium;
+p {
+  font-family: $font-saira;
 }
