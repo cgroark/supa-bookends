@@ -1,5 +1,8 @@
 @import '../../../styles/variables';
 
+nav {
+  border-top: 3px solid $purple;
+}
 a {
   color: $ivory;
   text-decoration: none;
