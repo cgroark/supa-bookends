@@ -55,3 +55,30 @@ section.reading {
     background-color: $light-black;
   }
 }
+
+.breadcrumbs {
+  position: sticky;
+  top: 0;
+  background-color: rgba($salmon, 0.9);
+  z-index: 2500;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  a {
+    color: $black;
+    text-decoration: none;
+    font-family: $font-saira;
+    font-size: $font-size-small;
+    border-bottom: solid 3px transparent;
+    &.active {
+      border-bottom: solid 3px $black;
+    }
+    &:hover {
+      border-bottom: solid 2px $ivory;
+    }
+    i {
+      color: $black;
+    }
+    @media screen and (max-width: 470px) {
+      font-size: 13px;
+    }
+  }
+}

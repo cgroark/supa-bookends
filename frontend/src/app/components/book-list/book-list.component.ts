@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { jwtDecode}  from 'jwt-decode';
@@ -21,7 +21,7 @@ import { UserStatsComponent } from '../user-stats/user-stats.component';
   standalone: true,
   templateUrl: './book-list.component.html',
   styleUrls: ['./book-list.component.scss'],
-  imports: [BookItemComponent, BookFormComponent, UserStatsComponent, HeaderComponent, NavbarComponent, CommonModule, NgbAccordionModule]
+  imports: [BookItemComponent, BookFormComponent, UserStatsComponent, HeaderComponent, NavbarComponent, CommonModule, NgbAccordionModule, RouterLink]
 })
 export class BookListComponent implements OnInit {
 
@@ -43,6 +43,9 @@ export class BookListComponent implements OnInit {
   protected userId: string = '';
   protected user: any;
   protected userIsSelf = false;
+  protected activeSection: string = '';
+  protected sectionsLength: number = 0;
+
 
   constructor(private bookService: BookService, private modalService: NgbModal, private route: ActivatedRoute, private userService: UserService) { }
 
@@ -74,7 +77,6 @@ export class BookListComponent implements OnInit {
         }
       }
     });
-
   }
 
   protected fetchBooks(userId: string) {
@@ -109,6 +111,7 @@ export class BookListComponent implements OnInit {
         this.setAside = response.filter((each: Book) =>
           each.status === 3);
         this.isLoading = false;
+        this.observeSections();
       },
       error: (err: any) => {
         console.error('Error fetching books:', err);
@@ -125,4 +128,42 @@ export class BookListComponent implements OnInit {
     });
     this.selectedBook = book;
   }
+
+  protected scrollToSection(sectionId: string): void {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const offset = 40;
+      const elementPosition = element.getBoundingClientRect().top + window.scrollY - offset;
+
+      window.scrollTo({
+        top: elementPosition,
+        behavior: 'smooth'
+      });
+    }
+  }
+
+
+  protected observeSections(): void {
+    setTimeout(() => {
+      const sections = document.querySelectorAll('.breadcrumb-section');
+      this.sectionsLength = sections.length;
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              console.warn('intersection', entry.target.id)
+              this.activeSection = entry.target.id;
+            }
+          });
+        },
+        {
+          rootMargin: '0px 0px -94% 0px',
+          threshold: 0,
+        }
+      );
+
+      sections.forEach((section) => observer.observe(section));
+    }, 0);
+  }
+
 }

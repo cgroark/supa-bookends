@@ -58,6 +58,7 @@
       }
     </section>
   </div>
+
   @if(userIsSelf) {
     <div class="col-md-3">
       <div class="text-center my-3 goals p-md-0 p-4 rounded">
@@ -68,9 +69,40 @@
     </div>
   }
 </div>
+<div class="breadcrumbs">
+  <ul class="list-unstyled d-flex justify-content-evenly pt-1 pb-2 py-md-2">
+    @if(completed.length && sectionsLength >=2) {
+      <li>
+        <a [class.active]="activeSection === 'completed'" (click)="scrollToSection('completed')">
+          <i class="bi bi-bookmark-check-fill me-1"></i>
+          Completed
+          <i class="bi bi-chevron-right ms-1"></i>
+        </a>
+      </li>
+    }
+    @if(setAside.length && sectionsLength >=2) {
+      <li>
+        <a [class.active]="activeSection === 'set-aside'" (click)="scrollToSection('set-aside')">
+          <i class="bi bi-book-half me-1"></i>
+          Set Aside
+          <i class="bi bi-chevron-right ms-1"></i>
+        </a>
+      </li>
+    }
+    @if(wantToRead.length && sectionsLength >=2) {
+      <li>
+        <a [class.active]="activeSection === 'want-to-read'" (click)="scrollToSection('want-to-read')">
+          <i class="bi bi-bookmark-star me-1"></i>
+          List
+          <i class="bi bi-chevron-right ms-1"></i>
+        </a>
+      </li>
+    }
+  </ul>
+</div>
 
 @if(completed.length) {
-  <section class="py-3 mb-2">
+  <section class="py-3 mb-2 breadcrumb-section" id="completed">
     <h2 class="text-center text-md-start mb-4 mb-md-2 pb-3"pb-3>
       <i class="bi bi-bookmark-check-fill me-2"></i>
       Completed
@@ -406,7 +438,7 @@
   </section>
 }
 @if(setAside.length) {
-  <section class="py-3 mb-2">
+  <section class="py-3 mb-2 breadcrumb-section" id="set-aside">
     <h2 class="text-center text-md-start mb-4 mb-md-2 pb-3"pb-3>
       <i class="bi bi-book-half me-2"></i>
       Set Aside
@@ -463,7 +495,7 @@
   </section>
 }
 @if (wantToRead.length) {
-  <section class="py-3 mb-2">
+  <section class="py-3 mb-2 breadcrumb-section" id="want-to-read">
     <h2 class="text-center text-md-start mb-4 mb-md-2 pb-3"pb-3>
       <i class="bi bi-bookmark-star me-2"></i>
       Reading List
