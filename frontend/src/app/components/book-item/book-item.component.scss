@@ -45,7 +45,7 @@ h4.modal-text, h4.modal-text i, p.modal-text {
 .book-item {
   max-width: 136px;
   &:hover {
-    z-index: 1000;
+    z-index: 900;
     transition: .4s;
     -webkit-transform: scale(1.04);
     transform: scale(1.04);
