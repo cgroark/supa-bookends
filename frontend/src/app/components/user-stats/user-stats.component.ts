@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { jwtDecode}  from 'jwt-decode';
 import { ReactiveFormsModule, FormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
 import { UserService } from 'src/app/services/user.service';
@@ -7,7 +8,7 @@ import { User } from 'src/app/models/user.model';
 @Component({
   selector: 'app-user-stats',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule],
+  imports: [ReactiveFormsModule, FormsModule, CommonModule],
   templateUrl: './user-stats.component.html',
   styleUrl: './user-stats.component.scss'
 })
