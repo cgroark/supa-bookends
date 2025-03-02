@@ -35,8 +35,6 @@ export class UserFormComponent {
       validators: [Validators.required, Validators.email]
     }),
     goal: new FormControl<number | null>(null),
-    username: new FormControl<string>('',{
-      validators: [Validators.required]}),
     password: new FormControl<string>('',{
       validators: [Validators.required, Validators.minLength(8)]}),
     passwordConfirm: new FormControl<string>('',{
@@ -55,14 +53,13 @@ export class UserFormComponent {
   constructor(private userService: UserService, private supabaseService: SupabaseService, private router: Router, private systemMessageService: SystemMessageService){}
 
   onSubmit(): void {
-    console.warn('submit', this.form);
     if (this.form.invalid) {
       console.warn('Form is invalid');
       return;
     }
     this.isSubmitting = true;
 
-    const { email, first, last, username, password } = this.form.value;
+    const { email, first, last, password } = this.form.value;
 
     const supabaseUser = {
       email,
@@ -77,7 +74,7 @@ export class UserFormComponent {
         created_at: authUser.created_at, // Pass the creation timestamp
         first,
         last,
-        username,
+        username: email,
       };
       // Call your backend API to store user profile information
       this.userService.createUser(backendUser).subscribe({

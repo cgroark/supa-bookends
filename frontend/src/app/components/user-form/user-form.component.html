@@ -61,23 +61,6 @@
               />
             </div>
           }
-          @if(form.controls['username']; as username) {
-            <div class="mb-2">
-              <label class="d-block" for="username">
-                <i class="bi bi-person-rolodex me-1"></i>
-                Username
-              </label>
-              <input
-                [class.is-invalid]="
-                  (!username.valid && username.touched) ||
-                (!username.valid && ngForm.submitted)"
-                class="w-100"
-                type="text"
-                formControlName="username"
-                id="username"
-              />
-            </div>
-          }
           @if(form.controls['password']; as password) {
             <div class="mb-2 w-100">
               <label class="d-block" for="password">
