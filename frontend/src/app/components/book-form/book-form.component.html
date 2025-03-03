@@ -197,6 +197,8 @@
                 class="w-100"
                 id="end"
                 #endInput="ngbDatepicker"
+                (focus)="endInput.open()"
+                restoreFocus="false"
                 type="date"
                 formControlName="end"
                 ngbDatepicker
