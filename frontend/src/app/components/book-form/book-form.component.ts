@@ -27,7 +27,7 @@ import { HttpClient } from '@angular/common/http';
   standalone: true,
   templateUrl: './book-form.component.html',
   styleUrls: ['./book-form.component.scss'],
-  imports: [NgSelectModule, NgbDatepickerModule, NgOptionHighlightModule, ReactiveFormsModule, FormsModule, CommonModule]
+  imports: [ReactiveFormsModule, FormsModule, CommonModule, NgSelectModule, NgbDatepickerModule, NgOptionHighlightModule]
 })
 export class BookFormComponent implements OnInit {
   @Input() noModal = false;
