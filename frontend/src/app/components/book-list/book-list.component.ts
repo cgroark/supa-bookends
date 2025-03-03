@@ -151,7 +151,6 @@ export class BookListComponent implements OnInit {
         (entries) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
-              console.warn('intersection', entry.target.id)
               this.activeSection = entry.target.id;
             }
           });

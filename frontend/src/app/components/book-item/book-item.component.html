@@ -17,6 +17,13 @@
           </em>
         </h4>
         <p>{{ selectedBook.author }}</p>
+        @if(selectedBook.rating) {
+          <span
+            class="rating d-flex justify-content-evenly"
+            [class.narrow]="minimize"
+            [innerHTML]="displayRating(selectedBook.rating)">
+          </span>
+        }
         @if(editable && !selectedBook.image_url) {
           <div ngbDropdown class="dropdown">
             <button ngbDropdownToggle class="btn edit-button dropdown-toggle ms-auto">
@@ -57,9 +64,19 @@
             (click)="onOpenBook(contentBook, selectedBook)"
           ></i>
         }
+        @if(selectedBook.rating) {
+          <span
+            class="rating d-flex justify-content-evenly"
+            [class.narrow]="minimize"
+            [innerHTML]="displayRating(selectedBook.rating)">
+          </span>
+        }
         @if(editable && selectedBook.image_url) {
           <div ngbDropdown class="dropdown">
-            <button ngbDropdownToggle class="btn edit-button overlay dropdown-toggle">
+            <button ngbDropdownToggle
+              class="btn edit-button overlay dropdown-toggle"
+              [class.higher]="selectedBook.rating"
+              >
               <i class="bi bi-pencil ms-1 fw-bold"></i>
             </button>
             <div ngbDropdownMenu>
@@ -78,13 +95,6 @@
             </div>
           </div>
         } @else if(!editable) {
-          @if(selectedBook.rating) {
-            <span
-              class="rating"
-              [class.narrow]="minimize"
-              [innerHTML]="displayRating(selectedBook.rating)">
-            </span>
-          }
           <button
             class="btn circle-teal-button"
             [class.wider]="!minimize"
