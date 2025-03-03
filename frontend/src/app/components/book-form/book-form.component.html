@@ -197,10 +197,11 @@
                 class="w-100"
                 id="end"
                 #endInput="ngbDatepicker"
-                type="date"
+                type="text"
                 formControlName="end"
                 ngbDatepicker
-              />
+                (click)="endInput.open()"
+                />
             </div>
           }
           <div class="mb-2">

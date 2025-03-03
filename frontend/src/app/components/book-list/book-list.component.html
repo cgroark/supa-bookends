@@ -1,6 +1,6 @@
 <app-header />
 <app-navbar />
-@if(!userIsSelf && !isLoading) {
+@if(!userIsSelf && !isLoadingUser) {
   <h2 class="mb-4 mb-md-2 pb-3">
     <i class="bi bi-file-earmark-person me-2"></i>
     {{user.first}}'s Book List</h2>
@@ -37,7 +37,7 @@
                 <i class="bi bi-bookmark-plus ms-1"></i>
             </button>
           }
-        } @else {
+        } @else if(!isLoading) {
           <h2 class="no-books">
             <i class="bi bi-bookmark-x-fill me-2"></i>
             No current books

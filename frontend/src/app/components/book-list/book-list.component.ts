@@ -28,6 +28,7 @@ export class BookListComponent implements OnInit {
   protected booksError: string = '';
   protected allUserBooks: Book[] = [];
   protected isLoading = true;
+  protected isLoadingUser = true;
   protected noBooks = false;
   protected completed: Book[] = [];
   protected completed2025: Book[] = [];
@@ -66,11 +67,11 @@ export class BookListComponent implements OnInit {
             this.userService.getUserById(this.userId).subscribe({
               next: (response: User) => {
                 this.user = response;
-                this.isLoading = false;
+                this.isLoadingUser = false;
               },
               error: (err: any) => {
                 console.error('Error fetching user:', err);
-                this.isLoading = false;
+                this.isLoadingUser = false;
               }
             })
           }
@@ -84,34 +85,11 @@ export class BookListComponent implements OnInit {
       next: (response: Book[]) => {
         this.allUserBooks = response;
         this.noBooks = !response.length
-        this.completed = response.filter((each: Book) => each.status === 4);
-        this.completed2020 = response.filter((each: any) =>
-          each.status === 4 && each.end_date < '2021-01-01')
-          .sort((a: any, b: any) => b.end_date.localeCompare(a.end_date));
-        this.completed2021 = response.filter((each: any) =>
-          each.status === 4 &&  each.end_date >= '2021-01-01' && each.end_date < '2022-01-01')
-          .sort((a: any, b: any) => b.end_date.localeCompare(a.end_date));
-        this.completed2022 = response.filter((each: any) =>
-          each.status === 4 &&  each.end_date >= '2022-01-01' && each.end_date < '2023-01-01')
-          .sort((a: any, b: any) => b.end_date.localeCompare(a.end_date));
-        this.completed2023 = response.filter((each: any) =>
-          each.status === 4 &&  each.end_date >= '2023-01-01' && each.end_date < '2024-01-01')
-          .sort((a: any, b: any) => b.end_date.localeCompare(a.end_date));
-        this.completed2024 = response.filter((each: any) =>
-          each.status === 4 &&  each.end_date >= '2024-01-01' && each.end_date < '2025-01-01')
-          .sort((a: any, b: any) => b.end_date.localeCompare(a.end_date));
-        this.completed2025 = response.filter((each: any) =>
-          each.status === 4 &&  each.end_date >= '2025-01-01')
-          .sort((a: any, b: any) => b.end_date.localeCompare(a.end_date));
-        this.reading = response.filter((each: Book) =>
-            each.status === 2);
-        this.wantToRead = response.filter((each: Book) =>
-          each.status === 1)
-          .sort((a: Book, b: Book) => a.title.localeCompare(b.title));
-        this.setAside = response.filter((each: Book) =>
-          each.status === 3);
-        this.isLoading = false;
-        this.observeSections();
+        const isProcessed = this.processBooks(response);
+        if (isProcessed) {
+          this.isLoading = false;
+          this.observeSections();
+        }
       },
       error: (err: any) => {
         console.error('Error fetching books:', err);
@@ -120,6 +98,40 @@ export class BookListComponent implements OnInit {
       }
     })
   };
+
+  private processBooks(response: Book[]): boolean {
+      this.completed = response.filter((each: Book) => each.status === 4);
+      this.completed2020 = this.sortBooksByDate(response, 4, null, '2021-01-01');
+      this.completed2021 = this.sortBooksByDate(response, 4, '2021-01-01', '2022-01-01');
+      this.completed2022 = this.sortBooksByDate(response, 4, '2022-01-01', '2023-01-01');
+      this.completed2023 = this.sortBooksByDate(response, 4, '2023-01-01', '2024-01-01');
+      this.completed2024 = this.sortBooksByDate(response, 4, '2024-01-01', '2025-01-01');
+      this.completed2025 = this.sortBooksByDate(response, 4, '2025-01-01', '2026-01-01');
+
+      this.reading = response.filter((each: Book) => each.status === 2);
+      this.wantToRead = response
+        .filter((each: Book) => each.status === 1)
+        .sort((a: Book, b: Book) => a.title.localeCompare(b.title));
+      this.setAside = response.filter((each: Book) => each.status === 3);
+      this.reading = response.filter((each: Book) =>
+          each.status === 2);
+      this.wantToRead = response.filter((each: Book) =>
+        each.status === 1)
+        .sort((a: Book, b: Book) => a.title.localeCompare(b.title));
+      this.setAside = response.filter((each: Book) =>
+        each.status === 3);
+      return true;
+  }
+
+  private sortBooksByDate(response: Book[], status: number, startDate: string | null, endDate: string | null): Book[] {
+    return response
+      .filter((each: any) =>
+        each.status === status &&
+        (startDate ? each.end_date >= startDate : true) &&
+        (endDate ? each.end_date < endDate : true)
+      )
+      .sort((a: any, b: any) => b.end_date.localeCompare(a.end_date));
+  }
 
   onOpenForm(content: any, book: any):void {
     this.modalService.open(content, {
