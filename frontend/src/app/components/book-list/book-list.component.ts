@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { jwtDecode}  from 'jwt-decode';
@@ -48,7 +48,7 @@ export class BookListComponent implements OnInit {
   protected sectionsLength: number = 0;
 
 
-  constructor(private bookService: BookService, private modalService: NgbModal, private route: ActivatedRoute, private userService: UserService) { }
+  constructor(private bookService: BookService, private modalService: NgbModal, private route: ActivatedRoute, private userService: UserService, private router: Router) { }
 
   ngOnInit(): void {
      // Retrieve the token from localStorage
@@ -56,7 +56,13 @@ export class BookListComponent implements OnInit {
      const decodedToken: any = token ? jwtDecode(token) : null;
      this.route.queryParams.subscribe(params => {
       const userId = params['user'];
-      if (userId) {
+      if(!userId && decodedToken) {
+        this.userId = decodedToken.sub;
+        this.userIsSelf = true;
+        this.router.navigate([], {
+          queryParams: {user: this.userId}
+        })
+      }else if(userId) {
         this.userId = userId;
         this.fetchBooks(userId);
         if(decodedToken) {
