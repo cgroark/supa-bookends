@@ -98,11 +98,14 @@
 .circle-teal-button {
   font-family: $font-saira;
   background-color: $teal !important;
-  margin-left: 50px;
-  margin-top: -45px;
+  margin-left: 45px;
+  margin-top: -50px;
   color: $ivory !important;
   padding: .25rem .5rem !important;
   border-radius: 50% !important;
+  width: 40px;
+  height: 40px;
+  border: solid 2px $black !important;
   &.wider {
     margin-left: 100px;
   }
@@ -112,6 +115,10 @@
   &:hover {
     background-color: $teal-hover !important;
   }
+  i {
+    color: $black;
+    font-size: 16px;
+  }
 }
 
 .edit-button {
@@ -119,32 +126,26 @@
   background-color: $salmon !important;
   border-radius: 50% !important;
   padding-right: .5rem !important;
-  padding-left: .5rem !important;
+  padding-left: .3rem !important;
   display: block !important;
   margin-top: 5px;
+  width: 40px;
+  height: 40px;
+  border: solid 2px $black !important;
   &.overlay {
     display: inline-block !important;
-    margin-left: 100px;
-    margin-top: -42px;
+    margin-left: 95px;
+    margin-top: -52px;
   }
   &.higher {
     margin-top: -100px;
   }
   i {
     color: $black;
-    @media screen and (max-width: 767px) {
-      font-size: 14px;
-      margin-top: -2px !important;
-      display: block;
-    }
+    font-size: 16px;
   }
   &:hover {
     background-color: $salmon-hover !important;
-  }
-  @media screen and (max-width: 767px) {
-    width: 30px;
-    height: 30px;
-    padding-left: 0.3rem !important;
   }
 }
 

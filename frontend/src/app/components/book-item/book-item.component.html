@@ -179,37 +179,34 @@
            <span class="small">{{ selectedBook.comments}}</span>
           }
         </div>
-        @if(!editable) {
-          <button
-            class="btn main-teal-button mt-3 full-width"
-            (click)="onOpenForm(content, selectedBook)"
-          >
-            Add
-            <i class="bi bi-bookmark-plus ms-1 fw-bold"></i>
-          </button>
-        }
-        @if(editable) {
-          <div class="d-flex"
-            [class.justify-content-end]="!selectedBook.image_url"
-          >
-            <button
-              class="btn delete-button"
-              [ngClass]="selectedBook.image_url ? 'me-auto' : 'me-2'"
-              (click)="onOpenDelete(deleteContent, selectedBook)"
-            >
-              <i class="bi bi-trash3 fw-bold"></i>
-            </button>
-            <button
-              class="btn edit-button"
-              [class.ms-auto]="selectedBook.image_url"
-              (click)="onOpenForm(content, selectedBook)"
-            >
-              <i class="bi bi-pencil ms-1 fw-bold"></i>
-            </button>
-          </div>
-        }
       </div>
     </div>
+    @if(editable) {
+      <div class="d-flex">
+        <button
+          class="btn main-teal-button mx-1"
+          (click)="onOpenForm(content, selectedBook)"
+        >
+          Edit
+          <i class="bi bi-pencil ms-1 fw-bold"></i>
+        </button>
+        <button
+          class="btn main-red-button mx-1"
+          (click)="onOpenDelete(deleteContent, selectedBook)"
+        >
+          Delete
+          <i class="bi bi-trash3 fw-bold"></i>
+        </button>
+      </div>
+    } @else {
+      <button
+        class="btn main-teal-button mt-3 full-width"
+        (click)="onOpenForm(content, selectedBook)"
+      >
+        Add
+        <i class="bi bi-bookmark-plus ms-1 fw-bold"></i>
+      </button>
+    }
   </div>
 </ng-template>
 
@@ -230,7 +227,7 @@
           class="modal-title align-content-center"
           id="modal-basic-title"
           >
-          Add <em>{{ selectedBook.title }}</em> to your reading list
+          Add <em>{{ selectedBook.title }}</em>
         </h4>
       } @else {
         <h4
