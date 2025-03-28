@@ -572,12 +572,17 @@
           class="modal-title align-content-center">
           <i class="bi bi-pencil me-2"></i>
         </h4>
-        <h4
-          class="modal-title align-content-center"
-          id="modal-basic-title"
-          >
-          Editing <em>{{ selectedBook.title }}</em>
-        </h4>
+        <div>
+          <h4
+            class="modal-title align-content-center"
+            id="modal-basic-title"
+            >
+            Editing <em>{{ selectedBook.title }}</em>
+          </h4>
+          @if(selectedBook.author) {
+            <p>By {{ selectedBook.author }}</p>
+          }
+        </div>
       </div>
     }
     <button
