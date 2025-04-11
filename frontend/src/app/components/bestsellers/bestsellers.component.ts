@@ -90,6 +90,7 @@ export class BestsellersComponent implements OnInit {
   }
 
   addBestSeller(contentForm: any, book: any): void {
+    console.warn(contentForm, book)
     this.addingTitle = book.title;
     this.isAdding = true;
     const isbns = [
@@ -100,13 +101,41 @@ export class BestsellersComponent implements OnInit {
     ].filter((isbn) => isbn); // Filter out undefined or null ISBNs
     const searchBookByISBN = (index: number): void => {
       if (index >= isbns.length) {
-        this.identifiedBook = false;
-        this.bookToAdd = {
-          title: book.title ? book.title : 'Unknown title',
-          author: book.author ? book.author : 'Unknown author',
-        };
-        this.isAdding = false;
-        this.onOpenForm(contentForm);
+        console.warn("CHECKHEE EHWEFWEF")
+        this.http
+        .get(`https://www.googleapis.com/books/v1/volumes?q=isbn:${book.primary_isbn13}&langRestrict=en`)
+        .subscribe({
+          next: (response: any) => {
+            function checkTitle(book: string, response: string): boolean {
+              console.warn('CHECK title check', book.startsWith(response) ||
+              response.startsWith(book))
+              return book.startsWith(response) ||
+              response.startsWith(book)
+            }
+            if (response?.items?.length > 0
+              && checkTitle(book.title.toLowerCase(), response.items[0].volumeInfo.title.toLowerCase())) {
+
+              this.bookToAdd = response.items[0];
+              this.identifiedBook = true;
+              this.onOpenForm(contentForm);
+              this.isAdding = false;
+            } else {
+              searchBookByISBN(index + 1);
+            }
+          },
+          error: (err) => {
+            console.error(`Error searching for ISBN: ${isbn}`, err);
+            searchBookByISBN(index + 1);
+            this.isAdding = false;
+          },
+        });
+        // this.identifiedBook = false;
+        // this.bookToAdd = {
+        //   title: book.title ? book.title : 'Unknown title',
+        //   author: book.author ? book.author : 'Unknown author',
+        // };
+        // this.isAdding = false;
+        // this.onOpenForm(contentForm);
         return;
       }
 
@@ -115,7 +144,15 @@ export class BestsellersComponent implements OnInit {
         .get(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}&langRestrict=en`)
         .subscribe({
           next: (response: any) => {
-            if (response?.items?.length > 0) {
+            function checkTitle(book: string, response: string): boolean {
+              console.warn('CHECK title check', book.startsWith(response) ||
+              response.startsWith(book))
+              return book.startsWith(response) ||
+              response.startsWith(book)
+            }
+            if (response?.items?.length > 0
+              && checkTitle(book.title.toLowerCase(), response.items[0].volumeInfo.title.toLowerCase())) {
+
               this.bookToAdd = response.items[0];
               this.identifiedBook = true;
               this.onOpenForm(contentForm);

@@ -109,12 +109,26 @@
   >
   <div class="p-1 each-book">
     <div>
-      <img
-        [src]="book.book_image"
-        [alt]="'picture of the cover of ' + book.title"
-        class="d-block"
-        (click)="onOpenBook(contentBook, book)"
-      >
+      @if(book.book_image) {
+        <img
+          [src]="book.book_image"
+          [alt]="'picture of the cover of ' + book.title"
+          class="d-block"
+          (click)="onOpenBook(contentBook, book)"
+        >
+      } @else {
+        <div class="no-image text-center"
+          (click)="onOpenBook(contentBook, book)"
+          >
+          <p class="mb-0">
+            <i
+              class="bi bi-book d-block"
+            >
+            </i>
+          </p>
+          <p class="mb-0"><em>{{book.title}}</em></p>
+        </div>
+      }
     </div>
     <button
       class="btn circle-teal-button"

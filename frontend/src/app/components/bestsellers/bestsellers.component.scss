@@ -32,8 +32,13 @@ div.fiction, div.non-fiction {
 .each-book {
   div {
     height: 120px;
-    img {
+    img, .no-image {
       max-width: 80px;
+      &:hover {
+        cursor: pointer;
+      }
+    }
+    .no-image {
       &:hover {
         cursor: pointer;
       }
