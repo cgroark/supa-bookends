@@ -98,8 +98,39 @@
             }
           }
         </div>
+        <div class="breadcrumbs">
+          <ul class="list-unstyled d-flex justify-content-evenly pt-1 pb-2 py-md-2">
+            @if(recentBooks.length && sectionsLength >=2) {
+              <li>
+                <a [class.active]="activeSection === 'current'" (click)="scrollToSection('current')">
+                  <i class="bi bi-bookmark-check-fill me-1"></i>
+                  Latest
+                  <i class="bi bi-chevron-right ms-1"></i>
+                </a>
+              </li>
+            }
+            @if(existingConnections.length && sectionsLength >=2) {
+              <li>
+                <a [class.active]="activeSection === 'friends'" (click)="scrollToSection('friends')">
+                  <i class="bi bi-book-half me-1"></i>
+                  Friends
+                  <i class="bi bi-chevron-right ms-1"></i>
+                </a>
+              </li>
+            }
+            @if(!fullWidth && sectionsLength >=2) {
+              <li>
+                <a [class.active]="activeSection === 'bestsellers'" (click)="scrollToSection('bestsellers')">
+                  <i class="bi bi-bookmark-star me-1"></i>
+                  Bestsellers
+                  <i class="bi bi-chevron-right ms-1"></i>
+                </a>
+              </li>
+            }
+          </ul>
+        </div>
         @if(recentBooks.length && !isLoading) {
-          <div class="row mb-3 py-3 px-1 px-md-3 rounded read">
+          <div class="row mb-3 py-3 px-1 px-md-3 rounded read breadcrumb-section" id="current">
             <div class="col-md-3 ps-0 align-content-center">
               <h2>
                 <i class="bi bi-bookmark-check-fill me-1"></i>
@@ -129,7 +160,7 @@
           </div>
         }
         @if(existingConnections.length) {
-          <div class="row mb-3 py-3 px-1 px-md-3 rounded connections">
+          <div class="row mb-3 py-3 px-1 px-md-3 rounded connections breadcrumb-section" id="friends">
             <div class="col-md-3 ps-0 mb-md-0 mb-3">
               <h2>
                 <i class="bi bi-people-fill me-1"></i>
@@ -165,7 +196,9 @@
         }
     </div>
     <div
-    [ngClass]="noBooks ? '' : 'col-lg-3 pt-4'"
+      class="breadcrumb-section"
+      id="bestsellers"
+      [ngClass]="noBooks ? '' : 'col-lg-3 pt-4'"
     >
       <app-bestsellers
         (updateBooks)="fetchBooks(userId)"

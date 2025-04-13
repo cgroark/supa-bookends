@@ -40,6 +40,8 @@ export class HomeComponent implements OnInit {
   protected user: any;
   protected existingConnections: User[] = [];
   protected fullWidth = false;
+  protected activeSection: string = '';
+  protected sectionsLength: number = 0;
 
   constructor(private userService: UserService, private bookService: BookService, private modalService: NgbModal) {}
 
@@ -99,6 +101,7 @@ export class HomeComponent implements OnInit {
         this.completed2025 = response.filter((each: any) =>
           each.status === 4 &&  each.end_date >= '2025-01-01');
         this.isLoading = false;
+        this.observeSections();
       },
       error: (err: any) => {
         console.error('Error fetching books:', err);
@@ -126,5 +129,42 @@ export class HomeComponent implements OnInit {
 
   protected fullWidthBooks(): void {
     this.fullWidth = true;
+  }
+
+  protected scrollToSection(sectionId: string): void {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const offset = 40;
+      const elementPosition = element.getBoundingClientRect().top + window.scrollY - offset;
+
+      window.scrollTo({
+        top: elementPosition,
+        behavior: 'smooth'
+      });
+    }
+  }
+
+
+  protected observeSections(): void {
+    setTimeout(() => {
+      const sections = document.querySelectorAll('.breadcrumb-section');
+      this.sectionsLength = sections.length;
+      console.log('SECTION length', this.sectionsLength)
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              this.activeSection = entry.target.id;
+            }
+          });
+        },
+        {
+          rootMargin: '0px 0px -94% 0px',
+          threshold: 0,
+        }
+      );
+
+      sections.forEach((section) => observer.observe(section));
+    }, 0);
   }
 }
