@@ -121,12 +121,12 @@ export class BookFormComponent implements OnInit {
       debounceTime(200),
       distinctUntilChanged(),
       switchMap((term) => {
-        if (!term) {
+        if (!term || term?.length < 2) {
           this.isLoading = false;
           return of([]);
         }
         const searchTerm = of(term);
-        return this.http.get<any>(`https://www.googleapis.com/books/v1/volumes?q=${term}&langRestrict=en`).pipe(
+        return this.http.get<any>(`https://www.googleapis.com/books/v1/volumes?q=${term}&sortBy=relevance`).pipe(
           map((response) =>
             response.items.map((item: any) => ({
               title: item.volumeInfo?.title || 'Unknown Title',
@@ -221,7 +221,9 @@ export class BookFormComponent implements OnInit {
   }
 
   protected alreadyAdded(title: string, authors: any): boolean {
-    return this.allUserBooks.some(each => each.title === title && each.author === authors[0] );
+    if(!authors) {
+    }
+    return this.allUserBooks.some(each => each.title === title && (authors && each.author === authors[0] ));
   }
 
   protected onBookChange(selected: any): void {

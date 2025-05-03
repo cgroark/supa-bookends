@@ -40,28 +40,38 @@
           let-search="searchTerm"
           >
           <span class="ng-value-label">
-            <div class="d-flex align-items-center gap-1"
+            <div
+              class="d-flex"
               [style.cursor]="item.disabled ? 'default' : null"
             >
-              <span [ngOptionHighlight]="search">{{ item.title }}</span>
-              @if(item.authors) {
-                @for(author of item.authors; track $index ) {
-                  <span
-                    [ngOptionHighlight]="search"
-                    class="small badge bg-black"
+              <div>
+                <img
+                  class="me-2"
+                  [style.max-width.px]="32"
+                  [src]="item.image_url">
+              </div>
+              <div>
+                <div
+                  class="text-wrap"
+                  [ngOptionHighlight]="search">{{ item.title }}</div>
+                @if(item.authors) {
+                  @for(author of item.authors; track $index ) {
+                    <div
+                      class="small me-1"
+                    >
+                      {{ author }}
+                    </div
                   >
-                    {{ author }}
-                  </span
-                >
+                  }
                 }
-              }
-              @if(alreadyAdded(item.title, item?.authors)) {
-                <span
-                  class="badge text-bg-secondary text-uppercase ms-2"
-                >
-                  Already added
-                </span>
-              }
+                @if(alreadyAdded(item.title, item?.authors)) {
+                  <span
+                    class="badge text-bg-secondary text-uppercase ms-2"
+                  >
+                    Already added
+                  </span>
+                }
+              </div>
             </div>
           </span>
         </ng-template>

@@ -2,13 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ReactiveFormsModule, FormsModule, FormControl, FormGroup } from '@angular/forms';
 
 import { jwtDecode}  from 'jwt-decode';
 import { BookService } from 'src/app/services/book.service';
 import { UserService } from 'src/app/services/user.service';
 import { User } from 'src/app/models/user.model';
 import { Book} from 'src/app/models/book.model';
-
+import { Subject } from 'rxjs'
+import { takeUntil } from 'rxjs/operators';
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 import { HeaderComponent } from '../header/header.component';
 import { BookFormComponent } from '../book-form/book-form.component';
@@ -21,7 +23,7 @@ import { UserStatsComponent } from '../user-stats/user-stats.component';
   standalone: true,
   templateUrl: './book-list.component.html',
   styleUrls: ['./book-list.component.scss'],
-  imports: [BookItemComponent, BookFormComponent, UserStatsComponent, HeaderComponent, NavbarComponent, CommonModule, NgbAccordionModule, RouterLink]
+  imports: [BookItemComponent, BookFormComponent, UserStatsComponent, HeaderComponent, NavbarComponent, CommonModule, NgbAccordionModule, RouterLink, ReactiveFormsModule, FormsModule]
 })
 export class BookListComponent implements OnInit {
 
@@ -46,9 +48,28 @@ export class BookListComponent implements OnInit {
   protected userIsSelf = false;
   protected activeSection: string = '';
   protected sectionsLength: number = 0;
+  protected searchForm: FormGroup = new FormGroup({
+    search: new FormControl<string>(''),
+  })
+  private destroyed$ = new Subject<void>();
 
 
-  constructor(private bookService: BookService, private modalService: NgbModal, private route: ActivatedRoute, private userService: UserService, private router: Router) { }
+  constructor(private bookService: BookService, private modalService: NgbModal, private route: ActivatedRoute, private userService: UserService, private router: Router) {
+    this.searchForm.controls['search'].valueChanges
+      .pipe(
+        takeUntil(this.destroyed$),
+      )
+      .subscribe((search) => {
+        this.allUserBooks = this.allUserBooks.filter((each) => {
+          if(each.title.toLowerCase().startsWith(search.toLowerCase())) {
+            console.warn('each', each.title, each.title.startsWith(search))
+          }
+          return each.title.toLowerCase().startsWith(search.toLowerCase())
+        })
+        console.warn('check', this.allUserBooks)
+      }
+    )
+  }
 
   ngOnInit(): void {
      // Retrieve the token from localStorage
