@@ -1,9 +1,9 @@
 from fastapi import FastAPI
 from supabase import create_client, Client
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import book_routes
-from app.routers import user_routes
-from app.routers import login_routes
+from .routers import book_routes
+from .routers import user_routes
+from .routers import login_routes
 import os
 from dotenv import load_dotenv
 

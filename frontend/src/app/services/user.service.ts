@@ -18,7 +18,7 @@ export class UserService {
     const headers = new HttpHeaders({
       'apikey': environment.supabaseKey,
       'Content-Type': 'application/json',
-      'Prefer': 'return=representation' // Ensures response returns created data
+      'Prefer': 'return=representation'
     });
 
     return this.http.post<User>(url, user, { headers }).pipe(
@@ -36,11 +36,11 @@ export class UserService {
     return this.http.get<User[]>(url, { headers }).pipe(
       map((responses) => {
         if (responses.length === 1) {
-          return User.fromApiResponse(responses[0]); // Return the first user if found
+          return User.fromApiResponse(responses[0]);
         } else if (responses.length === 0) {
-          throw new Error('User not found'); // Handle case where user is not found
+          throw new Error('User not found');
         } else {
-          throw new Error('Multiple users found'); // Handle unexpected case
+          throw new Error('Multiple users found');
         }
       })
     );

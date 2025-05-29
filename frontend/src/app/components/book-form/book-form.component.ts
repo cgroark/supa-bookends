@@ -177,7 +177,7 @@ export class BookFormComponent implements OnInit {
     const date = new Date(dateString);
     return {
       year: date.getFullYear(),
-      month: date.getMonth() + 1, // Months are 0-based in JS
+      month: date.getMonth() + 1,
       day: date.getDate(),
     };
   }
@@ -216,7 +216,7 @@ export class BookFormComponent implements OnInit {
         authors: this.addingBestSeller.author || 'Unknown Author',
       }
       const searchTerm = `${this.addingBestSeller.title || ''} ${this.addingBestSeller.author || ''}`.trim();
-      this.bookInput$.next(searchTerm); // Push the term into the ReplaySubject
+      this.bookInput$.next(searchTerm);
     }
   }
 

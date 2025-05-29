@@ -8,7 +8,6 @@ export class AuthService {
 
   isLoggedIn(): boolean {
     const token = localStorage.getItem(this.tokenKey);
-    // Optionally validate the token (e.g., check expiration)
     return !!token;
   }
 

@@ -68,15 +68,13 @@ export class UserFormComponent {
 
     this.supabaseService.createUser(supabaseUser.email, supabaseUser.password)
     .then((authUser) => {
-      // Prepare data for your backend
       const backendUser = {
-        id: authUser.id, // Pass the Supabase user ID
-        created_at: authUser.created_at, // Pass the creation timestamp
+        id: authUser.id,
+        created_at: authUser.created_at,
         first,
         last,
         username: email,
       };
-      // Call your backend API to store user profile information
       this.userService.createUser(backendUser).subscribe({
         next: (user) => {
           this.isSubmitting = false;

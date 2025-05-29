@@ -40,15 +40,4 @@ export class SupabaseService {
   private clearAppState() {
     localStorage.removeItem('auth_token_bookends');
   }
-
-  // // Get the current user
-  // getCurrentUser() {
-  //   return this.supabase.auth.user();
-  // }
-
-  // // Get current session
-  // getSession() {
-  //   return this.supabase.auth.session();
-  // }
-
 }

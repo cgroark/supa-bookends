@@ -13,7 +13,6 @@ import { Book } from '../models/book.model';
 export class BookService {
   constructor(private http: HttpClient) {}
   getAllUserBooks(userId: string): Observable<Book[]> {
-    // const token = localStorage.getItem('auth_token_bookends');
     const url = `${environment.supabaseUrl}/rest/v1/books?user_id=eq.${userId}`;
     const headers = new HttpHeaders({
       'apikey': environment.supabaseKey,
@@ -31,7 +30,7 @@ export class BookService {
     const url = `${environment.supabaseUrl}/rest/v1/books?id=eq.${bookId}`;
 
     const headers = new HttpHeaders({
-      'apikey': environment.supabaseKey, // Supabase API key
+      'apikey': environment.supabaseKey,
       'Content-Type': 'application/json'
     });
 

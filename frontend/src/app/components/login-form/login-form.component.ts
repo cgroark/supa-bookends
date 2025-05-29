@@ -31,7 +31,6 @@ export class LoginFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe(params => {
-      console.warn('params', params)
       const from = params['from'];
       if(from === 'signup') {
         this.fromSignup = true;
@@ -40,9 +39,7 @@ export class LoginFormComponent implements OnInit {
   }
 
   onSubmit() {
-    console.warn('submit', this.form);
     if (this.form.invalid) {
-      console.warn('Form is invalid');
       return;
     }
     this.isSubmitting = true;
@@ -65,7 +62,6 @@ export class LoginFormComponent implements OnInit {
         this.router.navigate(['/']);
       })
       .catch((error) => {
-        console.error('Login failed:', error.message);
         this.loginError = error.message;
         this.systemMessageService.showMessage(`Login failed: ${error.message}`);
         this.isSubmitting = false;

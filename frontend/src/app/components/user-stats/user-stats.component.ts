@@ -50,6 +50,7 @@ export class UserStatsComponent implements OnInit {
       },
       error: (err: any) => {
         console.error('Error fetching user:', err);
+        this.isLoading = false;
       }
     })
   }

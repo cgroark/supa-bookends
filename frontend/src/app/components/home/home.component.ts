@@ -149,7 +149,6 @@ export class HomeComponent implements OnInit {
     setTimeout(() => {
       const sections = document.querySelectorAll('.breadcrumb-section');
       this.sectionsLength = sections.length;
-      console.log('SECTION length', this.sectionsLength)
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {

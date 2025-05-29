@@ -40,9 +40,4 @@ export class Book {
       user_id: response.user_id,
     });
   }
-
-  // Example method for displaying book info
-  // getSummary(): string {
-  //   return `${this.title} by ${this.author}`;
-  // }
 }
