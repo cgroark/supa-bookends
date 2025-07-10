@@ -2,3 +2,16 @@
 @import '../src/styles/partials/spinners';
 @import '../src/styles/partials/buttons';
 @import '../src/styles/partials/modals';
+
+// Reset body and html for mobile navbar
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+@media screen and (max-width: 768px) {
+  body {
+    padding-bottom: 60px; // Add space for fixed navbar
+  }
+}
