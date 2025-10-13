@@ -1,27 +1,29 @@
-# Frontend
+# Book Ends
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.2.2.
+A full stack application to track what you read and see the books your friends pick up, this project was built with Angular/TypeScript and RESTful API architecture.
 
-## Development server
+## Overview
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+With full CRUD capabilities built with RESTful architecture and a PostgreSQL database on Supabase, users can search, add, edit, delete, and view all their books and the books of their friends. They can search for new friends and follow/un-follow any other user.
 
-## Code scaffolding
+Project provides full authentication: users can sign up and create a password. Sign up and verify via email from Supabase then sign in for full access.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+### Features
+ - Authentication: username/password, email verification via Supabase
+ - Search for any book on the internet (Google Books API)
+ - View, add, edit, delete your books
+ - Search for friends and add them to the ones you follow to see their books
+ - See latest bestsellers (NYT API)
 
-## Build
+### Technology
+ - Angular
+ - TypeScript
+ - PostgreSQL
+ - RESTful API architecture
+ - Supabase database and auth
+ - HTML/SCSS
+ - Bootstrap
+ - Google Books API
+ - NYT Books API
+ - Netflify hosting
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
