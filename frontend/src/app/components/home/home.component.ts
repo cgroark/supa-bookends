@@ -32,7 +32,7 @@ export class HomeComponent implements OnInit {
   protected isLoadingConnections = false;
   protected currentBooks: Book[] = [];
   protected recentBooks: Book[] = [];
-  protected completed2025: Book[] = [];
+  protected completed2026: Book[] = [];
   protected allUserBooks: Book[] = []
   protected selectedBook: any;
   protected noBooks = false;
@@ -98,8 +98,8 @@ export class HomeComponent implements OnInit {
           each.status === 4
         ).sort((a: any, b: any) => b.end_date.localeCompare(a.end_date));
         this.noBooks = !this.recentBooks.length;
-        this.completed2025 = response.filter((each: any) =>
-          each.status === 4 &&  each.end_date >= '2025-01-01');
+        this.completed2026 = response.filter((each: any) =>
+          each.status === 4 &&  each.end_date >= '2026-01-01');
         this.isLoading = false;
         this.observeSections();
       },

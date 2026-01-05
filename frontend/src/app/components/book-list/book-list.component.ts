@@ -33,6 +33,7 @@ export class BookListComponent implements OnInit {
   protected isLoadingUser = true;
   protected noBooks = false;
   protected completed: Book[] = [];
+  protected completed2026: Book[] = [];
   protected completed2025: Book[] = [];
   protected completed2024: Book[] = [];
   protected completed2023: Book[] = [];
@@ -134,6 +135,7 @@ export class BookListComponent implements OnInit {
       this.completed2023 = this.sortBooksByDate(response, 4, '2023-01-01', '2024-01-01');
       this.completed2024 = this.sortBooksByDate(response, 4, '2024-01-01', '2025-01-01');
       this.completed2025 = this.sortBooksByDate(response, 4, '2025-01-01', '2026-01-01');
+      this.completed2026 = this.sortBooksByDate(response, 4, '2026-01-01', '2027-01-01');
 
       this.reading = response.filter((each: Book) => each.status === 2);
       this.wantToRead = response
