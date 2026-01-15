@@ -10,7 +10,7 @@ import { UserService } from 'src/app/services/user.service';
 import { User } from 'src/app/models/user.model';
 import { Book} from 'src/app/models/book.model';
 import { Subject } from 'rxjs'
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 import { HeaderComponent } from '../header/header.component';
 import { BookFormComponent } from '../book-form/book-form.component';
@@ -52,22 +52,24 @@ export class BookListComponent implements OnInit {
   protected searchForm: FormGroup = new FormGroup({
     search: new FormControl<string>(''),
   })
+  private allUserBooksSource: Book[] = [];
   private destroyed$ = new Subject<void>();
 
 
   constructor(private bookService: BookService, private modalService: NgbModal, private route: ActivatedRoute, private userService: UserService, private router: Router) {
     this.searchForm.controls['search'].valueChanges
       .pipe(
+        debounceTime(200),
+        distinctUntilChanged(),
         takeUntil(this.destroyed$),
       )
-      .subscribe((search) => {
-        this.allUserBooks = this.allUserBooks.filter((each) => {
-          if(each.title.toLowerCase().startsWith(search.toLowerCase())) {
-            console.warn('each', each.title, each.title.startsWith(search))
-          }
-          return each.title.toLowerCase().startsWith(search.toLowerCase())
-        })
-        console.warn('check', this.allUserBooks)
+      .subscribe((search: string) => {
+        const term = search?.trim().toLowerCase() ?? '';
+        const filteredBooks = this.allUserBooksSource.filter(book =>
+            book.title.toLowerCase().includes(term)
+          )
+
+        this.processBooks(filteredBooks);
       }
     )
   }
@@ -111,7 +113,7 @@ export class BookListComponent implements OnInit {
   protected fetchBooks(userId: string) {
     this.bookService.getAllUserBooks(userId).subscribe({
       next: (response: Book[]) => {
-        this.allUserBooks = response;
+        this.allUserBooks = this.allUserBooksSource = response;
         this.noBooks = !response.length
         const isProcessed = this.processBooks(response);
         if (isProcessed) {
