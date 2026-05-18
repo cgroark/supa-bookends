@@ -11,12 +11,13 @@ import { Book} from 'src/app/models/book.model';
 import { BookService } from 'src/app/services/book.service';
 import  {Observable, of, ReplaySubject, Subject} from 'rxjs'
 import {
+  catchError,
   debounceTime,
   distinctUntilChanged,
+  finalize,
   map,
   switchMap,
   takeUntil,
-  tap,
 } from 'rxjs/operators';
 import { ReactiveFormsModule, FormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -117,7 +118,6 @@ export class BookFormComponent implements OnInit {
   constructor(private bookService: BookService, private http: HttpClient, private systemMessageService: SystemMessageService, private modalService: NgbModal) {
 
     this.books$ = this.bookInput$.pipe(
-      tap(() => (this.isLoading = true)),
       debounceTime(200),
       distinctUntilChanged(),
       switchMap((term) => {
@@ -125,18 +125,21 @@ export class BookFormComponent implements OnInit {
           this.isLoading = false;
           return of([]);
         }
-        const searchTerm = of(term);
-        return this.http.get<any>(`https://www.googleapis.com/books/v1/volumes?q=${term}&sortBy=relevance`).pipe(
+        const fields = 'key,title,author_name,cover_i';
+        this.isLoading = true;
+        return this.http.get<any>(`https://openlibrary.org/search.json?q=${encodeURIComponent(term)}&fields=${fields}`).pipe(
           map((response) =>
-            response.items.map((item: any) => ({
-              title: item.volumeInfo?.title || 'Unknown Title',
-              authors: item.volumeInfo?.authors || ['Unknown Author'],
-              image_url: item.volumeInfo?.imageLinks?.thumbnail,
-              overview: item.volumeInfo?.description,
-              disabled: this.alreadyAdded(item.volumeInfo?.title, item.volumeInfo?.authors),
-            })) || []
+            (response.docs || []).map((item: any) => ({
+              title: item.title || 'Unknown Title',
+              authors: item.author_name || ['Unknown Author'],
+              image_url: this.getOpenLibraryCoverUrl(item.cover_i),
+              overview: null,
+              openLibraryWorkKey: item.key,
+              disabled: this.alreadyAdded(item.title, item.author_name),
+            }))
           ),
-          tap(() => (this.isLoading = false)),
+          catchError(() => of([])),
+          finalize(() => (this.isLoading = false)),
         );
       }),
     );
@@ -226,9 +229,44 @@ export class BookFormComponent implements OnInit {
     return this.allUserBooks.some(each => each.title === title && (authors && each.author === authors[0] ));
   }
 
+  private getOpenLibraryCoverUrl(coverId: number | null): string | null {
+    return coverId ? `https://covers.openlibrary.org/b/id/${coverId}-M.jpg?default=false` : null;
+  }
+
+  private getOpenLibraryOverview(work: any): string | null {
+    const description = work?.description;
+
+    if (typeof description === 'string') {
+      return description;
+    }
+
+    return description?.value || null;
+  }
+
+  private fetchOpenLibraryOverview(book: any): void {
+    if (!book?.openLibraryWorkKey || book.overview) {
+      return;
+    }
+
+    const workKey = book.openLibraryWorkKey.startsWith('/')
+      ? book.openLibraryWorkKey
+      : `/works/${book.openLibraryWorkKey}`;
+
+    this.http.get<any>(`https://openlibrary.org${workKey}.json`).pipe(
+      map((work) => this.getOpenLibraryOverview(work)),
+      catchError(() => of(null)),
+      takeUntil(this.destroyed$),
+    ).subscribe((overview) => {
+      if (this.selectedBook === book) {
+        this.selectedBook.overview = overview;
+      }
+    });
+  }
+
   protected onBookChange(selected: any): void {
     this.selectedBook = selected;
     if(this.selectedBook ) {
+      this.fetchOpenLibraryOverview(this.selectedBook);
       this.form.patchValue({
         title: this.selectedBook.title ? this.selectedBook.title : 'Unknown',
         author: this.selectedBook.authors ? this.selectedBook.authors[0] : 'Unknown',
