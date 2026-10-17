@@ -1,10 +1,14 @@
 <section
-  class="form-section mx-auto"
+  class="form-section book-entry mx-auto"
   [class.w-75]="noModal"
 >
   @if(!isManuallyAdding && !editingBook && (!addingBestSeller || (addingBestSeller && !identifiedBook))) {
-    <div class="py-4 px-3 search-section rounded">
-      <ng-select
+    <div class="search-section">
+      <div class="search-heading">
+        <span class="search-heading__icon" aria-hidden="true"><i class="bi bi-search"></i></span>
+        <div><h3>Find your next read</h3><p>Search by title or author</p></div>
+      </div>
+      <ng-select class="book-search" aria-label="Search books by title or author"
         [items]="books$ | async"
         [typeahead]="bookInput$"
         [loading]="isLoading"
@@ -44,12 +48,7 @@
               class="d-flex"
               [style.cursor]="item.disabled ? 'default' : null"
             >
-              <div>
-                <img
-                  class="me-2"
-                  [style.max-width.px]="32"
-                  [src]="item.image_url">
-              </div>
+              <app-book-thumbnail class="me-2" [imageUrl]="item.image_url" [title]="item.title" />
               <div>
                 <div
                   class="text-wrap"
@@ -81,7 +80,7 @@
 
   @if(!selectedBook){
     <button
-      class="btn btn-outline-secondary border-0 d-block ms-auto me-3 my-2"
+      class="btn manual-toggle"
       type="button"
       (click)="toggleManualAdd()"
     >{{!isManuallyAdding ? 'Add book manually' : 'Search for a book' }}</button>
@@ -90,16 +89,16 @@
   @if(selectedBook || isManuallyAdding){
   <form
     #ngForm="ngForm"
-    class="mt-2 p-3 rounded"
+    class="book-details-form"
     [formGroup]="form"
     (ngSubmit)="onSubmit()">
-    <div class="row">
+    <div class="row g-4">
       <div
-        [ngClass]="selectedBook?.image_url || selectedBook?.overview ? 'col-8' : ''"
+        [ngClass]="selectedBook?.image_url || selectedBook?.overview ? 'col-12 col-md-8' : 'col-12'"
       >
         @if(form.controls['title']; as title) {
           <div class="mb-2">
-            <label class="d-block text-secondary" for="title">
+            <label class="d-block" for="title">
               <i class="bi bi-book me-1"></i>
               Title
             </label>
@@ -116,7 +115,7 @@
         }
         @if(form.controls['author']; as author) {
           <div class="mb-2">
-            <label class="d-block text-secondary" for="author">
+            <label class="d-block" for="author">
               <i class="bi bi-pen me-1"></i>
               Author
             </label>
@@ -133,7 +132,7 @@
         }
         @if(form.controls['format']; as format) {
           <div class="mb-2">
-            <label class="d-block text-secondary" for="format">
+            <label class="d-block" for="format">
               <i class="bi bi-book-half me-1"></i>
               Format
             </label>
@@ -144,6 +143,7 @@
               [items]="formatTypes"
               bindLabel="label"
               bindValue="value"
+              labelForId="format"
               formControlName="format"
             >
             </ng-select>
@@ -151,7 +151,7 @@
         }
         @if(form.controls['status']; as status) {
           <div class="mb-2">
-            <label class="d-block text-secondary" for="status">
+            <label class="d-block" for="status">
               <i class="bi bi-bookmark-check me-1"></i>
               Status
             </label>
@@ -162,6 +162,7 @@
               [items]="statusOptions"
               bindLabel="label"
               bindValue="value"
+              labelForId="status"
               formControlName="status"
             >
             </ng-select>
@@ -170,7 +171,7 @@
         @if(form.controls['status'].value === 4) {
           @if(form.controls['rating']; as rating) {
             <div class="mb-2">
-              <label class="d-block text-secondary" for="rating">
+              <label class="d-block" for="rating">
                 <i class="bi bi-bookmark-heart me-1"></i>
                 Rating
               </label>
@@ -180,6 +181,7 @@
                 (!rating.valid && ngForm.submitted)"
                 [items]="ratingOptions"
                 bindValue="value"
+                labelForId="rating"
                 formControlName="rating"
               >
               <ng-template ng-option-tmp let-item="item">
@@ -194,8 +196,8 @@
           @if(form.controls['end']; as end) {
             <div class="mb-2">
               <label
-                class="d-block text-secondary"
-                id="end"
+                class="d-block"
+                for="end"
               >
                 <i class="bi bi-calendar-event me-1"></i>
                 Finished on
@@ -212,7 +214,7 @@
                 ngbDatepicker
                 />
                 <button
-                  class="btn date-button bg-white border-secondary-subtle"
+                  class="btn date-button"
                   type="button"
                   (click)="endInput.toggle()"
                 >
@@ -222,7 +224,7 @@
             </div>
           }
           <div class="mb-2">
-            <label class="d-block text-secondary" for="comments">
+            <label class="d-block" for="comments">
               <i class="bi bi-body-text me-1"></i>
               Comments
             </label>
@@ -234,7 +236,7 @@
             ></textarea>
           </div>
         }
-        <button class="btn main-teal-button mt-3"
+        <button class="btn main-teal-button mt-3 full-width"
           type="submit"
         >
           @if(isSubmitting) {
@@ -248,7 +250,7 @@
         </button>
       </div>
       @if(selectedBook?.image_url || selectedBook?.overview) {
-        <div class="col-4 mt-4">
+        <div class="col-12 col-md-4 book-preview">
           @if(selectedBook?.image_url) {
             <img [src]="selectedBook.image_url" alt="book cover" class="w-100">
           }

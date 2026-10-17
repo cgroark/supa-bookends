@@ -1,0 +1,73 @@
+@import '../variables';
+
+// Shared page surfaces and section navigation across Home, Friends, and Library.
+.page-card {
+  padding: clamp(1rem, 3vw, 1.5rem);
+  margin-bottom: 1.25rem;
+  border: 1px solid rgba($ivory, .1);
+  border-radius: $surface-radius;
+  background: $light-black;
+  color: $ivory;
+  box-shadow: 0 6px 20px rgba($black, .12);
+}
+.section-heading {
+  margin: 0 0 1.25rem;
+  padding-bottom: .8rem;
+  border-bottom: 1px solid rgba($ivory, .12);
+  color: $ivory;
+  font: 500 1.4rem $font-saira;
+  i { color: $salmon; }
+}
+.search-panel {
+  border-color: rgba($salmon, .3);
+  background: radial-gradient(ellipse at top right, rgba($salmon, .13), transparent 70%), #262128;
+  p { color: rgba($ivory, .65); font-size: .9rem; }
+}
+.page-book-shelf { display: flex; flex-wrap: wrap; gap: .75rem 1rem; align-items: start; }
+.breadcrumb-section { scroll-margin-top: 5rem; }
+.section-nav {
+  display: flex;
+  position: sticky;
+  top: 0;
+  align-self: start;
+  gap: .3rem;
+  padding: .4rem;
+  border: 1px solid rgba($ivory, .18);
+  border-radius: $surface-radius;
+  background: $light-black;
+  // Remain below the fixed mobile app nav as this bar returns to document flow.
+  z-index: 990;
+  box-shadow: 0 8px 24px rgba($black, .35);
+  button, a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .4rem;
+    flex: 1;
+    min-width: 0;
+    min-height: 44px;
+    padding: .5rem .25rem;
+    border: 1px solid transparent;
+    border-radius: 11px 3px 11px 3px;
+    background: transparent;
+    color: rgba($ivory, .75);
+    font: 500 clamp(.75rem, 2.5vw, .95rem) $font-saira;
+    cursor: pointer;
+    text-decoration: none;
+    i { color: inherit; }
+    &:hover { color: $ivory; background: rgba($ivory, .07); }
+    &.active { color: $ivory; background: #383141; border-color: #78658d; }
+    &:focus-visible { outline: 2px solid $teal; outline-offset: 2px; }
+  }
+}
+@media (max-width: 991.98px) {
+  .section-nav {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    border-radius: 0;
+    padding-inline: max(.4rem, env(safe-area-inset-left, 0px)) max(.4rem, env(safe-area-inset-right, 0px));
+  }
+}
+@media (max-width: 768px) {
+  .page-book-shelf { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem .75rem; }
+}

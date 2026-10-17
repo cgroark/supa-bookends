@@ -1,17 +1,23 @@
 @import '../src/styles/variables';
 @import '../src/styles/partials/spinners';
 @import '../src/styles/partials/buttons';
+@import '../src/styles/partials/forms';
 @import '../src/styles/partials/modals';
+@import '../src/styles/partials/navigation';
+@import '../src/styles/partials/surfaces';
 
 // Reset body and html for mobile navbar
 html, body {
   margin: 0;
   padding: 0;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 @media screen and (max-width: 768px) {
   body {
-    padding-bottom: 60px; // Add space for fixed navbar
+    padding-bottom: calc(90px + env(safe-area-inset-bottom, 0px)); // Space for mobile navigation
   }
+}
+.home-card {
+  border-radius: $surface-radius;
 }

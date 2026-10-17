@@ -1,69 +1,12 @@
 
-  <div
-    class="d-flex"
-    [class.wide-book-item]="selectedBook.status === 2 && !minimize"
-    [class.no-image-narrow-item]="selectedBook.status !== 2 && !selectedBook.image_url"
-  >
-    @if((selectedBook.status === 2 && !minimize) || !selectedBook.image_url) {
+  <div class="d-flex">
       <div
-        class="m-2 align-content-center"
-        (click)="selectedBook.status !== 2 ? onOpenBook(contentBook, selectedBook) : null"
-        [class.hover]="selectedBook.status !== 2"
-        >
-        <h4 class="m-0"
-        >
-          <em>
-            {{selectedBook.title}}
-          </em>
-        </h4>
-        <p>{{ selectedBook.author }}</p>
-        @if(selectedBook.rating) {
-          <span
-            class="rating d-flex justify-content-evenly"
-            [class.narrow]="minimize"
-            [innerHTML]="displayRating(selectedBook.rating)">
-          </span>
-        }
-        @if(editable && !selectedBook.image_url) {
-          <div ngbDropdown class="dropdown">
-            <button ngbDropdownToggle class="btn edit-button dropdown-toggle ms-auto">
-              <i class="bi bi-pencil ms-1 fw-bold"></i>
-            </button>
-            <div ngbDropdownMenu>
-              <button
-                ngbDropdownItem
-                (click)="onOpenForm(content, selectedBook)"
-                >
-                <i class="bi bi-pencil me-1 fw-bold"></i>Edit
-              </button>
-              <button
-                ngbDropdownItem
-                (click)="onOpenDelete(deleteContent, selectedBook)"
-              >
-                <i class="bi bi-trash3 me-1 fw-bold"></i>Delete
-              </button>
-            </div>
-          </div>
-        }
-      </div>
-    }
-    @if(selectedBook.image_url || selectedBook.status === 2) {
-      <div
-        class="m-2 book-item px-1"
+        class="book-item px-1"
         [class.narrow]="minimize"
       >
-        @if(selectedBook.image_url) {
-          <img
-            [src]="selectedBook.image_url"
-            [alt]="'book cover of '+ selectedBook.title"
-            (click)="onOpenBook(contentBook, selectedBook)"
-          >
-        } @else {
-          <i
-            class="bi bi-book no-image-icon d-block text-center"
-            (click)="onOpenBook(contentBook, selectedBook)"
-          ></i>
-        }
+        <app-book-cover [imageUrl]="selectedBook.image_url" [title]="selectedBook.title"
+          [author]="selectedBook.author" [compact]="minimize"
+          (opened)="onOpenBook(contentBook, selectedBook)" />
         @if(selectedBook.rating) {
           <span
             class="rating d-flex justify-content-evenly"
@@ -71,11 +14,11 @@
             [innerHTML]="displayRating(selectedBook.rating)">
           </span>
         }
-        @if(editable && selectedBook.image_url) {
-          <div ngbDropdown class="dropdown">
+        @if(editable) {
+          <div ngbDropdown class="dropdown" placement="bottom-end">
             <button ngbDropdownToggle
-              class="btn edit-button overlay dropdown-toggle"
-              [class.higher]="selectedBook.rating"
+              class="btn edit-button dropdown-toggle"
+              [attr.aria-label]="'Edit ' + selectedBook.title"
               >
               <i class="bi bi-pencil ms-1 fw-bold"></i>
             </button>
@@ -97,15 +40,13 @@
         } @else if(!editable) {
           <button
             class="btn circle-teal-button"
-            [class.wider]="!minimize"
-            [class.higher]="selectedBook.rating"
+            [attr.aria-label]="'Add ' + selectedBook.title + ' to your library'"
             (click)="onOpenForm(content, selectedBook)"
             >
             <i class="bi bi-bookmark-plus fw-bold"></i>
           </button>
         }
       </div>
-    }
   </div>
 
   <ng-template

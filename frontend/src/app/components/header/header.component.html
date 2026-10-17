@@ -1,14 +1,15 @@
-<header class="pt-1 pb-2">
-  <h1 class="mb-3 text-center"
-    [ngClass]="centered ? '' : 'text-center text-md-start'"
-  >
-    <a routerLink="/" class="text-decoration-none">Book Ends</a>
+<header class="site-header" [class.site-header--centered]="centered">
+  <div class="site-header__shelf" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+  <div class="site-header__content">
+  <h1 class="site-header__title">
+    <a routerLink="/" class="site-header__brand">
+      <span>Book Ends</span>
+    </a>
   </h1>
-  <p class="mb-3 text-center"
-    [ngClass]="centered ? '' : 'text-center text-md-start'"
-  >
-    <i class="bi bi-book-half me-1"></i>
-    Track your books
-    <i class="bi bi-file-earmark-person mx-1"></i>
-    Follow friends</p>
+  <p class="site-header__tagline">
+    <span>Track your books</span>
+    <span class="site-header__divider" aria-hidden="true"></span>
+    <span>Follow friends</span>
+  </p>
+  </div>
 </header>

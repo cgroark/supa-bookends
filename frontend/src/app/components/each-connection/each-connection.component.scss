@@ -1,52 +1,72 @@
 @import '../../../styles/variables';
 
-h2, h3, h4, p, i {
-  color: $ivory;
-}
+:host { display: block; min-width: 0; }
+h3, h4 { font-family: $font-saira; color: $ivory; }
+.friend-books { display: flex; flex-wrap: wrap; }
 
-h3 {
-  font-size: $font-size-base;
-  font-family: $font-saira;
-  &.name {
-    background-color: $salmon;
-    color: $light-black;
-    margin-right: -15px;
-    margin-left: -15px;
-    margin-top: -15px;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-    i {
-      color: $light-black;
+section.friend-card {
+  background: linear-gradient(135deg, rgba($purple, .1), transparent 60%), #181617;
+  border: 1px solid rgba($ivory, .1);
+  box-shadow: 0 5px 16px rgba($black, .15);
+  width: 100%;
+  .friend-heading {
+    display: flex;
+    align-items: center;
+    gap: .85rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba($ivory, .1);
+    &__details { min-width: 0; }
+    &__eyebrow {
+      margin: 0 0 .2rem;
+      color: rgba($ivory, .55);
+      font: 400 .75rem $font-saira;
+      letter-spacing: .06em;
+      text-transform: uppercase;
     }
+    h3 { margin: 0; font-size: 1.2rem; overflow-wrap: anywhere; }
   }
+  .friend-avatar {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 46px;
+    height: 46px;
+    border-radius: 14px 4px 14px 4px;
+    border: 1px solid rgba($salmon, .4);
+    background: rgba($salmon, .12);
+    color: $salmon;
+    font: 500 1rem $font-saira;
+    text-transform: uppercase;
+  }
+  .friend-activity {
+    display: grid;
+    gap: 1.25rem;
+    padding-block: 1rem;
+    @media (min-width: 769px) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    > :only-child { grid-column: 1 / -1; }
+  }
+  .friend-shelf-group { min-width: 0; }
+  h4 {
+    margin: 0 0 .65rem;
+    padding: 0;
+    border: 0;
+    color: rgba($ivory, .65);
+    font-size: .85rem;
+    i { color: $salmon; }
+  }
+  .friend-books { gap: .35rem; }
+  .friend-actions { gap: .5rem; padding-top: .75rem; border-top: 1px solid rgba($ivory, .08); }
 }
 
-h4 {
-  font-size: $font-size-base;
-  font-family: $font-saira;
-  border-bottom: solid 3px $salmon;
-  margin-right: -15px;
-  margin-left: -15px;
-  &.no-underline {
-    border-bottom: none;
+@media (max-width: 768px) {
+  section.friend-card:not(.minimize) .friend-books {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem .5rem;
   }
-}
-
-section {
-  background-color: $light-black;
-
-    &.constrain {
-      width: 48%;
-      display: inline-block;
-      margin: 10px 4px;
-      vertical-align: top !important;
-      @media screen and (max-width: 875px) {
-        width: 100%;
-        margin: 10px 0;
-      }
-    }
-    &.minimize {
-      background-color: $black;
-
+  section.minimize .friend-books--latest {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem .4rem;
   }
 }

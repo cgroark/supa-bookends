@@ -1,3 +1,4 @@
+import { SkeletonComponent } from '../skeleton/skeleton.component';
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { User } from 'src/app/models/user.model';
 import { RouterModule } from '@angular/router';
@@ -8,7 +9,7 @@ import { BookService } from 'src/app/services/book.service';
 @Component({
   selector: 'app-each-connection',
   standalone: true,
-  imports: [BookItemComponent, RouterModule],
+  imports: [SkeletonComponent, BookItemComponent, RouterModule],
   templateUrl: './each-connection.component.html',
   styleUrl: './each-connection.component.scss'
 })

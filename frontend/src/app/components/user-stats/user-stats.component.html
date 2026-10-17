@@ -3,17 +3,16 @@
   {{currentYear}} Goal
 </h2>
 @if(isLoading) {
-  <span class="spinner-border" role="status">
-  </span>
+  <app-skeleton variant="goal" label="Loading reading goal" />
 } @else {
   @if(goalForCurrentYear) {
-    <p>{{(currentBookCount / goalForCurrentYear) * 100  | number: '1.0-1' }}% progress on your goal of {{goalForCurrentYear}} books this year</p>
+    <p>{{(currentBookCount / goalForCurrentYear) * 100  | number: '1.0-1' }}% of {{goalForCurrentYear}} books</p>
     @if(!showForm) {
       <button
         class="btn main-purple-button wider"
         (click)="toggleGoalForm()"
       >
-        Upate Goal
+        Update Goal
         <i class="bi bi-trophy ms-1"></i>
       </button>
     }

@@ -1,83 +1,28 @@
 @import '../../../styles/variables';
-
-h2, h3, h4, p, i {
-  color: $ivory;
-}
-
-h4 {
-  font-family: $font-saira;
-}
-
-h2:not(.no-books) {
-  font-size: $font-size-medium;
-  border-bottom: solid 3px $yellow;
-  font-family: $font-saira;
-}
-
-p, p > i {
-  font-size: $font-size-small;
-}
-
+:host { display: block; color: $ivory; }
+.library-overview { display: grid; gap: 1.25rem; align-items: start; }
+.library-tools { min-width: 0; }
+@media (min-width: 992px) { .library-overview { grid-template-columns: minmax(0, 3fr) minmax(0, 1fr); } }
+.library-title { font: 500 1.4rem $font-saira; i { color: $salmon; } }
+.library-search-label { display: block; color: rgba($ivory, .7); font-size: .85rem; }
 h3.year {
-  background-color: $purple;
-  font-family: $font-saira;
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  margin: 1.5rem 0 1rem;
+  color: rgba($ivory, .75);
+  font: 500 1rem $font-saira;
+  &::after { content: ''; flex: 1; height: 1px; background: rgba($purple, .35); }
 }
-
-section.reading {
-  background-color: $light-black;
-}
-
+.section-nav { margin-bottom: 1.25rem; }
+.accordion-item { border: 0; background: transparent; }
 .accordion-button {
-  padding: 0;
-  background: $black;
+  padding: .75rem 0;
   color: $ivory;
-  font-size: 20px;
-  font-family: $font-saira;
-  border-top-left-radius: 0 !important;
-  border-top-right-radius: 0 !important;
-  &:focus {
-    box-shadow: none;
-  }
-  &::after, &.collapsed::after {
-    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23f9f4da'><path%20fill-rule='evenodd'%20d='M1.646%204.646a.5.5%200%200%201%20.708%200L8%2010.293l5.646-5.647a.5.5%200%200%201%20.708.708l-6%206a.5.5%200%200%201-.708%200l-6-6a.5.5%200%200%201%200-.708z'/></svg>");
-    margin-left: 5px;
-  }
+  background: transparent;
+  font: 500 1rem $font-saira;
+  box-shadow: none;
+  &::after { filter: brightness(0) invert(1); }
+  &:focus-visible { outline: 2px solid $teal; outline-offset: 2px; }
 }
-
-.accordion-item {
-  border: none;
-  background: $black;
-}
-
-.goals {
-  @media screen and (max-width: 767px) {
-    background-color: $light-black;
-  }
-}
-
-.breadcrumbs {
-  position: sticky;
-  top: 0;
-  background-color: rgba($salmon, 0.9);
-  z-index: 995;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  a {
-    color: $black;
-    text-decoration: none;
-    font-family: $font-saira;
-    font-size: $font-size-small;
-    border-bottom: solid 3px transparent;
-    &.active {
-      border-bottom: solid 3px $black;
-    }
-    &:hover {
-      border-bottom: solid 2px $ivory;
-    }
-    i {
-      color: $black;
-    }
-    @media screen and (max-width: 470px) {
-      font-size: 13px;
-    }
-  }
-}
+.breadcrumb-section { min-width: 0; }

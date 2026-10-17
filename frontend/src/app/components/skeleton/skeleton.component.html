@@ -1,0 +1,28 @@
+<div class="skeleton" [class.skeleton--card]="framed" [class.skeleton--compact]="compact" [class.skeleton--light]="light"
+  role="status" aria-live="polite" aria-busy="true">
+  <span class="sr-only">{{ label }}</span>
+  <div aria-hidden="true">
+    @if(variant === 'cover') {
+      <span class="bone cover"></span>
+    } @else {
+    @if(variant === 'friend') {
+      <div class="identity"><span class="bone avatar"></span><div class="identity__text"><span class="bone line short"></span><span class="bone line title"></span></div></div>
+    } @else if(variant !== 'goal') {
+      <span class="bone line title"></span>
+    }
+    @if(variant === 'heading') {
+      <span class="bone line medium"></span><span class="bone line short"></span>
+    } @else if(variant === 'goal') {
+      <span class="bone line medium"></span><span class="bone action"></span>
+    } @else if(variant === 'reading') {
+      <div class="reading"><span class="bone cover"></span><div class="goal"><span class="bone line medium"></span><span class="bone line short"></span><span class="bone action"></span></div></div>
+      <span class="bone action"></span>
+    } @else {
+      <div class="shelf" [class.shelf--friend]="variant === 'friend'">
+        @for(item of placeholders; track item) { <span class="bone cover"></span> }
+      </div>
+      @if(variant === 'friend') { <span class="bone action"></span> }
+    }
+    }
+  </div>
+</div>

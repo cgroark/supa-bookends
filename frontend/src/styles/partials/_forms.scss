@@ -1,0 +1,90 @@
+@import '../variables';
+
+// Shared field primitive for native inputs and ng-select containers.
+@mixin field-surface {
+  background: #fffdf4;
+  color: $light-black;
+  border: 1px solid #c9c5b5;
+  border-radius: 10px;
+  min-height: 44px;
+  transition: border-color .16s ease, box-shadow .16s ease;
+}
+input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='file']), textarea, select.form-select {
+  @include field-surface;
+  padding: .6rem .8rem;
+  font: inherit;
+  font-size: 1rem;
+  &:hover { border-color: #8d9e94; }
+  &:focus {
+    border-color: $teal-hover;
+    outline: 2px solid rgba($teal, .3);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 3px rgba($teal, .1);
+  }
+  &.is-invalid {
+    border-color: $red-hover;
+    &:focus { outline-color: rgba($red, .3); }
+  }
+  &.quiet-field:focus, &.quiet-field:focus-visible { outline: none; box-shadow: none; border-color: #c9c5b5; }
+  &:disabled { opacity: .6; cursor: not-allowed; }
+  &::placeholder { color: #78766f; opacity: 1; }
+}
+input[type='password'], input:has(+ .password-toggle) { padding-right: 3rem; }
+textarea { min-height: 110px; resize: vertical; }
+form label { margin-bottom: .4rem; font-size: .95rem; font-weight: 500; }
+form .mb-2 { margin-bottom: 1rem !important; }
+.ng-select {
+  .ng-select-container {
+    @include field-surface;
+    padding: .2rem .35rem;
+    .ng-value-container .ng-input > input,
+    .ng-value-container .ng-input > input:focus,
+    .ng-value-container .ng-input > input:focus-visible {
+      min-height: 0;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      outline: none;
+      box-shadow: none;
+    }
+  }
+  &.ng-select-single .ng-select-container { height: 44px; }
+  &.ng-select-focused:not(.ng-select-opened) > .ng-select-container {
+    border-color: $teal-hover;
+    box-shadow: 0 0 0 3px rgba($teal, .2);
+  }
+  &.is-invalid .ng-select-container { border-color: $red-hover; }
+}
+.ng-dropdown-panel {
+  border: 1px solid #c9c5b5;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba($black, .15);
+  .ng-dropdown-panel-items .ng-option {
+    padding: .75rem;
+    color: $light-black;
+    background: #fffdf4;
+    &.ng-option-marked, &.ng-option-selected { background: #e0eee4; }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  input, textarea, .ng-select .ng-select-container { transition: none !important; }
+}
+
+// Search uses its existing field border without a focus ring while typing.
+.book-entry .book-search, .quiet-search {
+  .ng-select-container,
+  &.ng-select-focused:not(.ng-select-opened) > .ng-select-container,
+  &.ng-select-opened > .ng-select-container {
+    border-color: #c9c5b5;
+    box-shadow: none;
+    outline: none;
+  }
+  .ng-select-container .ng-value-container .ng-input > input:focus,
+  .ng-select-container .ng-value-container .ng-input > input:focus-visible {
+    border: 0;
+    outline: none;
+    box-shadow: none;
+  }
+}

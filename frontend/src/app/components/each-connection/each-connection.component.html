@@ -1,30 +1,35 @@
 @if(isLoading) {
-  <span class="spinner-border" role="status">
-  </span>
+  <app-skeleton variant="friend" label="Loading friend books" [framed]="true" [compact]="minimize" />
 }@else{
   <section
-    class="rounded mb-4 p-3"
+    class="friend-card home-card mb-4 p-3"
     [class.minimize]="minimize"
     [class.constrain]="connectionsCount > 1"
   >
-    <h3 class="text-center name py-2">
-      <i class="bi bi-file-earmark-person me-1"></i>
-      {{connection.first}} {{connection.last}}
-    </h3>
+      <header class="friend-heading">
+        <span class="friend-avatar" aria-hidden="true">{{ connection.first?.charAt(0) }}{{ connection.last?.charAt(0) }}</span>
+        <div class="friend-heading__details">
+          <p class="friend-heading__eyebrow">On their bookshelf</p>
+          <h3>{{ connection.first }} {{ connection.last }}</h3>
+        </div>
+      </header>
+    <div class="friend-activity">
     @if(currentBooks.length) {
-      <h4 class="text-center my-3 py-2">
+      <div class="friend-shelf-group">
+      <h4 class="activity-title">
         <i class="bi bi-body-text me-1"></i>
         Reading
       </h4>
-      <div class="d-flex flex-wrap justify-content-center mt-md-0 mt-3">
+      <div class="friend-books">
           @for(book of currentBooks; track book.id) {
-            <app-book-item
+            <app-book-item class="mobile-grid-book"
               [selectedBook]="book"
               [editable]="false"
               [minimize]="minimize"
               (bookUpdated)="fetchBooks()"
             />
           }
+      </div>
       </div>
     } @else if(!currentBooks.length && !recentBooks.length) {
       <h4 class="text-center no-underline">
@@ -33,14 +38,15 @@
       </h4>
     }
     @if(recentBooks.length) {
-      <h4 class="text-center my-3 py-2">
+      <div class="friend-shelf-group">
+      <h4 class="activity-title">
         <i class="bi bi-bookmark-check-fill me-1"></i>
         Latest
       </h4>
-        <div class="d-flex flex-wrap justify-content-center mt-md-0 mt-3">
+        <div class="friend-books friend-books--latest">
             @for(book of recentBooks; track book.id; let index = $index) {
-              @if(index < 2) {
-                <app-book-item
+              @if(index < (minimize ? (currentBooks.length ? 3 : 6) : 2)) {
+                <app-book-item class="mobile-grid-book"
                   [selectedBook]="book"
                   [editable]="false"
                   [minimize]="minimize"
@@ -49,8 +55,10 @@
               }
             }
       </div>
+      </div>
     }
-    <div class="d-flex">
+    </div>
+    <div class="d-flex friend-actions">
       @if(allowRemoval) {
         <button
           class="btn outline-red-button me-1"
@@ -62,9 +70,7 @@
         </button>
       }
       <button
-        class="btn main-teal-button ms-1"
-        [class.full-width]="minimize"
-        [class.limit-width]="!minimize"
+        class="btn main-teal-button full-width"
         [routerLink]="['/books']" [queryParams]="{ user: connection.id }">
         All Books
         <i class="bi bi-bookmarks ms-1"></i>

@@ -1,27 +1,24 @@
 <app-header />
 <app-navbar />
 @if(!userIsSelf && !isLoadingUser) {
-  <h2 class="mb-4 mb-md-2 pb-3">
+  <h2 class="page-card library-title">
     <i class="bi bi-file-earmark-person me-2"></i>
     {{user.first}}'s Book List</h2>
 }
-<div class="row">
-  <div
-    [ngClass]="userIsSelf ? 'col-md-9' : ''"
-  >
-    <section class="my-3 p-4 rounded reading">
+<div class="library-overview">
+  <div>
+    <section class="page-card reading">
       @if(isLoading) {
-        <span class="spinner-border" role="status">
-        </span>
+        <app-skeleton variant="reading" label="Loading your books" />
       } @else {
         @if(reading.length) {
-          <h2 class="text-center mb-4 mb-md-2 pb-3">
+          <h2 class="section-heading">
             <i class="bi bi-body-text me-2"></i>
             Currently Reading
           </h2>
-          <div class="d-flex flex-wrap justify-content-around">
+          <div class="page-book-shelf">
             @for (book of reading; track book.id; let index = $index) {
-              <app-book-item
+              <app-book-item class="mobile-grid-book"
                 [selectedBook]="book"
                 [editable]="userIsSelf"
                 (bookUpdated)="fetchBooks(userId)"
@@ -30,7 +27,7 @@
           </div>
           @if(userIsSelf) {
             <button
-              class="btn btn main-teal-button"
+              class="btn main-teal-button full-width mt-3"
               (click)="onOpenForm(content, null)"
             >
                 Add a book
@@ -38,7 +35,7 @@
             </button>
           }
         } @else if(!isLoading) {
-          <h2 class="no-books">
+          <h2 class="section-heading no-books">
             <i class="bi bi-bookmark-x-fill me-2"></i>
             No current books
           </h2>
@@ -60,78 +57,66 @@
       }
     </section>
   </div>
-  <div class="col-md-3">
+  <aside class="library-tools">
     @if(userIsSelf) {
-        <div class="text-center my-3 goals p-md-0 p-4 rounded">
+        <div class="page-card goals">
           <app-user-stats
-            [currentBookCount]="completed2026.length"
+            [currentBookCount]="yearlyCompletedCount"
           />
           </div>
     }
     <div class="search mb-2">
       <form
         #ngForm="ngForm"
-        class="mt-2 p-3 rounded"
+        class="page-card search-panel"
         [formGroup]="searchForm"
       >
-        <h3 class="text-center border-0">
-          <i class="bi bi-search me-1"></i>
-          Find books
+        <h3 class="section-heading">
+          <i class="bi bi-funnel me-1"></i>
+          Filter books
         </h3>
-        <input type="text" formControlName="search" class="w-100">
+        <label for="library-search" class="library-search-label">Title or author</label>
+        <input id="library-search" type="search" formControlName="search" class="w-100 quiet-field" placeholder="Filter by title or author…">
       </form>
     </div>
-  </div>
+  </aside>
 
 </div>
-<div class="breadcrumbs">
-  <ul class="list-unstyled d-flex justify-content-evenly pt-1 pb-2 py-md-2">
-    @if(completed.length && sectionsLength >=2) {
-      <li>
-        <a [class.active]="activeSection === 'completed'" (click)="scrollToSection('completed')">
-          <i class="bi bi-bookmark-check-fill me-1"></i>
-          Completed
-          <i class="bi bi-chevron-right ms-1"></i>
-        </a>
-      </li>
+@if(sectionsLength >= 2) {
+  <nav class="section-nav breadcrumbs" aria-label="Book list sections">
+    @if(completed.length) {
+      <button type="button" [class.active]="activeSection === 'completed'" [attr.aria-current]="activeSection === 'completed' ? 'location' : null" (click)="scrollToSection('completed')">
+        <i class="bi bi-bookmark-check" aria-hidden="true"></i><span>Completed</span>
+      </button>
     }
-    @if(setAside.length && sectionsLength >=2) {
-      <li>
-        <a [class.active]="activeSection === 'set-aside'" (click)="scrollToSection('set-aside')">
-          <i class="bi bi-book-half me-1"></i>
-          Set Aside
-          <i class="bi bi-chevron-right ms-1"></i>
-        </a>
-      </li>
+    @if(setAside.length) {
+      <button type="button" [class.active]="activeSection === 'set-aside'" [attr.aria-current]="activeSection === 'set-aside' ? 'location' : null" (click)="scrollToSection('set-aside')">
+        <i class="bi bi-book-half" aria-hidden="true"></i><span>Set aside</span>
+      </button>
     }
-    @if(wantToRead.length && sectionsLength >=2) {
-      <li>
-        <a [class.active]="activeSection === 'want-to-read'" (click)="scrollToSection('want-to-read')">
-          <i class="bi bi-bookmark-star me-1"></i>
-          List
-          <i class="bi bi-chevron-right ms-1"></i>
-        </a>
-      </li>
+    @if(wantToRead.length) {
+      <button type="button" [class.active]="activeSection === 'want-to-read'" [attr.aria-current]="activeSection === 'want-to-read' ? 'location' : null" (click)="scrollToSection('want-to-read')">
+        <i class="bi bi-bookmark-star" aria-hidden="true"></i><span>Want to read</span>
+      </button>
     }
-  </ul>
-</div>
+  </nav>
+}
 
 @if(completed.length) {
-  <section class="py-3 mb-2 breadcrumb-section" id="completed">
-    <h2 class="text-center text-md-start mb-4 mb-md-2 pb-3"pb-3>
+  <section class="page-card breadcrumb-section" id="completed">
+    <h2 class="section-heading">
       <i class="bi bi-bookmark-check-fill me-2"></i>
       Completed
     </h2>
     @if (completed2026.length) {
-      <h3 class="year px-4 py-1 w-50 ms-auto">
+      <h3 class="year">
         2026
       </h3>
-      <div class="d-flex flex-wrap"
-        [class.justify-content-evenly]="completed2026.length > 1"
+      <div class="page-book-shelf"
       >
         @for (book of completed2026; track book.id; let index = $index) {
           @if(index < 6)  {
-            <app-book-item
+            <app-book-item class="mobile-grid-book"
               [selectedBook]="book"
               [editable]="userIsSelf"
               (bookUpdated)="fetchBooks(userId)"
@@ -156,12 +141,11 @@
                 class="px-0"
               >
                 <ng-template>
-                  <div class="d-flex flex-wrap"
-                  [class.justify-content-evenly]="completed2026.length > 7"
+                  <div class="page-book-shelf"
                 >
                 @for(book of completed2026; track book.id; let index = $index) {
                     @if(index > 5) {
-                      <app-book-item
+                      <app-book-item class="mobile-grid-book"
                         [selectedBook]="book"
                         [editable]="userIsSelf"
                         (bookUpdated)="fetchBooks(userId)"
@@ -177,15 +161,14 @@
       }
     }
     @if (completed2025.length) {
-      <h3 class="year px-4 py-1 w-50 ms-end">
+      <h3 class="year">
         2025
       </h3>
-      <div class="d-flex flex-wrap"
-        [class.justify-content-evenly]="completed2025.length > 1"
+      <div class="page-book-shelf"
       >
         @for (book of completed2025; track book.id; let index = $index) {
           @if(index < 6)  {
-            <app-book-item
+            <app-book-item class="mobile-grid-book"
               [selectedBook]="book"
               [editable]="userIsSelf"
               (bookUpdated)="fetchBooks(userId)"
@@ -209,12 +192,11 @@
                 class="px-0"
               >
                 <ng-template>
-                  <div class="d-flex flex-wrap"
-                  [class.justify-content-evenly]="completed2025.length > 7"
+                  <div class="page-book-shelf"
                 >
                 @for(book of completed2025; track book.id; let index = $index) {
                     @if(index > 5) {
-                      <app-book-item
+                      <app-book-item class="mobile-grid-book"
                         [selectedBook]="book"
                         [editable]="userIsSelf"
                         (bookUpdated)="fetchBooks(userId)"
@@ -231,15 +213,14 @@
     }
 
     @if (completed2024.length) {
-      <h3 class="year px-4 py-1 w-50 ms-auto">
+      <h3 class="year">
         2024
       </h3>
-      <div class="d-flex flex-wrap"
-        [class.justify-content-evenly]="completed2024.length > 1"
+      <div class="page-book-shelf"
       >
         @for (book of completed2024; track book.id; let index = $index) {
           @if(index < 6)  {
-            <app-book-item
+            <app-book-item class="mobile-grid-book"
               [selectedBook]="book"
               [editable]="userIsSelf"
               (bookUpdated)="fetchBooks(userId)"
@@ -264,12 +245,11 @@
                 class="px-0"
               >
                 <ng-template>
-                  <div class="d-flex flex-wrap"
-                    [class.justify-content-evenly]="completed2024.length > 7"
+                  <div class="page-book-shelf"
                   >
                   @for(book of completed2024; track book.id; let index = $index) {
                     @if(index > 5) {
-                      <app-book-item
+                      <app-book-item class="mobile-grid-book"
                         [selectedBook]="book"
                         [editable]="userIsSelf"
                         (bookUpdated)="fetchBooks(userId)"
@@ -286,15 +266,14 @@
     }
 
     @if (completed2023.length) {
-      <h3 class="text-end year px-4 py-1 w-50 mt-2">
+      <h3 class="year">
         2023
       </h3>
-      <div class="d-flex flex-wrap"
-        [class.justify-content-evenly]="completed2023.length > 1"
+      <div class="page-book-shelf"
       >
         @for (book of completed2023; track book.id; let index = $index) {
           @if(index < 6)  {
-            <app-book-item
+            <app-book-item class="mobile-grid-book"
               [selectedBook]="book"
               [editable]="userIsSelf"
               (bookUpdated)="fetchBooks(userId)"
@@ -319,12 +298,11 @@
                 class="px-0"
               >
                 <ng-template>
-                  <div class="d-flex flex-wrap"
-                    [class.justify-content-evenly]="completed2023.length > 7"
+                  <div class="page-book-shelf"
                   >
                   @for(book of completed2023; track book.id; let index = $index) {
                     @if(index > 5) {
-                      <app-book-item
+                      <app-book-item class="mobile-grid-book"
                         [selectedBook]="book"
                         [editable]="userIsSelf"
                         (bookUpdated)="fetchBooks(userId)"
@@ -341,15 +319,14 @@
     }
 
     @if (completed2022.length) {
-      <h3 class="year px-4 py-1 w-50 ms-auto">
+      <h3 class="year">
         2022
       </h3>
-      <div class="d-flex flex-wrap"
-        [class.justify-content-evenly]="completed2022.length > 1"
+      <div class="page-book-shelf"
       >
         @for (book of completed2022; track book.id; let index = $index) {
           @if(index < 6)  {
-            <app-book-item
+            <app-book-item class="mobile-grid-book"
               [selectedBook]="book"
               [editable]="userIsSelf"
               (bookUpdated)="fetchBooks(userId)"
@@ -374,12 +351,11 @@
                 class="px-0"
               >
                 <ng-template>
-                  <div class="d-flex flex-wrap"
-                    [class.justify-content-evenly]="completed2022.length > 7"
+                  <div class="page-book-shelf"
                   >
                   @for(book of completed2022; track book.id; let index = $index) {
                     @if(index > 5) {
-                      <app-book-item
+                      <app-book-item class="mobile-grid-book"
                         [selectedBook]="book"
                         [editable]="userIsSelf"
                         (bookUpdated)="fetchBooks(userId)"
@@ -396,15 +372,14 @@
     }
 
     @if (completed2021.length) {
-      <h3 class="text-end year px-4 py-1 w-50 mt-2">
+      <h3 class="year">
         2021
       </h3>
-      <div class="d-flex flex-wrap"
-        [class.justify-content-evenly]="completed2021.length > 1"
+      <div class="page-book-shelf"
       >
         @for (book of completed2021; track book.id; let index = $index) {
           @if(index < 6)  {
-            <app-book-item
+            <app-book-item class="mobile-grid-book"
               [selectedBook]="book"
               [editable]="userIsSelf"
               (bookUpdated)="fetchBooks(userId)"
@@ -429,12 +404,11 @@
                 class="px-0"
               >
                 <ng-template>
-                  <div class="d-flex flex-wrap"
-                    [class.justify-content-evenly]="completed2021.length > 7"
+                  <div class="page-book-shelf"
                   >
                   @for(book of completed2021; track book.id; let index = $index) {
                     @if(index > 5) {
-                      <app-book-item
+                      <app-book-item class="mobile-grid-book"
                         [selectedBook]="book"
                         [editable]="userIsSelf"
                         (bookUpdated)="fetchBooks(userId)"
@@ -451,15 +425,14 @@
     }
 
     @if (completed2020.length) {
-      <h3 class="year px-4 py-1 w-50 ms-auto">
+      <h3 class="year">
         2020
       </h3>
-      <div class="d-flex flex-wrap"
-        [class.justify-content-evenly]="completed2020.length > 1"
+      <div class="page-book-shelf"
       >
         @for (book of completed2020; track book.id; let index = $index) {
           @if(index < 6)  {
-            <app-book-item
+            <app-book-item class="mobile-grid-book"
               [selectedBook]="book"
               [editable]="userIsSelf"
               (bookUpdated)="fetchBooks(userId)"
@@ -484,12 +457,11 @@
                 class="px-0"
               >
                 <ng-template>
-                  <div class="d-flex flex-wrap"
-                    [class.justify-content-evenly]="completed2020.length > 7"
+                  <div class="page-book-shelf"
                   >
                   @for(book of completed2020; track book.id; let index = $index) {
                     @if(index > 5) {
-                      <app-book-item
+                      <app-book-item class="mobile-grid-book"
                         [selectedBook]="book"
                         [editable]="userIsSelf"
                         (bookUpdated)="fetchBooks(userId)"
@@ -507,17 +479,16 @@
   </section>
 }
 @if(setAside.length) {
-  <section class="py-3 mb-2 breadcrumb-section" id="set-aside">
-    <h2 class="text-center text-md-start mb-4 mb-md-2 pb-3"pb-3>
+  <section class="page-card breadcrumb-section" id="set-aside">
+    <h2 class="section-heading">
       <i class="bi bi-book-half me-2"></i>
       Set Aside
     </h2>
-    <div class="d-flex flex-wrap"
-      [class.justify-content-evenly]="setAside.length > 1"
+    <div class="page-book-shelf"
     >
       @for (book of setAside; track book.id; let index = $index) {
         @if(index < 6) {
-          <app-book-item
+          <app-book-item class="mobile-grid-book"
           [selectedBook]="book"
           [editable]="userIsSelf"
           (bookUpdated)="fetchBooks(userId)"
@@ -542,12 +513,11 @@
               class="px-0"
             >
               <ng-template>
-                <div class="d-flex flex-wrap"
-                [class.justify-content-evenly]="setAside.length > 7"
+                <div class="page-book-shelf"
               >
                 @for(book of setAside; track book.id; let index = $index) {
                   @if(index > 5) {
-                    <app-book-item
+                    <app-book-item class="mobile-grid-book"
                       [selectedBook]="book"
                       [editable]="userIsSelf"
                       (bookUpdated)="fetchBooks(userId)"
@@ -564,17 +534,16 @@
   </section>
 }
 @if (wantToRead.length) {
-  <section class="py-3 mb-2 breadcrumb-section" id="want-to-read">
-    <h2 class="text-center text-md-start mb-4 mb-md-2 pb-3"pb-3>
+  <section class="page-card breadcrumb-section" id="want-to-read">
+    <h2 class="section-heading">
       <i class="bi bi-bookmark-star me-2"></i>
       Reading List
     </h2>
-    <div class="d-flex flex-wrap"
-      [class.justify-content-evenly]="wantToRead.length > 1"
+    <div class="page-book-shelf"
     >
       @for (book of wantToRead; track book.id; let index = $index) {
         @if(index < 12) {
-          <app-book-item
+          <app-book-item class="mobile-grid-book"
           [selectedBook]="book"
           [editable]="userIsSelf"
           (bookUpdated)="fetchBooks(userId)"
@@ -599,12 +568,11 @@
               class="px-0"
             >
               <ng-template>
-                <div class="d-flex flex-wrap"
-                  [class.justify-content-evenly]="wantToRead.length > 13"
+                <div class="page-book-shelf"
                 >
                 @for(book of wantToRead; track book.id; let index = $index) {
                   @if(index > 11) {
-                    <app-book-item
+                    <app-book-item class="mobile-grid-book"
                       [selectedBook]="book"
                       [editable]="userIsSelf"
                       (bookUpdated)="fetchBooks(userId)"

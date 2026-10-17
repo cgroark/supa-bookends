@@ -1,18 +1,1 @@
-@import '../../../styles/variables';
-
-a {
-  color: $ivory;
-  font-family: $font-saira;
-  border-bottom: solid 2px $black;
-  &:hover {
-    cursor: pointer;
-    border-bottom: solid 2px $salmon;
-  }
-  @media screen and (max-width: 470px) {
-    font-size: 13px;
-  }
-}
-
-::ng-deep .modal-body {
-  min-height: 100px;
-}
+:host { display: block; }

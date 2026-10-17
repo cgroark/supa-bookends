@@ -1,176 +1,134 @@
 @import '../variables';
 
-.main-teal-button {
-  font-family: $font-saira;
-  background-color: $teal !important;
-  color: $ivory !important;
-  margin: auto !important;
-  display: block !important;
-  width: 50% !important;
-  &.full-width {
-    width: 100% !important;
-  }
-  &.limit-width {
-    max-width: 200px;
-  }
-  &:hover {
-    background-color: $teal-hover !important;
-  }
-  @media screen and (max-width: 576px) {
-    width: 100% !important;
-  }
+// Shared button primitive. Variants only supply their palette and layout.
+@mixin button-tone($surface, $edge, $hover) {
+  --button-surface: #{$surface};
+  --button-edge: #{$edge};
+  --button-hover: #{$hover};
 }
 
-.main-red-button {
+.btn {
   font-family: $font-saira;
-  background-color: $red !important;
-  color: $ivory !important;
-  margin: auto !important;
-  display: block !important;
-  width: 50% !important;
-  &:hover {
-    background-color: $red-hover !important;
+  font-weight: 500;
+  min-height: 44px;
+  padding: .6rem 1.1rem;
+  border-radius: 14px;
+  transition: background-color .16s ease, border-color .16s ease, box-shadow .16s ease;
+
+  &:focus-visible {
+    outline: 3px solid $teal;
+    outline-offset: 3px;
+    box-shadow: none;
   }
-  @media screen and (max-width: 576px) {
-    width: 100% !important;
+  &:disabled, &.disabled {
+    opacity: .45;
+    box-shadow: none;
+    cursor: not-allowed;
   }
+  i { color: inherit; }
 }
 
-.outline-red-button {
-  font-family: $font-saira;
-  background-color: $ivory !important;
-  color: $black !important;
-  margin: auto !important;
-  display: block !important;
-  width: 50% !important;
-  border: 2px solid $red !important;
-  &:hover {
-    background-color: $ivory-hover !important;
-  }
-  @media screen and (max-width: 576px) {
-    width: 100% !important;
-  }
-  i {
-    color: $black !important;
-  }
+.main-teal-button, .circle-teal-button, .add-button {
+  @include button-tone(#1b4640, #32877a, #255b52);
 }
-
-.main-purple-button {
-  font-family: $font-saira;
-  background-color: $purple !important;
-  color: $ivory !important;
-  margin: auto !important;
-  display: block !important;
-  width: 50% !important;
-  &.wider {
-    width: 100% !important;
-  }
-  &:hover {
-    background-color: $purple-hover !important;
-  }
-  @media screen and (max-width: 576px) {
-    width: 100% !important;
-  }
+.main-purple-button, .edit-button {
+  @include button-tone(#383141, #78658d, #4a3d59);
 }
-
+.main-red-button, .delete-button {
+  @include button-tone(#49292e, #a65b67, #60333c);
+}
 .outline-purple-button {
-  font-family: $font-saira;
-  background-color: $ivory !important;
-  color: $black !important;
-  margin: auto !important;
-  display: block !important;
-  width: 50% !important;
-  border: 2px solid $purple !important;
-  &.wider {
-    width: 100% !important;
-  }
-  &:hover {
-    background-color: $ivory-hover !important;
-  }
-  @media screen and (max-width: 576px) {
-    width: 100% !important;
-  }
-  i {
-    color: $black !important;
-  }
+  @include button-tone(transparent, #78658d, rgba($purple, .12));
+}
+.outline-red-button {
+  @include button-tone(transparent, #a65b67, rgba($red, .1));
 }
 
+.btn:is(.main-teal-button, .main-purple-button, .main-red-button,
+  .outline-purple-button, .outline-red-button, .circle-teal-button,
+  .edit-button, .delete-button, .add-button) {
+  background: var(--button-surface);
+  border: 2px solid var(--button-edge);
+  color: $ivory;
+  box-shadow: 0 4px 12px rgba($black, .14);
+  &:hover:not(:disabled):not(.disabled) {
+    background: var(--button-hover);
+    border-color: var(--button-edge);
+    color: $ivory;
+  }
+  &:active:not(:disabled) {
+    background: var(--button-hover);
+    box-shadow: inset 0 2px 4px rgba($black, .2);
+  }
+  i { color: inherit; }
+}
+
+.btn:is(.outline-purple-button, .outline-red-button) {
+  color: $purple-hover;
+  box-shadow: none;
+  &:hover:not(:disabled) { color: $purple-hover; }
+}
+.btn.outline-red-button {
+  color: $red-hover;
+  &:hover:not(:disabled) { color: $red-hover; }
+}
+
+.main-teal-button, .main-purple-button, .main-red-button,
+.outline-purple-button, .outline-red-button {
+  display: block;
+  margin-inline: auto;
+  width: 50%;
+  &.full-width, &.wider { width: 100%; }
+  &.limit-width { max-width: 200px; }
+  @media (max-width: 576px) { width: 100%; }
+}
+
+.btn:is(.circle-teal-button, .edit-button, .delete-button) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 50%;
+  i { font-size: 18px; }
+}
 .circle-teal-button {
-  font-family: $font-saira;
-  background-color: $teal !important;
   margin-left: 45px;
   margin-top: -50px;
-  color: $ivory !important;
-  padding: .25rem .5rem !important;
-  border-radius: 50% !important;
-  width: 40px;
-  height: 40px;
-  border: solid 2px $black !important;
-  &.wider {
-    margin-left: 100px;
-  }
-  &.higher {
-    margin-top: -100px;
-  }
-  &:hover {
-    background-color: $teal-hover !important;
-  }
-  i {
-    color: $black;
-    font-size: 16px;
-  }
+  &.wider { margin-left: 100px; }
+  &.higher { margin-top: -100px; }
 }
-
 .edit-button {
-  font-family: $font-saira;
-  background-color: $salmon !important;
-  border-radius: 50% !important;
-  padding-right: .5rem !important;
-  padding-left: .3rem !important;
-  display: block !important;
   margin-top: 5px;
-  width: 40px;
-  height: 40px;
-  border: solid 2px $black !important;
-  &.overlay {
-    display: inline-block !important;
-    margin-left: 95px;
-    margin-top: -52px;
-  }
-  &.higher {
-    margin-top: -100px;
-  }
-  i {
-    color: $black;
-    font-size: 16px;
-  }
-  &:hover {
-    background-color: $salmon-hover !important;
-  }
+  &.overlay { margin-left: 95px; margin-top: -52px; }
+  &.higher { margin-top: -100px; }
+}
+.delete-button { margin-top: 5px; }
+
+.btn.btn-link, .btn.password-toggle {
+  box-shadow: none;
+  border-radius: 10px;
+}
+.btn.password-toggle {
+  width: 44px;
+  padding: .5rem;
+  margin-left: -44px;
+  margin-top: 0;
+}
+.dropdown-menu {
+  padding: .35rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba($black, .18);
+  .dropdown-item { border-radius: 8px; padding: .55rem .8rem; }
 }
 
-.delete-button {
-  font-family: $font-saira;
-  background-color: $black !important;
-  border-radius: 50% !important;
-  padding-right: .6rem !important;
-  padding-left: .7rem !important;
-  display: block !important;
-  margin-top: 5px;
-  i {
-    color: $red;
-    @media screen and (max-width: 767px) {
-      font-size: 14px;
-      margin-top: -2px !important;
-      display: block;
-    }
-  }
-  &:hover {
-    background-color: $light-black !important;
-  }
-  @media screen and (max-width: 767px) {
-    width: 30px;
-    height: 30px;
-    padding-left: 0.5rem !important;
-  }
+button.accordion-button:focus-visible {
+  outline: 3px solid $teal;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn { transition: none; }
 }

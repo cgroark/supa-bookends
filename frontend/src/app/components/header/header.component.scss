@@ -1,15 +1,149 @@
 @import '../../../styles/variables';
 
-h1, h2, p, i, a {
-  color: $ivory;
-}
-
-h1 {
-  font-size: $font-size-large;
-  margin-bottom: 0;
-  font-family: $font-bungee;
-}
-
-p {
-  font-family: $font-saira;
+.site-header {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  min-height: 32vh;
+  min-height: 32svh;
+  margin-bottom: 1rem;
+  padding: clamp(2rem, 5vh, 4rem) clamp(1.25rem, 4vw, 3rem);
+  overflow: hidden;
+  border: 1px solid rgba($ivory, .1);
+  border-radius: $surface-radius;
+  background: radial-gradient(ellipse at 90% 100%, rgba($purple, .24), transparent 60%), linear-gradient(120deg, #242021, #151515 70%);
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(-35deg, transparent 0 22px, rgba($ivory, .025) 22px 23px);
+    mask-image: linear-gradient(to right, transparent 25%, black);
+    pointer-events: none;
+    z-index: -1;
+  }
+  &__content {
+    position: relative;
+    z-index: 1;
+    width: fit-content;
+    max-width: 100%;
+    &::before {
+      content: '';
+      position: absolute;
+      top: calc(100% + .95rem);
+      left: 0;
+      right: 0;
+      height: 14px;
+      z-index: 1;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 1px 6px at 18% 50%, $ivory 20%, transparent 100%),
+        radial-gradient(ellipse 5px 1px at 18% 50%, $ivory 20%, transparent 100%),
+        radial-gradient(ellipse 1px 5px at 57% 50%, $ivory 20%, transparent 100%),
+        radial-gradient(ellipse 4px 1px at 57% 50%, $ivory 20%, transparent 100%),
+        radial-gradient(ellipse 1px 6px at 86% 50%, $ivory 20%, transparent 100%),
+        radial-gradient(ellipse 5px 1px at 86% 50%, $ivory 20%, transparent 100%);
+      filter: drop-shadow(0 0 3px rgba($ivory, .65));
+      opacity: .35;
+    }
+    &::after {
+      content: '';
+      position: absolute;
+      top: calc(100% + 1.2rem);
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, rgba($salmon, .8), rgba($purple, .8) 55%, rgba($teal, .7));
+      filter: blur(1px);
+      box-shadow: 0 3px 8px rgba($purple, .35);
+      opacity: .9;
+      pointer-events: none;
+    }
+  }
+  // Oversized, individually leaning spines with stamped bands and page edges.
+  &__shelf {
+    position: absolute;
+    right: -1.5rem;
+    bottom: -2.5rem;
+    display: flex;
+    align-items: flex-end;
+    gap: 9px;
+    height: 100%;
+    width: 35%;
+    opacity: .8;
+    transform: rotate(-14deg);
+    pointer-events: none;
+    z-index: -1;
+    span {
+      position: relative;
+      flex: 1;
+      height: 85%;
+      border: 1px solid rgba($ivory, .3);
+      border-radius: 3px 7px 0 0;
+      background: linear-gradient(90deg, rgba($black, .35) 0 10%, transparent 12% 85%, rgba($ivory, .12) 88% 90%, transparent 92%), #5b4274;
+      box-shadow: -6px 5px 0 rgba($black, .35);
+      transform-origin: bottom;
+      &::before {
+        content: '';
+        position: absolute;
+        top: 12px;
+        left: 5px;
+        right: 5px;
+        height: 14px;
+        border-block: 3px double rgba($ivory, .6);
+      }
+      &::after {
+        content: '';
+        position: absolute;
+        top: 30%;
+        left: 35%;
+        width: 24%;
+        height: 35%;
+        border-top: 5px solid rgba($ivory, .65);
+        border-bottom: 2px solid rgba($ivory, .4);
+        background: repeating-linear-gradient(to bottom, transparent 0 9px, rgba($ivory, .3) 9px 11px);
+      }
+      &:nth-child(1) { transform: rotate(-8deg); }
+      &:nth-child(2) { height: 105%; background-color: #246052; transform: rotate(-3deg); }
+      &:nth-child(3) { height: 76%; background-color: #a75c70; transform: rotate(7deg); }
+      &:nth-child(4) { height: 94%; transform: rotate(2deg); }
+      &:nth-child(5) { height: 82%; background-color: #94702d; transform: rotate(10deg); }
+    }
+  }
+  &__title { margin: 0; line-height: 1.25; }
+  &__brand {
+    display: inline-flex;
+    align-items: center;
+    color: $ivory;
+    text-decoration: none;
+    font-family: $font-bungee;
+    font-size: clamp(2.4rem, 6.5vw, 4.6rem);
+    border-radius: 12px;
+    &:hover { color: $ivory-hover; }
+    &:focus-visible { outline: 3px solid $teal; outline-offset: 6px; }
+  }
+  &__tagline {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: .7rem;
+    margin: 1.1rem 0 0;
+    color: rgba($ivory, .7);
+    font: 400 .95rem $font-saira;
+  }
+  &__divider { width: 4px; height: 4px; border-radius: 50%; background: $salmon; }
+  &--centered {
+    justify-content: center;
+    text-align: center;
+    .site-header__tagline { justify-content: center; margin-left: 0; }
+    .site-header__shelf { opacity: .28; }
+  }
+  @media (max-width: 768px) {
+    text-align: center;
+    min-height: 28vh;
+    min-height: 28svh;
+    justify-content: center;
+    &__shelf { width: 48%; opacity: .28; }
+    &__tagline { justify-content: center; margin-left: 0; }
+  }
 }

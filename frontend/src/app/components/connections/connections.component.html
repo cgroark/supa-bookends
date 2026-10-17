@@ -1,11 +1,10 @@
 <app-header />
 <app-navbar />
-<h2 class="text-center">
-  <i class="bi bi-person-add me-1"></i>
-  Find and Add Friends
-</h2>
-<div class="py-4 px-3 search-section rounded mb-4 mx-auto">
-  <ng-select
+<main class="friends-page">
+<section class="page-card search-panel" id="find-friends">
+  <h2 class="section-heading"><i class="bi bi-person-add" aria-hidden="true"></i> Find your people</h2>
+  <p>Search by name to follow what your friends are reading.</p>
+  <ng-select class="quiet-search" aria-label="Search friends by name"
     [items]="connections$ | async"
     [typeahead]="connectionInput$"
     [loading]="isLoading"
@@ -33,7 +32,8 @@
           }
           @else {
             <button
-              class="btn main-teal-button px-2 py-0 ms-2"
+              class="btn main-teal-button search-add ms-2"
+              type="button"
               (click)="addConnection(item.id)"
               >
               Add {{ item.first }}
@@ -46,21 +46,24 @@
 
     </ng-template>
   </ng-select>
-</div>
+</section>
 @if(isAdding) {
   <span class="spinner-border" role="status">
   </span>
 }
 
-@if(existingConnections.length) {
-  <section>
-    <h2 class="text-center mb-3">
+@if(existingConnections.length || isLoadingConnections) {
+  <nav class="section-nav" aria-label="Friends page sections">
+    <button type="button" [class.active]="activeSection === 'find-friends'" [attr.aria-current]="activeSection === 'find-friends' ? 'location' : null" (click)="scrollToSection('find-friends')"><i class="bi bi-search" aria-hidden="true"></i> Find friends</button>
+    <button type="button" [class.active]="activeSection === 'your-friends'" [attr.aria-current]="activeSection === 'your-friends' ? 'location' : null" (click)="scrollToSection('your-friends')"><i class="bi bi-people" aria-hidden="true"></i> Your friends</button>
+  </nav>
+  <section class="page-card" id="your-friends">
+    <h2 class="section-heading">
       <i class="bi bi-people-fill me-1"></i>
       Your Friends
     </h2>
     @if(isLoadingConnections) {
-      <span class="spinner-border" role="status">
-      </span>
+      <app-skeleton variant="friend" [framed]="true" label="Loading your friends" />
     } @else {
       <div>
         @for(each of existingConnections; track each.id) {
@@ -75,4 +78,4 @@
     }
   </section>
 }
-
+</main>

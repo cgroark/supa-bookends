@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { SkeletonComponent } from '../skeleton/skeleton.component';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -22,11 +23,11 @@ import { EachConnectionComponent } from '../each-connection/each-connection.comp
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [EachConnectionComponent, BestsellersComponent, BookItemComponent, BookFormComponent, HeaderComponent, NavbarComponent, UserStatsComponent, CommonModule, RouterModule, NgbAccordionModule],
+  imports: [SkeletonComponent, EachConnectionComponent, BestsellersComponent, BookItemComponent, BookFormComponent, HeaderComponent, NavbarComponent, UserStatsComponent, CommonModule, RouterModule, NgbAccordionModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
 
   protected isLoading = true;
   protected isLoadingConnections = false;
@@ -42,6 +43,13 @@ export class HomeComponent implements OnInit {
   protected fullWidth = false;
   protected activeSection: string = '';
   protected sectionsLength: number = 0;
+  private sectionObserver?: IntersectionObserver;
+  private observationTimer?: ReturnType<typeof setTimeout>;
+
+  ngOnDestroy(): void {
+    this.sectionObserver?.disconnect();
+    clearTimeout(this.observationTimer);
+  }
 
   constructor(private userService: UserService, private bookService: BookService, private modalService: NgbModal) {}
 
@@ -68,6 +76,7 @@ export class HomeComponent implements OnInit {
           forkJoin<User[]>(userRequests).subscribe({
             next: (users: User[]) => {
               this.existingConnections = users;
+              this.observeSections();
               this.isLoadingConnections = false;
             },
             error: (error) => {
@@ -134,22 +143,26 @@ export class HomeComponent implements OnInit {
   protected scrollToSection(sectionId: string): void {
     const element = document.getElementById(sectionId);
     if (element) {
-      const offset = 40;
+      const nav = document.querySelector<HTMLElement>('.breadcrumbs');
+      const offset = nav?.offsetHeight ? nav.offsetHeight + 24 : 16;
+      this.activeSection = sectionId;
       const elementPosition = element.getBoundingClientRect().top + window.scrollY - offset;
 
       window.scrollTo({
         top: elementPosition,
-        behavior: 'smooth'
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'
       });
     }
   }
 
 
   protected observeSections(): void {
-    setTimeout(() => {
+    clearTimeout(this.observationTimer);
+    this.observationTimer = setTimeout(() => {
+      this.sectionObserver?.disconnect();
       const sections = document.querySelectorAll('.breadcrumb-section');
       this.sectionsLength = sections.length;
-      const observer = new IntersectionObserver(
+      this.sectionObserver = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
@@ -158,12 +171,12 @@ export class HomeComponent implements OnInit {
           });
         },
         {
-          rootMargin: '0px 0px -94% 0px',
+          rootMargin: '-80px 0px -65% 0px',
           threshold: 0,
         }
       );
 
-      sections.forEach((section) => observer.observe(section));
+      sections.forEach((section) => this.sectionObserver?.observe(section));
     }, 0);
   }
 }

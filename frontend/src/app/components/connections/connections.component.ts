@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { SkeletonComponent } from '../skeleton/skeleton.component';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { jwtDecode}  from 'jwt-decode';
 import { SystemMessageService } from '../../services/system-message.service';
@@ -24,11 +25,31 @@ import { User } from 'src/app/models/user.model';
 @Component({
   selector: 'app-connections',
   standalone: true,
-  imports: [HeaderComponent, NavbarComponent, EachConnectionComponent, NgSelectModule, CommonModule, NgOptionHighlightModule, FormsModule],
+  imports: [SkeletonComponent, HeaderComponent, NavbarComponent, EachConnectionComponent, NgSelectModule, CommonModule, NgOptionHighlightModule, FormsModule],
   templateUrl: './connections.component.html',
   styleUrl: './connections.component.scss'
 })
 export class ConnectionsComponent implements OnInit {
+  protected activeSection = 'find-friends';
+
+  @HostListener('window:scroll')
+  protected updateActiveSection(): void {
+    const section = document.getElementById('your-friends');
+    const nav = document.querySelector<HTMLElement>('.friends-page .section-nav');
+    this.activeSection = section && section.getBoundingClientRect().top <= (nav?.offsetHeight ?? 60) + 24 ? 'your-friends' : 'find-friends';
+  }
+
+  protected scrollToSection(id: string): void {
+    const section = document.getElementById(id);
+    const nav = document.querySelector<HTMLElement>('.friends-page .section-nav');
+    if (!section) return;
+    this.activeSection = id;
+    window.scrollTo({
+      top: section.getBoundingClientRect().top + window.scrollY - (nav?.offsetHeight ?? 60) - 16,
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'
+    });
+  }
+
   protected connections$: Observable<any[]>;
   protected connectionInput$ = new ReplaySubject<string>(1);
   protected existingConnections: User[] = [];

@@ -1,0 +1,41 @@
+@import '../../../styles/variables';
+
+:host { position: relative; z-index: 0; display: block; width: 100%; aspect-ratio: 2 / 3; }
+.cover {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 3px 7px 7px 3px;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  img { width: 100%; height: 100%; object-fit: contain; object-position: top; border-radius: inherit; }
+  &:focus-visible { outline: 3px solid $teal; outline-offset: 3px; }
+  &--fallback {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: .55rem;
+    padding: .8rem .65rem .75rem 1rem;
+    color: $ivory;
+    background: linear-gradient(90deg, rgba($black, .35) 0 5%, rgba($ivory, .12) 6%, transparent 8%), linear-gradient(145deg, #4b3b60, #26212f);
+    border: 1px solid rgba($ivory, .25);
+    box-shadow: inset -3px 0 0 rgba($ivory, .13), 2px 3px 6px rgba($black, .2);
+  }
+  &__icon { width: 26px; height: 26px; flex-shrink: 0; color: $salmon; }
+  &__title, &__author {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+  }
+  &__title { -webkit-line-clamp: 5; font: 500 .95rem/1.2 $font-saira; }
+  &__author { -webkit-line-clamp: 2; margin-top: auto; color: rgba($ivory, .8); font: 400 .7rem/1.25 $font-saira; }
+  &--compact.cover--fallback { padding: .4rem .3rem .4rem .55rem; gap: .3rem; }
+  &--compact &__icon { width: 16px; height: 16px; }
+  &--compact &__title { font-size: .65rem; -webkit-line-clamp: 4; }
+  &--compact &__author { font-size: .55rem; }
+}

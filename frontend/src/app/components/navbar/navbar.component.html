@@ -1,25 +1,23 @@
-<nav class="navbar p-1">
-  <ul class="list-unstyled d-flex ms-auto me-md-0 me-auto pt-2">
-    <li class="ms-md-3 ms-0">
-      <a class="pb-1" routerLink="/home" routerLinkActive="active">
-        Home <i class="bi bi-house ms-1"></i>
-      </a>
-    </li>
-    <li class="ms-3">
-      <a class="pb-1"
-      [routerLink]="['/books']" [queryParams]="{ user: userId }"
-      [class.active]="router.url.startsWith('/books')"
-      >
-        Book List <i class="bi bi-bookmarks ms-1"></i>
-      </a>
-    </li>
-    <li class="ms-3">
-      <a class="pb-1" routerLink="/connections" routerLinkActive="active">
-        Friends
-        <i class="bi bi-people ms-1"></i>
-      </a></li>
+<nav class="site-nav" aria-label="Main navigation">
+  <ul class="site-nav__items">
     <li>
-      <app-logout />
+      <a class="site-nav__link" routerLink="/home" routerLinkActive="active" ariaCurrentWhenActive="page">
+        <i class="bi bi-house" aria-hidden="true"></i><span>Home</span>
+      </a>
     </li>
+    <li>
+      <a class="site-nav__link"
+        [routerLink]="['/books']" [queryParams]="{ user: userId }"
+        [class.active]="router.url.startsWith('/books')"
+        [attr.aria-current]="router.url.startsWith('/books') ? 'page' : null">
+        <i class="bi bi-bookmarks" aria-hidden="true"></i><span>Book List</span>
+      </a>
+    </li>
+    <li>
+      <a class="site-nav__link" routerLink="/connections" routerLinkActive="active" ariaCurrentWhenActive="page">
+        <i class="bi bi-people" aria-hidden="true"></i><span>Friends</span>
+      </a>
+    </li>
+    <li class="site-nav__account"><app-logout /></li>
   </ul>
 </nav>

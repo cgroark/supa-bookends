@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { SkeletonComponent } from '../skeleton/skeleton.component';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -23,9 +24,19 @@ import { UserStatsComponent } from '../user-stats/user-stats.component';
   standalone: true,
   templateUrl: './book-list.component.html',
   styleUrls: ['./book-list.component.scss'],
-  imports: [BookItemComponent, BookFormComponent, UserStatsComponent, HeaderComponent, NavbarComponent, CommonModule, NgbAccordionModule, RouterLink, ReactiveFormsModule, FormsModule]
+  imports: [SkeletonComponent, BookItemComponent, BookFormComponent, UserStatsComponent, HeaderComponent, NavbarComponent, CommonModule, NgbAccordionModule, RouterLink, ReactiveFormsModule, FormsModule]
 })
-export class BookListComponent implements OnInit {
+export class BookListComponent implements OnInit, OnDestroy {
+  private sectionObserver?: IntersectionObserver;
+  private observationTimer?: ReturnType<typeof setTimeout>;
+
+  ngOnDestroy(): void {
+    this.sectionObserver?.disconnect();
+    clearTimeout(this.observationTimer);
+    this.destroyed$.next();
+    this.destroyed$.complete();
+  }
+
 
   protected booksError: string = '';
   protected allUserBooks: Book[] = [];
@@ -34,6 +45,7 @@ export class BookListComponent implements OnInit {
   protected noBooks = false;
   protected completed: Book[] = [];
   protected completed2026: Book[] = [];
+  protected yearlyCompletedCount = 0;
   protected completed2025: Book[] = [];
   protected completed2024: Book[] = [];
   protected completed2023: Book[] = [];
@@ -66,10 +78,11 @@ export class BookListComponent implements OnInit {
       .subscribe((search: string) => {
         const term = search?.trim().toLowerCase() ?? '';
         const filteredBooks = this.allUserBooksSource.filter(book =>
-            book.title.toLowerCase().includes(term)
+            book.title.toLowerCase().includes(term) || book.author?.toLowerCase().includes(term)
           )
 
         this.processBooks(filteredBooks);
+        this.observeSections();
       }
     )
   }
@@ -78,7 +91,7 @@ export class BookListComponent implements OnInit {
      // Retrieve the token from localStorage
      const token = localStorage.getItem('auth_token_bookends');
      const decodedToken: any = token ? jwtDecode(token) : null;
-     this.route.queryParams.subscribe(params => {
+     this.route.queryParams.pipe(takeUntil(this.destroyed$)).subscribe(params => {
       const userId = params['user'];
       if(!userId && decodedToken) {
         this.userId = decodedToken.sub;
@@ -114,6 +127,8 @@ export class BookListComponent implements OnInit {
     this.bookService.getAllUserBooks(userId).subscribe({
       next: (response: Book[]) => {
         this.allUserBooks = this.allUserBooksSource = response;
+        const goalYear = new Date().getFullYear();
+        this.yearlyCompletedCount = this.sortBooksByDate(response, 4, `${goalYear}-01-01`, `${goalYear + 1}-01-01`).length;
         this.noBooks = !response.length
         const isProcessed = this.processBooks(response);
         if (isProcessed) {
@@ -139,18 +154,11 @@ export class BookListComponent implements OnInit {
       this.completed2025 = this.sortBooksByDate(response, 4, '2025-01-01', '2026-01-01');
       this.completed2026 = this.sortBooksByDate(response, 4, '2026-01-01', '2027-01-01');
 
-      this.reading = response.filter((each: Book) => each.status === 2);
+      this.reading = this.allUserBooksSource.filter((each: Book) => each.status === 2);
       this.wantToRead = response
         .filter((each: Book) => each.status === 1)
         .sort((a: Book, b: Book) => a.title.localeCompare(b.title));
       this.setAside = response.filter((each: Book) => each.status === 3);
-      this.reading = response.filter((each: Book) =>
-          each.status === 2);
-      this.wantToRead = response.filter((each: Book) =>
-        each.status === 1)
-        .sort((a: Book, b: Book) => a.title.localeCompare(b.title));
-      this.setAside = response.filter((each: Book) =>
-        each.status === 3);
       return true;
   }
 
@@ -175,22 +183,26 @@ export class BookListComponent implements OnInit {
   protected scrollToSection(sectionId: string): void {
     const element = document.getElementById(sectionId);
     if (element) {
-      const offset = 40;
+      const nav = document.querySelector<HTMLElement>('.breadcrumbs');
+      const offset = nav?.offsetHeight ? nav.offsetHeight + 16 : 16;
+      this.activeSection = sectionId;
       const elementPosition = element.getBoundingClientRect().top + window.scrollY - offset;
 
       window.scrollTo({
         top: elementPosition,
-        behavior: 'smooth'
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'
       });
     }
   }
 
 
   protected observeSections(): void {
-    setTimeout(() => {
+    clearTimeout(this.observationTimer);
+    this.observationTimer = setTimeout(() => {
+      this.sectionObserver?.disconnect();
       const sections = document.querySelectorAll('.breadcrumb-section');
       this.sectionsLength = sections.length;
-      const observer = new IntersectionObserver(
+      this.sectionObserver = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
@@ -199,12 +211,12 @@ export class BookListComponent implements OnInit {
           });
         },
         {
-          rootMargin: '0px 0px -94% 0px',
+          rootMargin: '-80px 0px -65% 0px',
           threshold: 0,
         }
       );
 
-      sections.forEach((section) => observer.observe(section));
+      sections.forEach((section) => this.sectionObserver?.observe(section));
     }, 0);
   }
 

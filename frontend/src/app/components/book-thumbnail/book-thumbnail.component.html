@@ -1,0 +1,11 @@
+@if(loading) {
+  <app-skeleton variant="cover" [light]="true" label="Loading cover" />
+}
+@if(imageUrl && !failed) {
+  <img [src]="imageUrl" [alt]="'Cover of ' + title" [class.loading]="loading"
+    (load)="loading = false" (error)="loading = false; failed = true">
+} @else {
+  <span class="fallback" role="img" [attr.aria-label]="'No cover available for ' + title">
+    <i class="bi bi-book" aria-hidden="true"></i>
+  </span>
+}

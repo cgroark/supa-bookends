@@ -1,33 +1,32 @@
 @import '../../../styles/variables';
 
-nav {
-  border-top: 3px solid $purple;
-
-  @media screen and (max-width: 768px) {
+.site-nav {
+  margin-bottom: 1.5rem;
+  padding: .4rem;
+  background: $light-black;
+  border: 1px solid rgba($ivory, .12);
+  border-radius: $surface-radius;
+  &__items {
+    display: flex;
+    align-items: center;
+    gap: .35rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    li { min-width: 0; }
+  }
+  &__account { margin-left: auto; }
+  @media (max-width: 768px) {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    width: 100vw;
-    background: $purple;
-    border-top: 3px solid $ivory;
+    margin: 0;
+    padding: .5rem .5rem calc(.5rem + env(safe-area-inset-bottom, 0px));
+    border-radius: $surface-radius;
+    box-shadow: 0 -8px 24px rgba($black, .25);
     z-index: 1000;
-  }
-
-}
-a {
-  color: $ivory;
-  text-decoration: none;
-  font-family: $font-saira;
-  font-size: $font-size-small;
-  border-bottom: solid 2px $black;
-  &:hover {
-    border-bottom: solid 2px $salmon;
-  }
-  &.active {
-    border-bottom: solid 3px $salmon;
-  }
-  @media screen and (max-width: 470px) {
-    font-size: 13px;
+    &__items { gap: .25rem; li { flex: 1; } }
+    &__account { margin-left: 0; }
   }
 }

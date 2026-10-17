@@ -1,3 +1,4 @@
+import { SkeletonComponent } from '../skeleton/skeleton.component';
 import { Component, OnInit, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { jwtDecode}  from 'jwt-decode';
@@ -8,7 +9,7 @@ import { User } from 'src/app/models/user.model';
 @Component({
   selector: 'app-user-stats',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, CommonModule],
+  imports: [SkeletonComponent, ReactiveFormsModule, FormsModule, CommonModule],
   templateUrl: './user-stats.component.html',
   styleUrl: './user-stats.component.scss'
 })

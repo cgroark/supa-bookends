@@ -1,23 +1,20 @@
 @import '../../../styles/variables';
 
-form {
-  background-color: $ivory;
+.form-section {
+  padding: 1rem;
+  background: #1c191d;
+  color: $ivory;
+}
+.book-details-form {
+  padding: 1.25rem;
+  background: rgba($ivory, .025);
+  border: 1px solid rgba($ivory, .1);
+  border-radius: $surface-radius;
+  label { color: rgba($ivory, .8); font-family: $font-saira; i { color: $salmon; } }
 }
 section.form-section {
   @media screen and (max-width: 768px) {
     width: 100% !important;
-  }
-}
-
-input, textarea {
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  min-height: 36px;
-  &:focus-visible {
-    outline: none;
-  }
-  &.is-invalid {
-    border: solid $red 1px;
   }
 }
 
@@ -44,8 +41,8 @@ input, textarea {
     height: 4rem;
     background: linear-gradient(
       to bottom,
-      rgba(255, 255, 255, 0) 0%,
-      $ivory
+      rgba(28, 25, 29, 0) 0%,
+      #212022
     );
     pointer-events: none;
   }
@@ -53,24 +50,56 @@ input, textarea {
 
 button.btn-link {
   margin-top: -25px;
-  color: $purple;
-}
-
-.ng-select {
-  &.is-invalid {
-    border: solid $red 1px;
-    border-radius: 4px;
-  }
+  color: $salmon;
 }
 
 .search-section {
-  background-color: #f38ba2;
+  padding: 1.25rem;
+  border: 1px solid rgba($salmon, .3);
+  border-radius: $surface-radius;
+  background: radial-gradient(ellipse at top right, rgba($salmon, .13), transparent 70%), #262128;
+  box-shadow: 0 8px 24px rgba($black, .15);
+}
+.search-heading {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  margin-bottom: 1rem;
+  h3 { margin: 0; font: 500 1.15rem $font-saira; }
+  p { margin: .15rem 0 0; color: rgba($ivory, .6); font-size: .85rem; }
+  &__icon {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    color: $salmon;
+    border: 1px solid rgba($salmon, .3);
+    border-radius: 12px 3px;
+    background: rgba($salmon, .08);
+  }
+}
+.btn.manual-toggle {
+  display: block;
+  margin: .75rem 0 .75rem auto;
+  color: $salmon;
+  background: transparent;
+  font-size: .9rem;
+  &:hover { background: rgba($salmon, .08); }
+}
+.book-preview {
+  color: rgba($ivory, .7);
+  font-size: .85rem;
+  img { max-width: 140px; display: block; margin: 0 auto 1rem; border-radius: 4px 10px 10px 4px; box-shadow: 4px 5px 15px rgba($black, .3); }
+}
+.date-button { color: $ivory; background: #383141; border: 1px solid #78658d; }
+@media (max-width: 576px) {
+  .form-section { padding: .75rem; }
+  .search-section, .book-details-form { padding: 1rem; }
 }
 
 input[type="date"] {
   width: 100% !important;
-  color: black !important;
-  background-color: white !important;
   text-align: left !important;
 }
 

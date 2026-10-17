@@ -1,3 +1,4 @@
+import { BookCoverComponent } from '../book-cover/book-cover.component';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -9,7 +10,7 @@ import { BookService } from 'src/app/services/book.service';
 @Component({
   selector: 'app-book-item',
   standalone: true,
-  imports: [BookFormComponent, CommonModule, NgbDropdownModule],
+  imports: [BookCoverComponent, BookFormComponent, CommonModule, NgbDropdownModule],
   templateUrl: './book-item.component.html',
   styleUrl: './book-item.component.scss'
 })

@@ -5,6 +5,7 @@
 
 div.fiction, div.non-fiction {
   background-color: $light-black;
+  border: 1px solid rgba($ivory, .1);
 }
 
 .accordion-button {
@@ -28,25 +29,25 @@ div.fiction, div.non-fiction {
   background: $light-black;
 }
 
+:host {
+  display: block;
+  container-type: inline-size;
+  container-name: bestsellers;
+}
 .each-book {
-  div {
+  position: relative;
+  min-width: 0;
+  > div {
     height: 120px;
-    img, .no-image {
-      max-width: 80px;
-      &:hover {
-        cursor: pointer;
-      }
-    }
-    .no-image {
-      &:hover {
-        cursor: pointer;
-      }
-    }
+    app-book-cover { width: 80px; max-width: 100%; height: 120px; margin-inline: auto; }
+
   }
-  &:hover {
-    transition: .4s;
-    -webkit-transform: scale(1.04);
-    transform: scale(1.04);
+  > .circle-teal-button {
+    position: absolute;
+    z-index: 1;
+    top: -4px;
+    right: 0;
+    margin: 0;
   }
 }
 
@@ -68,4 +69,30 @@ div.fiction, div.non-fiction {
 
 h3 {
   color: $ivory;
+}
+.bestseller-shelf {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem .5rem;
+  margin-bottom: 1rem;
+}
+@container bestsellers (min-width: 360px) {
+  .bestseller-shelf { grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); }
+}
+
+.bestsellers-heading {
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background: $light-black;
+  border: 1px solid rgba($ivory, .1);
+  box-shadow: 0 6px 20px rgba($black, .12);
+  h2 {
+    margin: 0 0 .75rem;
+    padding-bottom: .75rem;
+    border-bottom: 1px solid rgba($ivory, .12);
+    font: 500 1.3rem $font-saira;
+    i { color: $salmon; }
+  }
+  p { margin: 0; font-size: .9rem; }
+  p.bestsellers-heading__date { color: rgba($ivory, .65); font-size: .8rem; margin-top: .25rem; }
 }

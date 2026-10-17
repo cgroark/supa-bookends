@@ -1,29 +1,28 @@
 <app-header />
 <app-navbar />
-<main>
-  <div class="row">
-    <div
-      [ngClass]="noBooks || fullWidth ? 'px-4' : 'col-lg-9 px-4'"
-    >
-        <div class="row mb-3 py-3 px-1 px-md-3 rounded reading mt-3">
+<main class="home-dashboard">
+  <div class="dashboard-stack" [class.dashboard-stack--with-sidebar]="!noBooks && !fullWidth">
+    <div class="dashboard-primary">
+        <div class="dashboard-card home-card reading">
           @if(isLoading) {
-            <span class="spinner-border" role="status">
-            </span>
+            <app-skeleton variant="reading" label="Loading current reads" />
           } @else {
             @if(currentBooks.length) {
-              <div class="col-md-3 ps-0 align-content-center">
+              <div class="card-heading">
                   <h2>
                     <i class="bi bi-body-text me-1"></i>
                     Reading
                   </h2>
               </div>
-              <div class="col-md-9">
-                  <div class="d-sm-flex flex-wrap justify-content-between mt-md-0 mt-3">
-                   <div>
+              <div class="card-body">
+                  <div class="reading-content" [class.reading-content--single]="currentBooks.length === 1">
+                   <div class="reading-books">
                     @for(book of currentBooks; track book.id; let index = $index) {
                       @if(index < 1) {
                         <app-book-item
                         [selectedBook]="book"
+                        [class.mobile-grid-book]="currentBooks.length === 1"
+                        [class.reading-current-book]="currentBooks.length === 1"
                         [editable]="true"
                         (bookUpdated)="fetchBooks(userId)"
                       />
@@ -45,7 +44,7 @@
                               class="px-0"
                             >
                               <ng-template>
-                                <div class="d-flex flex-wrap">
+                                <div class="book-shelf">
                                 @for(book of currentBooks; track book.id; let index = $index) {
                                   @if(index > 0) {
                                     <app-book-item
@@ -62,21 +61,21 @@
                         </div>
                       </div>
                     }
-                    <button
-                      class="btn main-teal-button full-width"
-                      (click)="onOpenForm(content, null)"
-                    >
-                        Add a book
-                        <i class="bi bi-bookmark-plus ms-1"></i>
-                    </button>
+
                    </div>
-                   <div class="align-content-center text-center goals mt-4 mt-sm-0">
+                   <div class="goals">
                     <app-user-stats
                       [currentBookCount]="completed2026.length"
                     />
                     </div>
                   </div>
-
+                    <button
+                      class="btn main-teal-button card-action"
+                      (click)="onOpenForm(content, null)"
+                    >
+                        Add a book
+                        <i class="bi bi-bookmark-plus ms-1"></i>
+                    </button>
               </div>
             } @else {
               <h2>
@@ -98,50 +97,46 @@
             }
           }
         </div>
-        <div class="breadcrumbs d-lg-none d-block">
-          <ul class="list-unstyled d-flex justify-content-evenly pt-1 pb-2 py-md-2">
-            @if(recentBooks.length && sectionsLength >=2) {
-              <li>
-                <a [class.active]="activeSection === 'current'" (click)="scrollToSection('current')">
-                  <i class="bi bi-bookmark-check-fill me-1"></i>
-                  Latest
-                  <i class="bi bi-chevron-right ms-1"></i>
-                </a>
-              </li>
+        @if(sectionsLength >= 2) {
+          <nav class="section-nav breadcrumbs d-lg-none" aria-label="Home page sections">
+            @if(recentBooks.length) {
+              <button type="button" [class.active]="activeSection === 'current'"
+                [attr.aria-current]="activeSection === 'current' ? 'location' : null" (click)="scrollToSection('current')">
+                <i class="bi bi-bookmark-check" aria-hidden="true"></i><span>Latest</span>
+              </button>
             }
-            @if(existingConnections.length && sectionsLength >=2) {
-              <li>
-                <a [class.active]="activeSection === 'friends'" (click)="scrollToSection('friends')">
-                  <i class="bi bi-book-half me-1"></i>
-                  Friends
-                  <i class="bi bi-chevron-right ms-1"></i>
-                </a>
-              </li>
+            @if(existingConnections.length) {
+              <button type="button" [class.active]="activeSection === 'friends'"
+                [attr.aria-current]="activeSection === 'friends' ? 'location' : null" (click)="scrollToSection('friends')">
+                <i class="bi bi-people" aria-hidden="true"></i><span>Friends</span>
+              </button>
             }
-            @if(!fullWidth && sectionsLength >=2) {
-              <li>
-                <a [class.active]="activeSection === 'bestsellers'" (click)="scrollToSection('bestsellers')">
-                  <i class="bi bi-bookmark-star me-1"></i>
-                  Bestsellers
-                  <i class="bi bi-chevron-right ms-1"></i>
-                </a>
-              </li>
+            @if(!fullWidth) {
+              <button type="button" [class.active]="activeSection === 'bestsellers'"
+                [attr.aria-current]="activeSection === 'bestsellers' ? 'location' : null" (click)="scrollToSection('bestsellers')">
+                <i class="bi bi-award" aria-hidden="true"></i><span>Bestsellers</span>
+              </button>
             }
-          </ul>
-        </div>
+          </nav>
+        }
+        @if(isLoading) {
+          <div class="dashboard-card home-card">
+            <app-skeleton variant="shelf" [count]="6" label="Loading latest books" />
+          </div>
+        }
         @if(recentBooks.length && !isLoading) {
-          <div class="row mb-3 py-3 px-1 px-md-3 rounded read breadcrumb-section" id="current">
-            <div class="col-md-3 ps-0 align-content-center">
+          <div class="dashboard-card home-card read breadcrumb-section" id="current">
+            <div class="card-heading">
               <h2>
                 <i class="bi bi-bookmark-check-fill me-1"></i>
                 Latest
               </h2>
             </div>
-            <div class="col-md-9">
-              <div class="d-flex flex-wrap justify-content-between mt-md-0 mt-3">
+            <div class="card-body">
+              <div class="book-shelf latest-shelf">
                 @for(book of recentBooks; track book.id; let index = $index) {
                   @if(index < 6 && book.image_url) {
-                    <app-book-item
+                    <app-book-item class="mobile-grid-book"
                       [selectedBook]="book"
                       [editable]="true"
                       (bookUpdated)="fetchBooks(userId)"
@@ -150,7 +145,7 @@
                 }
               </div>
               <button
-                class="btn main-teal-button"
+                class="btn main-teal-button card-action"
                 [routerLink]="['/books']" [queryParams]="{ user: userId }">
                   All Books
                   <i class="bi bi-bookmarks ms-1"></i>
@@ -158,18 +153,17 @@
             </div>
           </div>
         }
-        @if(existingConnections.length) {
-          <div class="row mb-3 py-3 px-1 px-md-3 rounded connections breadcrumb-section" id="friends">
-            <div class="col-md-3 ps-0 mb-md-0 mb-3">
+        @if(existingConnections.length || isLoadingConnections) {
+          <div class="dashboard-card home-card connections breadcrumb-section" id="friends">
+            <div class="card-heading">
               <h2>
                 <i class="bi bi-people-fill me-1"></i>
                 Friends
               </h2>
             </div>
-            <div class="col-md-9">
+            <div class="card-body">
               @if(isLoadingConnections) {
-              <span class="spinner-border" role="status">
-              </span>
+              <app-skeleton variant="friend" [framed]="true" label="Loading friends" />
               } @else {
                 <div>
                   @for(each of existingConnections; track each.id) {
@@ -184,7 +178,7 @@
                 </div>
               }
               <button
-                class="btn main-teal-button"
+                class="btn main-teal-button card-action"
                 [routerLink]="['/connections']">
                   All Friends
                   <i class="bi bi-people-fill ms-1"></i>
@@ -195,9 +189,8 @@
         }
     </div>
     <div
-      class="breadcrumb-section"
+      class="breadcrumb-section dashboard-bestsellers"
       id="bestsellers"
-      [ngClass]="noBooks ? '' : 'col-lg-3 pt-4'"
     >
       <app-bestsellers
         (updateBooks)="fetchBooks(userId)"

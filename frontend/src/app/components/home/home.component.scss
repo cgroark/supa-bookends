@@ -13,30 +13,56 @@ p, p > i {
   font-size: $font-size-small;
 }
 
-div.reading, div.read, div.connections {
-  background-color: $light-black;
-  div.col-md-3 {
-    border-right: solid 3px $yellow;
-    @media screen and (max-width: 767px) {
-      border-right: none !important;
-      text-align: center;
-      border-bottom: solid 3px $yellow;
-      padding-bottom: 10px;
-    }
+.dashboard-stack, .dashboard-primary {
+  display: grid;
+  gap: 1.25rem;
+  min-width: 0;
+}
+@media (min-width: 992px) {
+  .dashboard-stack--with-sidebar {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 1fr);
+    align-items: start;
   }
 }
+.dashboard-bestsellers { min-width: 0; }
+.dashboard-primary { align-content: start; }
 
-.add-button {
-  background-color: $teal;
-  color: $ivory;
-  &:hover {
-    background-color: $ivory;
-    color: $teal;
-    i {
-      color: $teal;
-    }
+.dashboard-card {
+  padding: clamp(1rem, 3vw, 1.5rem);
+  background: $light-black;
+  border: 1px solid rgba($ivory, .1);
+  box-shadow: 0 6px 20px rgba($black, .12);
+}
+.card-heading {
+  margin-bottom: 1.25rem;
+  padding-bottom: .8rem;
+  border-bottom: 1px solid rgba($ivory, .12);
+  h2 { margin: 0; font-size: 1.4rem; }
+  i { color: $salmon; }
+}
+.card-body { padding: 0; min-width: 0; }
+.book-shelf {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: .75rem 1.25rem;
+}
+.reading-content {
+  display: grid;
+  gap: 1.5rem;
+  align-items: start;
+  @media (min-width: 992px) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
 }
+.reading-books { min-width: 0; }
+
+.btn.card-action {
+  width: 100%;
+  max-width: 100%;
+  margin: 1.25rem 0 0;
+}
+.breadcrumb-section { scroll-margin-top: 4rem; }
 
 .accordion-button {
   padding: 0;
@@ -60,34 +86,32 @@ div.reading, div.read, div.connections {
 }
 
 .goals {
-  @media screen and (min-width: 576px) {
-    max-width: 165px;
+  padding: 1.25rem;
+  border: 1px solid rgba($purple, .35);
+  border-radius: $surface-radius;
+  background: rgba($purple, .08);
+}
+
+// Let the section bar stick through the entire mobile page, including Bestsellers.
+@media (max-width: 991.98px) {
+  .dashboard-primary { display: contents; }
+
+}
+
+@media (max-width: 768px) {
+  .latest-shelf {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem .75rem;
   }
 }
 
-.breadcrumbs {
-  position: sticky;
-  top: 0;
-  background-color: rgba($salmon, 0.9);
-  z-index: 995;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  a {
-    color: $black;
-    text-decoration: none;
-    font-family: $font-saira;
-    font-size: $font-size-small;
-    border-bottom: solid 3px transparent;
-    &.active {
-      border-bottom: solid 3px $black;
-    }
-    &:hover {
-      border-bottom: solid 2px $ivory;
-    }
-    i {
-      color: $black;
-    }
-    @media screen and (max-width: 470px) {
-      font-size: 13px;
-    }
+@media (max-width: 768px) {
+  .reading-content--single {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .75rem;
+    .goals { padding: .65rem; min-width: 0; }
   }
 }
+
+.reading-content--single .goals { align-self: stretch; }

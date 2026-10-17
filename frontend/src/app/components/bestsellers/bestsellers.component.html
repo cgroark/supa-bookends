@@ -1,15 +1,16 @@
 @if(isLoading) {
-  <span class="spinner-border" role="status">
-  </span>
+  <app-skeleton variant="heading" label="Loading bestsellers" [framed]="true" />
+  <app-skeleton variant="shelf" [count]="6" [compact]="true" [framed]="true" label="Loading fiction bestsellers" />
+  <app-skeleton variant="shelf" [count]="6" [compact]="true" [framed]="true" label="Loading nonfiction bestsellers" />
 } @else if(fictionBooks.length) {
-    <h2 class="m-0 text-lg-start text-center">
-      <i class="bi bi-award me-1"></i>
-      Best Sellers
-    </h2>
-    <p class="text-lg-start text-center">New York Times, updated {{ lastUpdated }}</p>
-    <div class="fiction p-3 rounded mb-3">
+    <header class="bestsellers-heading home-card">
+      <h2><i class="bi bi-award" aria-hidden="true"></i> Bestsellers</h2>
+      <p>New York Times</p>
+      <p class="bestsellers-heading__date">Updated {{ lastUpdated }}</p>
+    </header>
+    <div class="fiction p-3 home-card mb-3">
       <h3 class="text-lg-start text-center">Fiction</h3>
-      <div class="d-flex flex-wrap justify-content-between">
+      <div class="bestseller-shelf">
         @for(book of fictionBooks; track book.primary_isbn10; let index = $index) {
           @if(index < 6) {
           <ng-container
@@ -36,7 +37,7 @@
               class="px-0"
             >
               <ng-template>
-                <div class="d-flex flex-wrap justify-content-between">
+                <div class="bestseller-shelf">
                   @for(book of fictionBooks; track book.primary_isbn10; let index = $index) {
                     @if(index >= 6) {
                     <ng-container
@@ -55,9 +56,9 @@
       </div>
     </div>
 
-  <div class="non-fiction p-3 rounded mb-3">
+  <div class="non-fiction p-3 home-card mb-3">
     <h3 class="text-lg-start text-center">Non-Fiction</h3>
-    <div class="d-flex flex-wrap justify-content-between">
+    <div class="bestseller-shelf">
       @for(book of nonFictionBooks; track book.primary_isbn10; let index = $index) {
         @if(index < 6) {
         <ng-container
@@ -84,7 +85,7 @@
             class="px-0"
           >
             <ng-template>
-              <div class="d-flex flex-wrap justify-content-between">
+              <div class="bestseller-shelf">
               @for(book of nonFictionBooks; track book.primary_isbn10; let index = $index) {
                 @if(index >= 6) {
                 <ng-container
@@ -109,29 +110,12 @@
   >
   <div class="p-1 each-book">
     <div>
-      @if(book.book_image) {
-        <img
-          [src]="book.book_image"
-          [alt]="'picture of the cover of ' + book.title"
-          class="d-block"
-          (click)="onOpenBook(contentBook, book)"
-        >
-      } @else {
-        <div class="no-image text-center"
-          (click)="onOpenBook(contentBook, book)"
-          >
-          <p class="mb-0">
-            <i
-              class="bi bi-book d-block"
-            >
-            </i>
-          </p>
-          <p class="mb-0"><em>{{book.title}}</em></p>
-        </div>
-      }
+      <app-book-cover [imageUrl]="book.book_image" [title]="book.title"
+        [author]="book.author" [compact]="true" (opened)="onOpenBook(contentBook, book)" />
     </div>
     <button
       class="btn circle-teal-button"
+      [attr.aria-label]="'Add ' + book.title + ' to your library'"
       (click)="addBestSeller(contentForm, book)"
       >
       @if(isAdding && addingTitle === book.title) {

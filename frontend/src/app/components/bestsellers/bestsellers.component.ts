@@ -1,3 +1,5 @@
+import { SkeletonComponent } from '../skeleton/skeleton.component';
+import { BookCoverComponent } from '../book-cover/book-cover.component';
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -10,7 +12,7 @@ import { BookFormComponent } from '../book-form/book-form.component';
 @Component({
   selector: 'app-bestsellers',
   standalone: true,
-  imports: [BookFormComponent, CommonModule, NgbAccordionModule],
+  imports: [SkeletonComponent, BookCoverComponent, BookFormComponent, CommonModule, NgbAccordionModule],
   templateUrl: './bestsellers.component.html',
   styleUrl: './bestsellers.component.scss',
   providers: [DatePipe],
