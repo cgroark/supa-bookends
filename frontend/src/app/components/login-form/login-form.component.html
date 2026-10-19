@@ -1,8 +1,29 @@
 <app-header [centered]="true"/>
 <main>
+  @if(showResetForm) {
+    <form class="page-card auth-card mx-auto p-4" [formGroup]="resetForm" (ngSubmit)="sendResetEmail()">
+      <h2 class="section-heading"><i class="bi bi-key" aria-hidden="true"></i> Reset your password</h2>
+      <p>We’ll email you a link to choose a new password.</p>
+      <label for="reset-email">Email</label>
+      <input id="reset-email" type="email" autocomplete="email" class="w-100" formControlName="email"
+        [class.is-invalid]="resetForm.controls.email.invalid && resetForm.controls.email.touched"
+        [attr.aria-invalid]="resetForm.controls.email.invalid && resetForm.controls.email.touched" aria-describedby="reset-email-error">
+      @if(resetForm.controls.email.invalid && resetForm.controls.email.touched) {
+        <p id="reset-email-error" class="field-error" role="alert">Enter a valid email address.</p>
+      }
+      @if(resetEmailSent) {
+        <p class="reset-notice mt-3" role="status">If an account uses this email, we’ve sent a password reset link. Check your inbox and spam folder.</p>
+      }
+      @if(resetError) { <p class="field-error mt-3" role="alert">{{ resetError }}</p> }
+      <button type="submit" class="btn main-teal-button full-width mt-3" [disabled]="isSendingReset">
+        {{ isSendingReset ? 'Sending…' : resetEmailSent ? 'Send another link' : 'Send reset link' }}
+      </button>
+      <button type="button" class="btn auth-link mt-3" [disabled]="isSendingReset" (click)="showResetForm = false">Back to login</button>
+    </form>
+  } @else {
   <form
     #ngForm="ngForm"
-    class="mt-2 p-4 m-auto rounded"
+    class="page-card auth-card mt-2 p-4 m-auto"
     [formGroup]="form"
     (ngSubmit)="onSubmit()">
       @if(fromSignup) {
@@ -26,7 +47,7 @@
                 (!email.valid && email.touched) ||
               (!email.valid && ngForm.submitted)"
               class="w-100"
-              type="text"
+              type="email" autocomplete="username"
               formControlName="email"
               id="email"
             />
@@ -47,7 +68,7 @@
               [class.is-invalid]="
                 (!password.valid && password.touched) ||
               (!password.valid && ngForm.submitted)"
-              type="password"
+              type="password" autocomplete="current-password"
               class="w-100"
               formControlName="password"
               id="password"
@@ -62,7 +83,8 @@
           </div>
         }
 
-    <button class="btn main-teal-button mt-3" type="submit">
+    <button type="button" class="btn auth-link forgot-password" (click)="openPasswordReset()" [disabled]="isSubmitting">Forgot password?</button>
+    <button class="btn main-teal-button mt-3" type="submit" [disabled]="isSubmitting">
       @if(isSubmitting) {
         <span class="me-2">Verifying</span>
         <span class="spinner-border button" role="status">
@@ -86,5 +108,5 @@
     }
 
   </form>
-
+  }
 </main>

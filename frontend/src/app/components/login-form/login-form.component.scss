@@ -32,3 +32,8 @@ button.password-toggle {
 a {
   color: $teal;
 }
+.auth-card { max-width: 550px; }
+.btn.auth-link { color: $salmon; padding: .25rem 0; min-height: 44px; background: transparent; }
+.forgot-password { display: block; margin-left: auto; }
+.field-error { color: $salmon; font-size: .9rem; margin-top: .5rem; }
+.reset-notice { border: 1px solid rgba($teal, .4); background: rgba($teal, .08); border-radius: 10px; padding: .8rem; }

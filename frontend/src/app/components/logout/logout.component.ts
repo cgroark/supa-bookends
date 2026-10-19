@@ -9,7 +9,6 @@ import {Router} from '@angular/router';
   imports: [],
   templateUrl: './logout.component.html',
   styleUrl: './logout.component.scss',
-  providers: [SupabaseService],
 
 })
 export class LogoutComponent {

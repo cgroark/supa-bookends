@@ -22,3 +22,17 @@
     }
   }
 }
+.modal-content { background: $light-black; border-color: rgba($ivory, .12); }
+.modal-body.modal-confirmation, .modal-footer {
+  padding: 1rem;
+  background: $light-black;
+  border: 0;
+}
+.modal-actions {
+  display: flex;
+  gap: .75rem;
+  padding: 1rem;
+  background: $light-black;
+  .btn { flex: 1; min-width: 0; margin: 0; width: auto; }
+}
+.modal-confirmation .modal-actions { padding: 0; }

@@ -1,3 +1,4 @@
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { BookFormComponent } from './components/book-form/book-form.component';
@@ -15,6 +16,7 @@ const routes: Routes = [
   { path: 'connections', component: ConnectionsComponent, canActivate: [AuthGuard]},
   { path: 'sign-up', component: UserFormComponent},
   { path: 'login', component: LoginFormComponent},
+  { path: 'reset-password', component: ResetPasswordComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
 ];
 

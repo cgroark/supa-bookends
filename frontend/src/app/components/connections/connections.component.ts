@@ -36,13 +36,13 @@ export class ConnectionsComponent implements OnInit {
   @HostListener('window:scroll')
   protected updateActiveSection(): void {
     const section = document.getElementById('your-friends');
-    const nav = document.querySelector<HTMLElement>('.friends-page .section-nav');
+    const nav = document.querySelector<HTMLElement>('.section-nav');
     this.activeSection = section && section.getBoundingClientRect().top <= (nav?.offsetHeight ?? 60) + 24 ? 'your-friends' : 'find-friends';
   }
 
   protected scrollToSection(id: string): void {
     const section = document.getElementById(id);
-    const nav = document.querySelector<HTMLElement>('.friends-page .section-nav');
+    const nav = document.querySelector<HTMLElement>('.section-nav');
     if (!section) return;
     this.activeSection = id;
     window.scrollTo({

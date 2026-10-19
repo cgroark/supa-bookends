@@ -12,7 +12,6 @@ import { HeaderComponent } from '../header/header.component';
   imports: [HeaderComponent, ReactiveFormsModule, FormsModule, RouterModule],
   templateUrl: './login-form.component.html',
   styleUrl: './login-form.component.scss',
-  providers: [SupabaseService],
 })
 export class LoginFormComponent implements OnInit {
   protected form: FormGroup = new FormGroup({
@@ -23,6 +22,36 @@ export class LoginFormComponent implements OnInit {
       validators: [Validators.required]}),
   });
 
+  protected showResetForm = false;
+  protected resetEmailSent = false;
+  protected resetError: string | null = null;
+  protected isSendingReset = false;
+  protected resetForm = new FormGroup({ email: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.email] }) });
+
+  protected openPasswordReset(): void {
+    this.resetForm.controls.email.setValue(this.form.controls['email'].value?.trim() ?? '');
+    this.form.controls['password'].reset();
+    this.resetEmailSent = false;
+    this.resetError = null;
+    this.showResetForm = true;
+  }
+
+  protected async sendResetEmail(): Promise<void> {
+    if (this.isSendingReset) return;
+    this.resetForm.markAllAsTouched();
+    if (this.resetForm.invalid) return;
+    this.isSendingReset = true;
+    this.resetError = null;
+    try {
+      await this.supabaseService.requestPasswordReset(this.resetForm.controls.email.value);
+      this.resetEmailSent = true;
+    } catch (error: any) {
+      this.resetError = ['over_email_send_rate_limit', 'over_request_rate_limit'].includes(error?.code)
+        ? 'Too many requests. Please wait a little before trying again.'
+        : 'We couldn’t send the reset link. Please try again.';
+    } finally { this.isSendingReset = false; }
+  }
+
   protected fromSignup = false;
   protected isSubmitting = false;
   protected loginError: string | null = null;
@@ -32,6 +61,7 @@ export class LoginFormComponent implements OnInit {
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe(params => {
       const from = params['from'];
+      if (from === 'reset') this.showResetForm = true;
       if(from === 'signup') {
         this.fromSignup = true;
       }
@@ -39,7 +69,9 @@ export class LoginFormComponent implements OnInit {
   }
 
   onSubmit() {
+    if (this.isSubmitting) return;
     if (this.form.invalid) {
+      this.form.markAllAsTouched();
       return;
     }
     this.isSubmitting = true;

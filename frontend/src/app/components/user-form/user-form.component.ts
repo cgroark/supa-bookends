@@ -1,5 +1,6 @@
+import { passwordsMatchValidator } from '../../validators/passwords-match.validator';
 import { Component} from '@angular/core';
-import { ReactiveFormsModule, FormsModule, FormControl, FormGroup, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { UserService } from 'src/app/services/user.service';
 import { SupabaseService } from 'src/app/services/supabase.service';
@@ -8,22 +9,12 @@ import { SystemMessageService } from '../../services/system-message.service';
 import { Router, RouterModule } from '@angular/router';
 import { HeaderComponent } from '../header/header.component';
 
-export function passwordsMatchValidator(): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
-    const password = control.get('password')?.value;
-    const passwordConfirm = control.get('passwordConfirm')?.value;
-
-    return password === passwordConfirm ? null : { passwordsMismatch: true };
-  };
-}
-
 @Component({
   selector: 'app-user-form',
   standalone: true,
   imports: [HeaderComponent, ReactiveFormsModule, FormsModule, RouterModule],
   templateUrl: './user-form.component.html',
   styleUrl: './user-form.component.scss',
-  providers: [SupabaseService],
 })
 export class UserFormComponent {
   protected form: FormGroup = new FormGroup({

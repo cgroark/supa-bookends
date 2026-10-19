@@ -1,3 +1,4 @@
+import { SupabaseService } from './services/supabase.service';
 import { Component } from '@angular/core';
 
 @Component({
@@ -6,5 +7,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
+  // Initialize auth before route redirects can discard a recovery callback.
+  constructor(private supabase: SupabaseService) {}
   title = 'frontend';
 }
