@@ -1,3 +1,4 @@
+import { StickySectionNavDirective } from '../../directives/sticky-section-nav.directive';
 import { SkeletonComponent } from '../skeleton/skeleton.component';
 import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -25,7 +26,7 @@ import { User } from 'src/app/models/user.model';
 @Component({
   selector: 'app-connections',
   standalone: true,
-  imports: [SkeletonComponent, HeaderComponent, NavbarComponent, EachConnectionComponent, NgSelectModule, CommonModule, NgOptionHighlightModule, FormsModule],
+  imports: [StickySectionNavDirective, SkeletonComponent, HeaderComponent, NavbarComponent, EachConnectionComponent, NgSelectModule, CommonModule, NgOptionHighlightModule, FormsModule],
   templateUrl: './connections.component.html',
   styleUrl: './connections.component.scss'
 })

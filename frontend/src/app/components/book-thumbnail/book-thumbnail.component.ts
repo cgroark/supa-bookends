@@ -1,10 +1,11 @@
+import { DecodedImageDirective } from '../../directives/decoded-image.directive';
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { SkeletonComponent } from '../skeleton/skeleton.component';
 
 @Component({
   selector: 'app-book-thumbnail',
   standalone: true,
-  imports: [SkeletonComponent],
+  imports: [SkeletonComponent, DecodedImageDirective],
   templateUrl: './book-thumbnail.component.html',
   styleUrl: './book-thumbnail.component.scss'
 })

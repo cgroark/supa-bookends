@@ -88,3 +88,15 @@ form .mb-2 { margin-bottom: 1rem !important; }
     box-shadow: none;
   }
 }
+
+.book-search.ng-select .ng-select-container, .quiet-search.ng-select .ng-select-container,
+.book-search .ng-dropdown-panel, .quiet-search .ng-dropdown-panel { border-radius: 4px; }
+
+.book-search .ng-dropdown-panel, .quiet-search .ng-dropdown-panel {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  .ng-dropdown-panel-items .ng-option:first-child {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+}

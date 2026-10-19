@@ -1,3 +1,4 @@
+import { StickySectionNavDirective } from '../../directives/sticky-section-nav.directive';
 import { SkeletonComponent } from '../skeleton/skeleton.component';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -24,7 +25,7 @@ import { UserStatsComponent } from '../user-stats/user-stats.component';
   standalone: true,
   templateUrl: './book-list.component.html',
   styleUrls: ['./book-list.component.scss'],
-  imports: [SkeletonComponent, BookItemComponent, BookFormComponent, UserStatsComponent, HeaderComponent, NavbarComponent, CommonModule, NgbAccordionModule, RouterLink, ReactiveFormsModule, FormsModule]
+  imports: [StickySectionNavDirective, SkeletonComponent, BookItemComponent, BookFormComponent, UserStatsComponent, HeaderComponent, NavbarComponent, CommonModule, NgbAccordionModule, RouterLink, ReactiveFormsModule, FormsModule]
 })
 export class BookListComponent implements OnInit, OnDestroy {
   private sectionObserver?: IntersectionObserver;

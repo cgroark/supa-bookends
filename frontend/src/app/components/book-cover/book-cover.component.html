@@ -3,7 +3,9 @@
   [attr.aria-label]="'Open ' + title + (author ? ' by ' + author : '')"
   [title]="title + (author ? ' — ' + author : '')" (click)="opened.emit()">
   @if(imageUrl && !imageFailed) {
-    <img [src]="imageUrl" [alt]="'Cover of ' + title" (error)="imageFailed = true">
+    @if(loading) { <app-skeleton variant="cover" label="Loading book cover" /> }
+    <img appDecodedImage [src]="imageUrl" [alt]="'Cover of ' + title" [class.cover__image--loading]="loading"
+      (imageReady)="loading = false" (imageFailed)="loading = false; imageFailed = true">
   } @else {
     <svg class="cover__icon" viewBox="0 0 32 32" fill="none" aria-hidden="true">
       <path d="M7 5h17a2 2 0 0 1 2 2v20H9a4 4 0 0 1-4-4V7a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.5"/>

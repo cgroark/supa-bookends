@@ -1,3 +1,4 @@
+import { StickySectionNavDirective } from '../../directives/sticky-section-nav.directive';
 import { SkeletonComponent } from '../skeleton/skeleton.component';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -23,7 +24,7 @@ import { EachConnectionComponent } from '../each-connection/each-connection.comp
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [SkeletonComponent, EachConnectionComponent, BestsellersComponent, BookItemComponent, BookFormComponent, HeaderComponent, NavbarComponent, UserStatsComponent, CommonModule, RouterModule, NgbAccordionModule],
+  imports: [StickySectionNavDirective, SkeletonComponent, EachConnectionComponent, BestsellersComponent, BookItemComponent, BookFormComponent, HeaderComponent, NavbarComponent, UserStatsComponent, CommonModule, RouterModule, NgbAccordionModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })

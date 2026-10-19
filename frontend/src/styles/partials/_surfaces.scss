@@ -19,6 +19,7 @@
   i { color: $salmon; }
 }
 .search-panel {
+  border-radius: 10px;
   border-color: rgba($salmon, .3);
   background: radial-gradient(ellipse at top right, rgba($salmon, .13), transparent 70%), #262128;
   p { color: rgba($ivory, .65); font-size: .9rem; }
@@ -27,7 +28,7 @@
 .breadcrumb-section { scroll-margin-top: 5rem; }
 .section-nav {
   display: flex;
-  position: sticky;
+  position: relative;
   top: 0;
   align-self: start;
   gap: .3rem;
@@ -71,3 +72,6 @@
 @media (max-width: 768px) {
   .page-book-shelf { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem .75rem; }
 }
+
+.section-nav-slot { min-width: 0; margin-bottom: 1.25rem; }
+.section-nav.section-nav--pinned { position: fixed; top: 0; margin-left: 0; margin-bottom: 0; }

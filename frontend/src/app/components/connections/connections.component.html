@@ -53,10 +53,10 @@
 }
 
 @if(existingConnections.length || isLoadingConnections) {
-  <nav class="section-nav" aria-label="Friends page sections">
+  <div class="section-nav-slot"><nav appStickySectionNav class="section-nav" aria-label="Friends page sections">
     <button type="button" [class.active]="activeSection === 'find-friends'" [attr.aria-current]="activeSection === 'find-friends' ? 'location' : null" (click)="scrollToSection('find-friends')"><i class="bi bi-search" aria-hidden="true"></i> Find friends</button>
     <button type="button" [class.active]="activeSection === 'your-friends'" [attr.aria-current]="activeSection === 'your-friends' ? 'location' : null" (click)="scrollToSection('your-friends')"><i class="bi bi-people" aria-hidden="true"></i> Your friends</button>
-  </nav>
+  </nav></div>
   <section class="page-card" id="your-friends">
     <h2 class="section-heading">
       <i class="bi bi-people-fill me-1"></i>

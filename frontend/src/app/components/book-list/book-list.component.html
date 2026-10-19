@@ -83,7 +83,7 @@
 
 </div>
 @if(sectionsLength >= 2) {
-  <nav class="section-nav breadcrumbs" aria-label="Book list sections">
+  <div class="section-nav-slot"><nav appStickySectionNav class="section-nav breadcrumbs" aria-label="Book list sections">
     @if(completed.length) {
       <button type="button" [class.active]="activeSection === 'completed'" [attr.aria-current]="activeSection === 'completed' ? 'location' : null" (click)="scrollToSection('completed')">
         <i class="bi bi-bookmark-check" aria-hidden="true"></i><span>Completed</span>
@@ -99,7 +99,7 @@
         <i class="bi bi-bookmark-star" aria-hidden="true"></i><span>Want to read</span>
       </button>
     }
-  </nav>
+  </nav></div>
 }
 
 @if(completed.length) {

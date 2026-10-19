@@ -39,3 +39,6 @@
   &--compact &__title { font-size: .65rem; -webkit-line-clamp: 4; }
   &--compact &__author { font-size: .55rem; }
 }
+
+.cover app-skeleton { position: absolute; inset: 0; }
+.cover img.cover__image--loading { visibility: hidden; }
