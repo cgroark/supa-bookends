@@ -1,592 +1,80 @@
 <app-header />
 <app-navbar />
-@if(!userIsSelf && !isLoadingUser) {
-  <h2 class="page-card library-title">
-    <i class="bi bi-file-earmark-person me-2"></i>
-    {{user.first}}'s Book List</h2>
+@if(!userIsSelf && !isLoadingUser && user) {
+  <h2 class="page-card library-title"><i class="bi bi-file-earmark-person me-2"></i>{{ user.first }}'s Book List</h2>
 }
-<div class="library-overview">
-  <div>
+@if(readingShelf) {
+  <div class="library-overview">
     <section class="page-card reading">
-      @if(isLoading) {
-        <app-skeleton variant="reading" label="Loading your books" />
+      <h2 class="section-heading"><i class="bi bi-body-text me-2"></i>Currently Reading</h2>
+      <app-book-shelf [shelf]="readingShelf" [editable]="userIsSelf" label="current reads" (bookUpdated)="fetchBooks(userId)" />
+      @if(!readingShelf.loading && !readingShelf.error && !readingShelf.total) {
+        <p>No current books</p>
+      }
+      @if(userIsSelf) {
+        <button type="button" class="btn main-teal-button full-width mt-3" (click)="onOpenForm(content, null)">Add a book <i class="bi bi-bookmark-plus ms-1"></i></button>
+      }
+    </section>
+    <aside class="library-tools">
+      @if(userIsSelf) {
+        <div class="page-card goals">
+          @if(yearlyCompletedCount !== null) {
+            <app-user-stats [currentBookCount]="yearlyCompletedCount" />
+          } @else if(goalCountError) {
+            <button type="button" class="btn btn-link" (click)="loadGoalCount()">Retry goal progress</button>
+          } @else { <app-skeleton variant="goal" label="Loading goal progress" /> }
+        </div>
+      }
+      <form class="page-card search-panel" [formGroup]="searchForm" (submit)="$event.preventDefault()">
+        <h3 class="section-heading"><i class="bi bi-funnel me-1"></i>Filter books</h3>
+        <label for="library-search" class="library-search-label">Title or author</label>
+        <input id="library-search" type="search" formControlName="search" class="w-100 quiet-field" placeholder="Filter by title or author…">
+      </form>
+    </aside>
+  </div>
+  @if(sectionsLength >= 2) {
+    <div class="section-nav-slot"><nav appStickySectionNav class="section-nav breadcrumbs" aria-label="Book list sections">
+      @if(hasCompleted) {
+        <button type="button" [class.active]="activeSection === 'completed'" [attr.aria-current]="activeSection === 'completed' ? 'location' : null" (click)="scrollToSection('completed')"><i class="bi bi-bookmark-check" aria-hidden="true"></i>Completed</button>
+      }
+      @if(asideShelf.total || asideShelf.loading || asideShelf.error) {
+        <button type="button" [class.active]="activeSection === 'set-aside'" [attr.aria-current]="activeSection === 'set-aside' ? 'location' : null" (click)="scrollToSection('set-aside')"><i class="bi bi-book-half" aria-hidden="true"></i>Set aside</button>
+      }
+      @if(wantedShelf.total || wantedShelf.loading || wantedShelf.error) {
+        <button type="button" [class.active]="activeSection === 'want-to-read'" [attr.aria-current]="activeSection === 'want-to-read' ? 'location' : null" (click)="scrollToSection('want-to-read')"><i class="bi bi-bookmark-star" aria-hidden="true"></i>Want to read</button>
+      }
+    </nav></div>
+  }
+  @if(hasCompleted) {
+    <section class="page-card breadcrumb-section" id="completed">
+      <h2 class="section-heading"><i class="bi bi-bookmark-check me-2"></i>Completed</h2>
+      @if(completedLoading) {
+        <app-skeleton variant="shelf" [count]="6" label="Loading completed books" />
       } @else {
-        @if(reading.length) {
-          <h2 class="section-heading">
-            <i class="bi bi-body-text me-2"></i>
-            Currently Reading
-          </h2>
-          <div class="page-book-shelf">
-            @for (book of reading; track book.id; let index = $index) {
-              <app-book-item class="mobile-grid-book"
-                [selectedBook]="book"
-                [editable]="userIsSelf"
-                (bookUpdated)="fetchBooks(userId)"
-              />
-            }
-          </div>
-          @if(userIsSelf) {
-            <button
-              class="btn main-teal-button full-width mt-3"
-              (click)="onOpenForm(content, null)"
-            >
-                Add a book
-                <i class="bi bi-bookmark-plus ms-1"></i>
-            </button>
-          }
-        } @else if(!isLoading) {
-          <h2 class="section-heading no-books">
-            <i class="bi bi-bookmark-x-fill me-2"></i>
-            No current books
-          </h2>
-          @if(userIsSelf) {
-            <div class="d-flex">
-              <div class="align-content-center">
-                <p><i class="bi bi-search me-2"></i></p>
-              </div>
-              <div class="align-content-center">
-                <p>Search for books to add</p>
-              </div>
-            </div>
-            <app-book-form
-              [noModal]="true"
-              (bookUpdated)="fetchBooks(userId)"
-            />
+        @for(group of yearShelves; track group.label) {
+          @if(group.shelf.total || group.shelf.error) {
+            <h3 class="year">{{ group.label }}</h3>
+            <app-book-shelf [shelf]="group.shelf" [editable]="userIsSelf" [label]="'books finished in ' + group.label" (bookUpdated)="fetchBooks(userId)" />
           }
         }
       }
     </section>
-  </div>
-  <aside class="library-tools">
-    @if(userIsSelf) {
-        <div class="page-card goals">
-          <app-user-stats
-            [currentBookCount]="yearlyCompletedCount"
-          />
-          </div>
-    }
-    <div class="search mb-2">
-      <form
-        #ngForm="ngForm"
-        class="page-card search-panel"
-        [formGroup]="searchForm"
-      >
-        <h3 class="section-heading">
-          <i class="bi bi-funnel me-1"></i>
-          Filter books
-        </h3>
-        <label for="library-search" class="library-search-label">Title or author</label>
-        <input id="library-search" type="search" formControlName="search" class="w-100 quiet-field" placeholder="Filter by title or author…">
-      </form>
-    </div>
-  </aside>
-
-</div>
-@if(sectionsLength >= 2) {
-  <div class="section-nav-slot"><nav appStickySectionNav class="section-nav breadcrumbs" aria-label="Book list sections">
-    @if(completed.length) {
-      <button type="button" [class.active]="activeSection === 'completed'" [attr.aria-current]="activeSection === 'completed' ? 'location' : null" (click)="scrollToSection('completed')">
-        <i class="bi bi-bookmark-check" aria-hidden="true"></i><span>Completed</span>
-      </button>
-    }
-    @if(setAside.length) {
-      <button type="button" [class.active]="activeSection === 'set-aside'" [attr.aria-current]="activeSection === 'set-aside' ? 'location' : null" (click)="scrollToSection('set-aside')">
-        <i class="bi bi-book-half" aria-hidden="true"></i><span>Set aside</span>
-      </button>
-    }
-    @if(wantToRead.length) {
-      <button type="button" [class.active]="activeSection === 'want-to-read'" [attr.aria-current]="activeSection === 'want-to-read' ? 'location' : null" (click)="scrollToSection('want-to-read')">
-        <i class="bi bi-bookmark-star" aria-hidden="true"></i><span>Want to read</span>
-      </button>
-    }
-  </nav></div>
-}
-
-@if(completed.length) {
-  <section class="page-card breadcrumb-section" id="completed">
-    <h2 class="section-heading">
-      <i class="bi bi-bookmark-check-fill me-2"></i>
-      Completed
-    </h2>
-    @if (completed2026.length) {
-      <h3 class="year">
-        2026
-      </h3>
-      <div class="page-book-shelf"
-      >
-        @for (book of completed2026; track book.id; let index = $index) {
-          @if(index < 6)  {
-            <app-book-item class="mobile-grid-book"
-              [selectedBook]="book"
-              [editable]="userIsSelf"
-              (bookUpdated)="fetchBooks(userId)"
-            />
-          }
-        }
-      </div>
-      @if(completed2026.length > 6) {
-        <div ngbAccordion>
-          <div ngbAccordionItem class="mb-4">
-            <div ngbAccordionHeader>
-              <button
-                ngbAccordionButton
-                class="justify-content-end"
-              >
-                View More
-              </button>
-            </div>
-            <div ngbAccordionCollapse>
-              <div
-                ngbAccordionBody
-                class="px-0"
-              >
-                <ng-template>
-                  <div class="page-book-shelf"
-                >
-                @for(book of completed2026; track book.id; let index = $index) {
-                    @if(index > 5) {
-                      <app-book-item class="mobile-grid-book"
-                        [selectedBook]="book"
-                        [editable]="userIsSelf"
-                        (bookUpdated)="fetchBooks(userId)"
-                      />
-                    }
-                  }
-                  </div>
-                </ng-template>
-              </div>
-            </div>
-          </div>
-        </div>
-      }
-    }
-    @if (completed2025.length) {
-      <h3 class="year">
-        2025
-      </h3>
-      <div class="page-book-shelf"
-      >
-        @for (book of completed2025; track book.id; let index = $index) {
-          @if(index < 6)  {
-            <app-book-item class="mobile-grid-book"
-              [selectedBook]="book"
-              [editable]="userIsSelf"
-              (bookUpdated)="fetchBooks(userId)"
-            />
-          }
-        }
-      </div>
-      @if(completed2025.length > 6) {
-        <div ngbAccordion>
-          <div ngbAccordionItem class="mb-4">
-            <div ngbAccordionHeader>
-              <button
-                ngbAccordionButton
-              >
-                View More
-              </button>
-            </div>
-            <div ngbAccordionCollapse>
-              <div
-                ngbAccordionBody
-                class="px-0"
-              >
-                <ng-template>
-                  <div class="page-book-shelf"
-                >
-                @for(book of completed2025; track book.id; let index = $index) {
-                    @if(index > 5) {
-                      <app-book-item class="mobile-grid-book"
-                        [selectedBook]="book"
-                        [editable]="userIsSelf"
-                        (bookUpdated)="fetchBooks(userId)"
-                      />
-                    }
-                  }
-                  </div>
-                </ng-template>
-              </div>
-            </div>
-          </div>
-        </div>
-      }
-    }
-
-    @if (completed2024.length) {
-      <h3 class="year">
-        2024
-      </h3>
-      <div class="page-book-shelf"
-      >
-        @for (book of completed2024; track book.id; let index = $index) {
-          @if(index < 6)  {
-            <app-book-item class="mobile-grid-book"
-              [selectedBook]="book"
-              [editable]="userIsSelf"
-              (bookUpdated)="fetchBooks(userId)"
-            />
-          }
-        }
-      </div>
-      @if(completed2024.length > 6) {
-        <div ngbAccordion>
-          <div ngbAccordionItem class="mb-4">
-            <div ngbAccordionHeader>
-              <button
-                ngbAccordionButton
-                class="justify-content-end"
-              >
-                View More
-              </button>
-            </div>
-            <div ngbAccordionCollapse>
-              <div
-                ngbAccordionBody
-                class="px-0"
-              >
-                <ng-template>
-                  <div class="page-book-shelf"
-                  >
-                  @for(book of completed2024; track book.id; let index = $index) {
-                    @if(index > 5) {
-                      <app-book-item class="mobile-grid-book"
-                        [selectedBook]="book"
-                        [editable]="userIsSelf"
-                        (bookUpdated)="fetchBooks(userId)"
-                      />
-                    }
-                  }
-                  </div>
-                </ng-template>
-              </div>
-            </div>
-          </div>
-        </div>
-      }
-    }
-
-    @if (completed2023.length) {
-      <h3 class="year">
-        2023
-      </h3>
-      <div class="page-book-shelf"
-      >
-        @for (book of completed2023; track book.id; let index = $index) {
-          @if(index < 6)  {
-            <app-book-item class="mobile-grid-book"
-              [selectedBook]="book"
-              [editable]="userIsSelf"
-              (bookUpdated)="fetchBooks(userId)"
-            />
-          }
-        }
-      </div>
-      @if(completed2023.length > 6) {
-        <div ngbAccordion>
-          <div ngbAccordionItem class="mb-4">
-            <div ngbAccordionHeader>
-              <button
-                ngbAccordionButton
-                class="justify-content-start"
-              >
-                View More
-              </button>
-            </div>
-            <div ngbAccordionCollapse>
-              <div
-                ngbAccordionBody
-                class="px-0"
-              >
-                <ng-template>
-                  <div class="page-book-shelf"
-                  >
-                  @for(book of completed2023; track book.id; let index = $index) {
-                    @if(index > 5) {
-                      <app-book-item class="mobile-grid-book"
-                        [selectedBook]="book"
-                        [editable]="userIsSelf"
-                        (bookUpdated)="fetchBooks(userId)"
-                      />
-                    }
-                  }
-                  </div>
-                </ng-template>
-              </div>
-            </div>
-          </div>
-        </div>
-      }
-    }
-
-    @if (completed2022.length) {
-      <h3 class="year">
-        2022
-      </h3>
-      <div class="page-book-shelf"
-      >
-        @for (book of completed2022; track book.id; let index = $index) {
-          @if(index < 6)  {
-            <app-book-item class="mobile-grid-book"
-              [selectedBook]="book"
-              [editable]="userIsSelf"
-              (bookUpdated)="fetchBooks(userId)"
-            />
-          }
-        }
-      </div>
-      @if(completed2022.length > 6) {
-        <div ngbAccordion>
-          <div ngbAccordionItem class="mb-4">
-            <div ngbAccordionHeader>
-              <button
-                ngbAccordionButton
-                class="justify-content-end"
-              >
-                View More
-              </button>
-            </div>
-            <div ngbAccordionCollapse>
-              <div
-                ngbAccordionBody
-                class="px-0"
-              >
-                <ng-template>
-                  <div class="page-book-shelf"
-                  >
-                  @for(book of completed2022; track book.id; let index = $index) {
-                    @if(index > 5) {
-                      <app-book-item class="mobile-grid-book"
-                        [selectedBook]="book"
-                        [editable]="userIsSelf"
-                        (bookUpdated)="fetchBooks(userId)"
-                      />
-                    }
-                  }
-                  </div>
-                </ng-template>
-              </div>
-            </div>
-          </div>
-        </div>
-      }
-    }
-
-    @if (completed2021.length) {
-      <h3 class="year">
-        2021
-      </h3>
-      <div class="page-book-shelf"
-      >
-        @for (book of completed2021; track book.id; let index = $index) {
-          @if(index < 6)  {
-            <app-book-item class="mobile-grid-book"
-              [selectedBook]="book"
-              [editable]="userIsSelf"
-              (bookUpdated)="fetchBooks(userId)"
-            />
-          }
-        }
-      </div>
-      @if(completed2021.length > 6) {
-        <div ngbAccordion>
-          <div ngbAccordionItem class="mb-4">
-            <div ngbAccordionHeader>
-              <button
-                ngbAccordionButton
-                class="justify-content-start"
-              >
-                View More
-              </button>
-            </div>
-            <div ngbAccordionCollapse>
-              <div
-                ngbAccordionBody
-                class="px-0"
-              >
-                <ng-template>
-                  <div class="page-book-shelf"
-                  >
-                  @for(book of completed2021; track book.id; let index = $index) {
-                    @if(index > 5) {
-                      <app-book-item class="mobile-grid-book"
-                        [selectedBook]="book"
-                        [editable]="userIsSelf"
-                        (bookUpdated)="fetchBooks(userId)"
-                      />
-                    }
-                  }
-                  </div>
-                </ng-template>
-              </div>
-            </div>
-          </div>
-        </div>
-      }
-    }
-
-    @if (completed2020.length) {
-      <h3 class="year">
-        2020
-      </h3>
-      <div class="page-book-shelf"
-      >
-        @for (book of completed2020; track book.id; let index = $index) {
-          @if(index < 6)  {
-            <app-book-item class="mobile-grid-book"
-              [selectedBook]="book"
-              [editable]="userIsSelf"
-              (bookUpdated)="fetchBooks(userId)"
-            />
-          }
-        }
-      </div>
-      @if(completed2020.length > 6) {
-        <div ngbAccordion>
-          <div ngbAccordionItem class="mb-4">
-            <div ngbAccordionHeader>
-              <button
-                ngbAccordionButton
-                class="justify-content-end"
-              >
-                View More
-              </button>
-            </div>
-            <div ngbAccordionCollapse>
-              <div
-                ngbAccordionBody
-                class="px-0"
-              >
-                <ng-template>
-                  <div class="page-book-shelf"
-                  >
-                  @for(book of completed2020; track book.id; let index = $index) {
-                    @if(index > 5) {
-                      <app-book-item class="mobile-grid-book"
-                        [selectedBook]="book"
-                        [editable]="userIsSelf"
-                        (bookUpdated)="fetchBooks(userId)"
-                      />
-                    }
-                  }
-                  </div>
-                </ng-template>
-              </div>
-            </div>
-          </div>
-        </div>
-      }
-    }
-  </section>
-}
-@if(setAside.length) {
-  <section class="page-card breadcrumb-section" id="set-aside">
-    <h2 class="section-heading">
-      <i class="bi bi-book-half me-2"></i>
-      Set Aside
-    </h2>
-    <div class="page-book-shelf"
-    >
-      @for (book of setAside; track book.id; let index = $index) {
-        @if(index < 6) {
-          <app-book-item class="mobile-grid-book"
-          [selectedBook]="book"
-          [editable]="userIsSelf"
-          (bookUpdated)="fetchBooks(userId)"
-        />
-        }
-      }
-    </div>
-    @if(setAside.length > 6) {
-      <div ngbAccordion>
-        <div ngbAccordionItem class="mb-4">
-          <div ngbAccordionHeader>
-            <button
-              ngbAccordionButton
-              class="justify-content-center"
-            >
-              View More
-            </button>
-          </div>
-          <div ngbAccordionCollapse>
-            <div
-              ngbAccordionBody
-              class="px-0"
-            >
-              <ng-template>
-                <div class="page-book-shelf"
-              >
-                @for(book of setAside; track book.id; let index = $index) {
-                  @if(index > 5) {
-                    <app-book-item class="mobile-grid-book"
-                      [selectedBook]="book"
-                      [editable]="userIsSelf"
-                      (bookUpdated)="fetchBooks(userId)"
-                    />
-                  }
-                }
-                </div>
-              </ng-template>
-            </div>
-          </div>
-        </div>
-      </div>
-    }
-  </section>
-}
-@if (wantToRead.length) {
-  <section class="page-card breadcrumb-section" id="want-to-read">
-    <h2 class="section-heading">
-      <i class="bi bi-bookmark-star me-2"></i>
-      Reading List
-    </h2>
-    <div class="page-book-shelf"
-    >
-      @for (book of wantToRead; track book.id; let index = $index) {
-        @if(index < 12) {
-          <app-book-item class="mobile-grid-book"
-          [selectedBook]="book"
-          [editable]="userIsSelf"
-          (bookUpdated)="fetchBooks(userId)"
-        />
-        }
-      }
-    </div>
-    @if(wantToRead.length > 12) {
-      <div ngbAccordion>
-        <div ngbAccordionItem class="mb-4">
-          <div ngbAccordionHeader>
-            <button
-              ngbAccordionButton
-              class="justify-content-center"
-            >
-              View More
-            </button>
-          </div>
-          <div ngbAccordionCollapse>
-            <div
-              ngbAccordionBody
-              class="px-0"
-            >
-              <ng-template>
-                <div class="page-book-shelf"
-                >
-                @for(book of wantToRead; track book.id; let index = $index) {
-                  @if(index > 11) {
-                    <app-book-item class="mobile-grid-book"
-                      [selectedBook]="book"
-                      [editable]="userIsSelf"
-                      (bookUpdated)="fetchBooks(userId)"
-                    />
-                  }
-                }
-                </div>
-              </ng-template>
-            </div>
-          </div>
-        </div>
-      </div>
-    }
-  </section>
+  }
+  @if(asideShelf.total || asideShelf.loading || asideShelf.error) {
+    <section class="page-card breadcrumb-section" id="set-aside">
+      <h2 class="section-heading"><i class="bi bi-book-half me-2"></i>Set Aside</h2>
+      <app-book-shelf [shelf]="asideShelf" [editable]="userIsSelf" label="set aside books" (bookUpdated)="fetchBooks(userId)" />
+    </section>
+  }
+  @if(wantedShelf.total || wantedShelf.loading || wantedShelf.error) {
+    <section class="page-card breadcrumb-section" id="want-to-read">
+      <h2 class="section-heading"><i class="bi bi-bookmark-star me-2"></i>Want to Read</h2>
+      <app-book-shelf [shelf]="wantedShelf" [editable]="userIsSelf" label="books you want to read" (bookUpdated)="fetchBooks(userId)" />
+    </section>
+  }
+  @if(!hasCompleted && !asideShelf.loading && !wantedShelf.loading && !asideShelf.total && !wantedShelf.total && !asideShelf.error && !wantedShelf.error) {
+    <p class="page-card">{{ searchForm.controls.search.value ? 'No books match this filter.' : 'No other books in this library yet.' }}</p>
+  }
 }
 
 <ng-template
@@ -634,7 +122,6 @@
       <app-book-form
         [editingBook]="selectedBook"
         (bookUpdated)="fetchBooks(userId)"
-        [allUserBooks]="allUserBooks"
       />
     </div>
   </div>

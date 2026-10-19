@@ -1,186 +1,137 @@
-import { StickySectionNavDirective } from '../../directives/sticky-section-nav.directive';
-import { SkeletonComponent } from '../skeleton/skeleton.component';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterLink, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ReactiveFormsModule, FormsModule, FormControl, FormGroup } from '@angular/forms';
-
-import { jwtDecode}  from 'jwt-decode';
-import { BookService } from 'src/app/services/book.service';
-import { UserService } from 'src/app/services/user.service';
-import { User } from 'src/app/models/user.model';
-import { Book} from 'src/app/models/book.model';
-import { Subject } from 'rxjs'
-import { takeUntil, debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, takeUntil, map } from 'rxjs/operators';
+import { jwtDecode } from 'jwt-decode';
+import { BookService, BookQuery } from '../../services/book.service';
+import { BookShelfState } from '../../services/book-shelf-state';
+import { UserService } from '../../services/user.service';
+import { StickySectionNavDirective } from '../../directives/sticky-section-nav.directive';
+import { SkeletonComponent } from '../skeleton/skeleton.component';
+import { BookShelfComponent } from '../book-shelf/book-shelf.component';
 import { HeaderComponent } from '../header/header.component';
-import { BookFormComponent } from '../book-form/book-form.component';
-import { BookItemComponent } from '../book-item/book-item.component';
 import { NavbarComponent } from '../navbar/navbar.component';
+import { BookFormComponent } from '../book-form/book-form.component';
 import { UserStatsComponent } from '../user-stats/user-stats.component';
 
 @Component({
-  selector: 'app-book-list',
-  standalone: true,
-  templateUrl: './book-list.component.html',
-  styleUrls: ['./book-list.component.scss'],
-  imports: [StickySectionNavDirective, SkeletonComponent, BookItemComponent, BookFormComponent, UserStatsComponent, HeaderComponent, NavbarComponent, CommonModule, NgbAccordionModule, RouterLink, ReactiveFormsModule, FormsModule]
+  selector: 'app-book-list', standalone: true,
+  templateUrl: './book-list.component.html', styleUrl: './book-list.component.scss',
+  imports: [CommonModule, RouterLink, ReactiveFormsModule, StickySectionNavDirective, SkeletonComponent,
+    BookShelfComponent, HeaderComponent, NavbarComponent, BookFormComponent, UserStatsComponent]
 })
 export class BookListComponent implements OnInit, OnDestroy {
+  protected userId = '';
+  protected userIsSelf = false;
+  protected user: any;
+  protected isLoadingUser = true;
+  protected selectedBook: any;
+  protected readingShelf!: BookShelfState;
+  protected asideShelf!: BookShelfState;
+  protected wantedShelf!: BookShelfState;
+  protected yearShelves: { label: string; shelf: BookShelfState }[] = [];
+  protected yearlyCompletedCount: number | null = null;
+  protected goalCountError = false;
+  protected activeSection = '';
+  protected sectionsLength = 0;
+  protected searchForm = new FormGroup({ search: new FormControl('', { nonNullable: true }) });
+  private searchTerm = '';
+  private destroyed$ = new Subject<void>();
+  private countRequest?: Subscription;
+  private userRequest?: Subscription;
   private sectionObserver?: IntersectionObserver;
   private observationTimer?: ReturnType<typeof setTimeout>;
 
+  protected get completedLoading(): boolean { return this.yearShelves.some(group => group.shelf.loading); }
+  protected get hasCompleted(): boolean {
+    return this.yearShelves.some(group => group.shelf.total > 0 || group.shelf.loading || !!group.shelf.error);
+  }
+  constructor(private bookService: BookService, private userService: UserService,
+    private modalService: NgbModal, private route: ActivatedRoute, private router: Router) {}
+
+  ngOnInit(): void {
+    this.searchForm.controls.search.valueChanges.pipe(map(value => value.trim()), debounceTime(250),
+      distinctUntilChanged(), takeUntil(this.destroyed$)).subscribe(term => {
+      this.searchTerm = term;
+      this.resetFilteredShelves();
+    });
+    const token = localStorage.getItem('auth_token_bookends');
+    const selfId = token ? (jwtDecode(token) as { sub?: string }).sub : undefined;
+    this.route.queryParams.pipe(takeUntil(this.destroyed$)).subscribe(params => {
+      const userId = params['user'] || selfId;
+      if (!userId) return;
+      if (!params['user']) {
+        this.router.navigate([], { queryParams: { user: userId }, replaceUrl: true });
+        return;
+      }
+      this.userId = userId;
+      this.userIsSelf = selfId === userId;
+      this.fetchBooks(userId);
+      this.userRequest?.unsubscribe();
+      this.user = undefined;
+      this.isLoadingUser = !this.userIsSelf;
+      if (!this.userIsSelf) this.userRequest = this.userService.getUserById(userId).subscribe({
+        next: user => { this.user = user; this.isLoadingUser = false; },
+        error: () => this.isLoadingUser = false
+      });
+    });
+  }
+
+  protected fetchBooks(userId: string): void {
+    this.disposeShelves();
+    const create = (query: BookQuery) => new BookShelfState(this.bookService, query, 6, 12, () => this.observeSections());
+    this.readingShelf = create({ userId, status: 2 });
+    this.asideShelf = create({ userId, status: 3 });
+    this.wantedShelf = create({ userId, status: 1 });
+    const year = new Date().getFullYear();
+    this.yearShelves = Array.from({ length: Math.max(1, year - 2020) }, (_, index) => {
+      const value = year - index;
+      return { label: String(value), shelf: create({ userId, status: 4, from: `${value}-01-01`, to: `${value + 1}-01-01` }) };
+    });
+    this.yearShelves.push({ label: '2020 and earlier', shelf: create({ userId, status: 4, to: '2021-01-01' }) },
+      { label: 'No finish date', shelf: create({ userId, status: 4, undated: true }) });
+    this.readingShelf.reset();
+    this.resetFilteredShelves();
+    if (this.userIsSelf) this.loadGoalCount();
+  }
+
+  private resetFilteredShelves(): void {
+    const shelves = [this.asideShelf, this.wantedShelf, ...this.yearShelves.map(group => group.shelf)];
+    shelves.filter(Boolean).forEach(shelf => shelf.reset({ ...shelf.query, search: this.searchTerm }));
+  }
+
+  protected loadGoalCount(): void {
+    this.countRequest?.unsubscribe();
+    this.yearlyCompletedCount = null;
+    this.goalCountError = false;
+    const year = new Date().getFullYear();
+    this.countRequest = this.bookService.getBookCount({ userId: this.userId, status: 4,
+      from: `${year}-01-01`, to: `${year + 1}-01-01` }).subscribe({
+      next: count => this.yearlyCompletedCount = count,
+      error: () => this.goalCountError = true
+    });
+  }
+
+  protected onOpenForm(content: any, book: any): void {
+    this.selectedBook = book;
+    this.modalService.open(content, { size: 'md', backdrop: 'static' });
+  }
+  private disposeShelves(): void {
+    [this.readingShelf, this.asideShelf, this.wantedShelf, ...this.yearShelves.map(group => group.shelf)]
+      .filter(Boolean).forEach(shelf => shelf.destroy());
+  }
   ngOnDestroy(): void {
+    this.disposeShelves();
+    this.countRequest?.unsubscribe();
+    this.userRequest?.unsubscribe();
     this.sectionObserver?.disconnect();
     clearTimeout(this.observationTimer);
     this.destroyed$.next();
     this.destroyed$.complete();
   }
-
-
-  protected booksError: string = '';
-  protected allUserBooks: Book[] = [];
-  protected isLoading = true;
-  protected isLoadingUser = true;
-  protected noBooks = false;
-  protected completed: Book[] = [];
-  protected completed2026: Book[] = [];
-  protected yearlyCompletedCount = 0;
-  protected completed2025: Book[] = [];
-  protected completed2024: Book[] = [];
-  protected completed2023: Book[] = [];
-  protected completed2022: Book[] = [];
-  protected completed2021: Book[] = [];
-  protected completed2020: Book[] = [];
-  protected reading: Book[] = [];
-  protected wantToRead: Book[] = [];
-  protected setAside: Book[] = [];
-  protected selectedBook: any;
-  protected userId: string = '';
-  protected user: any;
-  protected userIsSelf = false;
-  protected activeSection: string = '';
-  protected sectionsLength: number = 0;
-  protected searchForm: FormGroup = new FormGroup({
-    search: new FormControl<string>(''),
-  })
-  private allUserBooksSource: Book[] = [];
-  private destroyed$ = new Subject<void>();
-
-
-  constructor(private bookService: BookService, private modalService: NgbModal, private route: ActivatedRoute, private userService: UserService, private router: Router) {
-    this.searchForm.controls['search'].valueChanges
-      .pipe(
-        debounceTime(200),
-        distinctUntilChanged(),
-        takeUntil(this.destroyed$),
-      )
-      .subscribe((search: string) => {
-        const term = search?.trim().toLowerCase() ?? '';
-        const filteredBooks = this.allUserBooksSource.filter(book =>
-            book.title.toLowerCase().includes(term) || book.author?.toLowerCase().includes(term)
-          )
-
-        this.processBooks(filteredBooks);
-        this.observeSections();
-      }
-    )
-  }
-
-  ngOnInit(): void {
-     // Retrieve the token from localStorage
-     const token = localStorage.getItem('auth_token_bookends');
-     const decodedToken: any = token ? jwtDecode(token) : null;
-     this.route.queryParams.pipe(takeUntil(this.destroyed$)).subscribe(params => {
-      const userId = params['user'];
-      if(!userId && decodedToken) {
-        this.userId = decodedToken.sub;
-        this.userIsSelf = true;
-        this.router.navigate([], {
-          queryParams: {user: this.userId}
-        })
-      }else if(userId) {
-        this.userId = userId;
-        this.fetchBooks(userId);
-        if(decodedToken) {
-          const selfId = decodedToken.sub;
-          this.userIsSelf = selfId === this.userId;
-          if(!this.userIsSelf) {
-            this.isLoading = true;
-            this.userService.getUserById(this.userId).subscribe({
-              next: (response: User) => {
-                this.user = response;
-                this.isLoadingUser = false;
-              },
-              error: (err: any) => {
-                console.error('Error fetching user:', err);
-                this.isLoadingUser = false;
-              }
-            })
-          }
-        }
-      }
-    });
-  }
-
-  protected fetchBooks(userId: string) {
-    this.bookService.getAllUserBooks(userId).subscribe({
-      next: (response: Book[]) => {
-        this.allUserBooks = this.allUserBooksSource = response;
-        const goalYear = new Date().getFullYear();
-        this.yearlyCompletedCount = this.sortBooksByDate(response, 4, `${goalYear}-01-01`, `${goalYear + 1}-01-01`).length;
-        this.noBooks = !response.length
-        const isProcessed = this.processBooks(response);
-        if (isProcessed) {
-          this.isLoading = false;
-          this.observeSections();
-        }
-      },
-      error: (err: any) => {
-        console.error('Error fetching books:', err);
-        this.booksError = err;
-        this.isLoading = false;
-      }
-    })
-  };
-
-  private processBooks(response: Book[]): boolean {
-      this.completed = response.filter((each: Book) => each.status === 4);
-      this.completed2020 = this.sortBooksByDate(response, 4, null, '2021-01-01');
-      this.completed2021 = this.sortBooksByDate(response, 4, '2021-01-01', '2022-01-01');
-      this.completed2022 = this.sortBooksByDate(response, 4, '2022-01-01', '2023-01-01');
-      this.completed2023 = this.sortBooksByDate(response, 4, '2023-01-01', '2024-01-01');
-      this.completed2024 = this.sortBooksByDate(response, 4, '2024-01-01', '2025-01-01');
-      this.completed2025 = this.sortBooksByDate(response, 4, '2025-01-01', '2026-01-01');
-      this.completed2026 = this.sortBooksByDate(response, 4, '2026-01-01', '2027-01-01');
-
-      this.reading = this.allUserBooksSource.filter((each: Book) => each.status === 2);
-      this.wantToRead = response
-        .filter((each: Book) => each.status === 1)
-        .sort((a: Book, b: Book) => a.title.localeCompare(b.title));
-      this.setAside = response.filter((each: Book) => each.status === 3);
-      return true;
-  }
-
-  private sortBooksByDate(response: Book[], status: number, startDate: string | null, endDate: string | null): Book[] {
-    return response
-      .filter((each: any) =>
-        each.status === status &&
-        (startDate ? each.end_date >= startDate : true) &&
-        (endDate ? each.end_date < endDate : true)
-      )
-      .sort((a: any, b: any) => b.end_date.localeCompare(a.end_date));
-  }
-
-  onOpenForm(content: any, book: any):void {
-    this.modalService.open(content, {
-      size: 'md',
-      backdrop: 'static',
-    });
-    this.selectedBook = book;
-  }
-
   protected scrollToSection(sectionId: string): void {
     const element = document.getElementById(sectionId);
     if (element) {

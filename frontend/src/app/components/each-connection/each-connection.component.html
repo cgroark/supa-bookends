@@ -14,22 +14,13 @@
         </div>
       </header>
     <div class="friend-activity">
-    @if(currentBooks.length) {
+    @if(currentBooks.length || currentShelf.error) {
       <div class="friend-shelf-group">
       <h4 class="activity-title">
         <i class="bi bi-body-text me-1"></i>
         Reading
       </h4>
-      <div class="friend-books">
-          @for(book of currentBooks; track book.id) {
-            <app-book-item class="mobile-grid-book"
-              [selectedBook]="book"
-              [editable]="false"
-              [minimize]="minimize"
-              (bookUpdated)="fetchBooks()"
-            />
-          }
-      </div>
+      <app-book-shelf [shelf]="currentShelf" [compact]="minimize" label="friend current reads" (bookUpdated)="fetchBooks()" />
       </div>
     } @else if(!currentBooks.length && !recentBooks.length) {
       <h4 class="text-center no-underline">
@@ -37,24 +28,13 @@
         No current books
       </h4>
     }
-    @if(recentBooks.length) {
+    @if(recentBooks.length || latestShelf.error) {
       <div class="friend-shelf-group">
       <h4 class="activity-title">
         <i class="bi bi-bookmark-check-fill me-1"></i>
         Latest
       </h4>
-        <div class="friend-books friend-books--latest">
-            @for(book of recentBooks; track book.id; let index = $index) {
-              @if(index < (minimize ? (currentBooks.length ? 3 : 6) : 2)) {
-                <app-book-item class="mobile-grid-book"
-                  [selectedBook]="book"
-                  [editable]="false"
-                  [minimize]="minimize"
-                  (bookUpdated)="fetchBooks()"
-                />
-              }
-            }
-      </div>
+      <app-book-shelf [shelf]="latestShelf" [compact]="minimize" [columns]="minimize ? 3 : 2" [allowMore]="false" label="friend latest books" (bookUpdated)="fetchBooks()" />
       </div>
     }
     </div>

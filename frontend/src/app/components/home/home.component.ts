@@ -1,3 +1,5 @@
+import { BookShelfState } from '../../services/book-shelf-state';
+import { BookShelfComponent } from '../book-shelf/book-shelf.component';
 import { StickySectionNavDirective } from '../../directives/sticky-section-nav.directive';
 import { SkeletonComponent } from '../skeleton/skeleton.component';
 import { Component, OnInit, OnDestroy } from '@angular/core';
@@ -6,7 +8,8 @@ import { RouterModule } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 import { jwtDecode}  from 'jwt-decode';
-import  { forkJoin } from 'rxjs'
+import { forkJoin, Subject, Subscription } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { BookService } from 'src/app/services/book.service';
 import { UserService } from 'src/app/services/user.service';
@@ -24,20 +27,24 @@ import { EachConnectionComponent } from '../each-connection/each-connection.comp
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [StickySectionNavDirective, SkeletonComponent, EachConnectionComponent, BestsellersComponent, BookItemComponent, BookFormComponent, HeaderComponent, NavbarComponent, UserStatsComponent, CommonModule, RouterModule, NgbAccordionModule],
+  imports: [BookShelfComponent, StickySectionNavDirective, SkeletonComponent, EachConnectionComponent, BestsellersComponent, BookItemComponent, BookFormComponent, HeaderComponent, NavbarComponent, UserStatsComponent, CommonModule, RouterModule, NgbAccordionModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
 export class HomeComponent implements OnInit, OnDestroy {
 
-  protected isLoading = true;
+  protected currentShelf!: BookShelfState;
+  protected latestShelf!: BookShelfState;
+  protected yearlyCompletedCount: number | null = null;
+  protected goalCountError = false;
+  private countRequest?: Subscription;
+  private destroyed$ = new Subject<void>();
+  protected get isLoading(): boolean { return this.currentShelf?.loading ?? true; }
+  protected get currentBooks(): Book[] { return this.currentShelf?.books ?? []; }
+  protected get recentBooks(): Book[] { return this.latestShelf?.books ?? []; }
   protected isLoadingConnections = false;
-  protected currentBooks: Book[] = [];
-  protected recentBooks: Book[] = [];
-  protected completed2026: Book[] = [];
-  protected allUserBooks: Book[] = []
   protected selectedBook: any;
-  protected noBooks = false;
+  protected get noBooks(): boolean { return !!this.latestShelf && !this.latestShelf.loading && !this.latestShelf.total; }
   protected userId: string = '';
   protected user: any;
   protected existingConnections: User[] = [];
@@ -48,6 +55,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   private observationTimer?: ReturnType<typeof setTimeout>;
 
   ngOnDestroy(): void {
+    this.currentShelf?.destroy();
+    this.latestShelf?.destroy();
+    this.countRequest?.unsubscribe();
+    this.destroyed$.next();
+    this.destroyed$.complete();
     this.sectionObserver?.disconnect();
     clearTimeout(this.observationTimer);
   }
@@ -69,12 +81,12 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   protected fetchConnections(userId: string): void {
     this.isLoadingConnections = true;
-    this.userService.getUserById(userId).subscribe({
+    this.userService.getUserById(userId).pipe(takeUntil(this.destroyed$)).subscribe({
       next: (response) => {
         this.user = response;
         if (this.user.connections?.length) {
           const userRequests = this.user.connections.map((id: string) => this.userService.getUserById(id));
-          forkJoin<User[]>(userRequests).subscribe({
+          forkJoin<User[]>(userRequests).pipe(takeUntil(this.destroyed$)).subscribe({
             next: (users: User[]) => {
               this.existingConnections = users;
               this.observeSections();
@@ -96,28 +108,25 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
   }
 
-  protected fetchBooks(userId: string) {
-    this.isLoading = true;
-    this.bookService.getAllUserBooks(userId).subscribe({
-      next: (response: Book[]) => {
-        this.allUserBooks = response;
-        this.currentBooks = response.filter((each: Book) =>
-          each.status === /*status.reading*/ 2
-        );
-        this.recentBooks = response.filter((each: Book) =>
-          each.status === 4
-        ).sort((a: any, b: any) => b.end_date.localeCompare(a.end_date));
-        this.noBooks = !this.recentBooks.length;
-        this.completed2026 = response.filter((each: any) =>
-          each.status === 4 &&  each.end_date >= '2026-01-01');
-        this.isLoading = false;
-        this.observeSections();
-      },
-      error: (err: any) => {
-        console.error('Error fetching books:', err);
-        this.isLoading = false;
-        this.noBooks = true;
-      }
+  protected fetchBooks(userId: string): void {
+    this.currentShelf?.destroy();
+    this.latestShelf?.destroy();
+    this.currentShelf = new BookShelfState(this.bookService, { userId, status: 2 }, 1, 6, () => this.observeSections());
+    this.latestShelf = new BookShelfState(this.bookService, { userId, status: 4 }, 6, 6, () => this.observeSections());
+    this.currentShelf.reset();
+    this.latestShelf.reset();
+    this.loadGoalCount();
+  }
+
+  protected loadGoalCount(): void {
+    this.countRequest?.unsubscribe();
+    this.yearlyCompletedCount = null;
+    this.goalCountError = false;
+    const year = new Date().getFullYear();
+    this.countRequest = this.bookService.getBookCount({ userId: this.userId, status: 4,
+      from: `${year}-01-01`, to: `${year + 1}-01-01` }).subscribe({
+      next: count => this.yearlyCompletedCount = count,
+      error: () => this.goalCountError = true
     });
   }
 

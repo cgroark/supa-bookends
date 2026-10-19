@@ -1,5 +1,5 @@
 import { BookThumbnailComponent } from '../book-thumbnail/book-thumbnail.component';
-import { Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, OnDestroy, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SystemMessageService } from '../../services/system-message.service';
 
@@ -31,13 +31,13 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./book-form.component.scss'],
   imports: [BookThumbnailComponent, ReactiveFormsModule, FormsModule, CommonModule, NgSelectModule, NgbDatepickerModule, NgOptionHighlightModule]
 })
-export class BookFormComponent implements OnInit {
+export class BookFormComponent implements OnInit, OnDestroy {
   @Input() noModal = false;
   @Input() editingBook: any;
   @Input() addingBestSeller: any;
   @Input() identifiedBook = true;
   @Input() scrubBook = false;
-  @Input() allUserBooks: Book[] = []
+  private existingBooks: Pick<Book, 'title' | 'author'>[] = [];
   @Output() bookUpdated = new EventEmitter<void>();
 
   protected books$: Observable<any[]>;
@@ -128,7 +128,7 @@ export class BookFormComponent implements OnInit {
         }
         const fields = 'key,title,author_name,cover_i';
         this.isLoading = true;
-        return this.http.get<any>(`https://openlibrary.org/search.json?q=${encodeURIComponent(term)}&fields=${fields}`).pipe(
+        return this.http.get<any>(`https://openlibrary.org/search.json?q=${encodeURIComponent(term)}&fields=${fields}&limit=20`).pipe(
           map((response) =>
             (response.docs || []).map((item: any) => ({
               title: item.title || 'Unknown Title',
@@ -136,9 +136,21 @@ export class BookFormComponent implements OnInit {
               image_url: this.getOpenLibraryCoverUrl(item.cover_i),
               overview: null,
               openLibraryWorkKey: item.key,
-              disabled: this.alreadyAdded(item.title, item.author_name),
+              disabled: false,
             }))
           ),
+          switchMap((results: any[]) => {
+            const token = localStorage.getItem('auth_token_bookends');
+            const userId = token ? (jwtDecode(token) as { sub?: string }).sub : undefined;
+            if (!userId || !results.length) return of(results);
+            return this.bookService.findExistingBooks(userId, results.map(item => item.title)).pipe(
+              map(existing => {
+                this.existingBooks = existing;
+                return results.map(item => ({ ...item, disabled: this.alreadyAdded(item.title, item.authors) }));
+              }),
+              catchError(() => { this.existingBooks = []; return of(results); })
+            );
+          }),
           catchError(() => of([])),
           finalize(() => (this.isLoading = false)),
         );
@@ -176,6 +188,8 @@ export class BookFormComponent implements OnInit {
         }
       });
    }
+
+  ngOnDestroy(): void { this.destroyed$.next(); this.destroyed$.complete(); }
 
   private convertToNgbDate(dateString: string): { year: number; month: number; day: number } {
     const date = new Date(dateString);
@@ -225,9 +239,8 @@ export class BookFormComponent implements OnInit {
   }
 
   protected alreadyAdded(title: string, authors: any): boolean {
-    if(!authors) {
-    }
-    return this.allUserBooks.some(each => each.title === title && (authors && each.author === authors[0] ));
+    const values = Array.isArray(authors) ? authors : [authors];
+    return this.existingBooks.some(each => each.title === title && values.includes(each.author));
   }
 
   private getOpenLibraryCoverUrl(coverId: number | null): string | null {

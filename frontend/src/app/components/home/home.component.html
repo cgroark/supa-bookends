@@ -7,7 +7,7 @@
           @if(isLoading) {
             <app-skeleton variant="reading" label="Loading current reads" />
           } @else {
-            @if(currentBooks.length) {
+            @if(currentBooks.length || currentShelf.error) {
               <div class="card-heading">
                   <h2>
                     <i class="bi bi-body-text me-1"></i>
@@ -15,58 +15,18 @@
                   </h2>
               </div>
               <div class="card-body">
-                  <div class="reading-content" [class.reading-content--single]="currentBooks.length === 1">
+                  <div class="reading-content" [class.reading-content--single]="currentShelf.total === 1">
                    <div class="reading-books">
-                    @for(book of currentBooks; track book.id; let index = $index) {
-                      @if(index < 1) {
-                        <app-book-item
-                        [selectedBook]="book"
-                        [class.mobile-grid-book]="currentBooks.length === 1"
-                        [class.reading-current-book]="currentBooks.length === 1"
-                        [editable]="true"
-                        (bookUpdated)="fetchBooks(userId)"
-                      />
-                      }
-                    }
-                    @if(currentBooks.length > 1) {
-                      <div ngbAccordion>
-                        <div ngbAccordionItem class="mb-4">
-                          <div ngbAccordionHeader>
-                            <button
-                              ngbAccordionButton
-                            >
-                              View More
-                            </button>
-                          </div>
-                          <div ngbAccordionCollapse>
-                            <div
-                              ngbAccordionBody
-                              class="px-0"
-                            >
-                              <ng-template>
-                                <div class="book-shelf">
-                                @for(book of currentBooks; track book.id; let index = $index) {
-                                  @if(index > 0) {
-                                    <app-book-item
-                                      [selectedBook]="book"
-                                      [editable]="true"
-                                      (bookUpdated)="fetchBooks(userId)"
-                                    />
-                                  }
-                                }
-                                </div>
-                              </ng-template>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    }
+                    <app-book-shelf [shelf]="currentShelf" [editable]="true" [columns]="currentShelf.total === 1 ? 1 : 2" label="current reads"
+                      [singleReading]="currentShelf.total === 1" (bookUpdated)="fetchBooks(userId)" />
 
                    </div>
                    <div class="goals">
-                    <app-user-stats
-                      [currentBookCount]="completed2026.length"
-                    />
+                    @if(yearlyCompletedCount !== null) {
+                      <app-user-stats [currentBookCount]="yearlyCompletedCount" />
+                    } @else if(goalCountError) {
+                      <button class="btn btn-link" type="button" (click)="loadGoalCount()">Retry goal progress</button>
+                    } @else { <app-skeleton variant="goal" label="Loading goal progress" /> }
                     </div>
                   </div>
                     <button
@@ -119,12 +79,12 @@
             }
           </nav></div>
         }
-        @if(isLoading) {
+        @if(latestShelf && latestShelf.loading) {
           <div class="dashboard-card home-card">
             <app-skeleton variant="shelf" [count]="6" label="Loading latest books" />
           </div>
         }
-        @if(recentBooks.length && !isLoading) {
+        @if(latestShelf && !latestShelf.loading && (recentBooks.length || latestShelf.error)) {
           <div class="dashboard-card home-card read breadcrumb-section" id="current">
             <div class="card-heading">
               <h2>
@@ -133,17 +93,7 @@
               </h2>
             </div>
             <div class="card-body">
-              <div class="book-shelf latest-shelf">
-                @for(book of recentBooks; track book.id; let index = $index) {
-                  @if(index < 6 && book.image_url) {
-                    <app-book-item class="mobile-grid-book"
-                      [selectedBook]="book"
-                      [editable]="true"
-                      (bookUpdated)="fetchBooks(userId)"
-                    />
-                  }
-                }
-              </div>
+              <app-book-shelf [shelf]="latestShelf" [editable]="true" [allowMore]="false" label="latest books" (bookUpdated)="fetchBooks(userId)" />
               <button
                 class="btn main-teal-button card-action"
                 [routerLink]="['/books']" [queryParams]="{ user: userId }">
@@ -224,7 +174,6 @@
     <div>
       <app-book-form
         (bookUpdated)="fetchBooks(userId)"
-        [allUserBooks]="allUserBooks"
       />
     </div>
   </div>

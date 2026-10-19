@@ -35,3 +35,9 @@ Buttons use the shared primitive and palette variants in `frontend/src/styles/pa
 Content loading uses `app-skeleton` variants (`reading`, `shelf`, `friend`, `goal`, `heading`) with optional `count`, `compact`, `framed`, and accessible `label` inputs. Choose the variant that matches the loaded layout and let the same loading flag replace it with real content. Cover placeholders preserve the 2:3 book ratio and mobile shelf columns. Shimmer respects reduced-motion preferences; keep spinners for submissions and in-progress button actions.
 
 Shared page cards, section headings, mobile book shelves, and sticky section navigation live in `frontend/src/styles/partials/_surfaces.scss`, used across Home, Friends, and Book List.
+
+### Book pagination
+
+Supabase shelves use `BookService.getBookPage` with user/status/date filters, an explicit limit/offset, exact response counts, and a stable ID tie-breaker. `BookShelfState` owns loading, cancellation, retries, deduplication, and the next offset; `app-book-shelf` renders the same preview and View more controls across pages. Resetting a filter cancels pending requests and starts at offset zero. Failed next pages keep the loaded books and retry the same offset.
+
+Home requests one current read and six latest books. Friend previews request three current reads, then three latest books (six when there are no current reads; two on the Friends page). Library sections and completion-year groups start with six books, then load twelve at a time. Goal progress uses a separate HEAD count query and is never calculated from a filtered page. Book-search duplicate checks fetch only title/author metadata for the current search results. NYT bestsellers retain their existing disclosure because that API documents fixed pagination steps of twenty, with no six-book page-size parameter.

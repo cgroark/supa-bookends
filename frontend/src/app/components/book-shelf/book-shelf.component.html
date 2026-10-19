@@ -1,0 +1,23 @@
+<div [attr.aria-busy]="shelf.loading || shelf.loadingMore">
+  @if(shelf.loading) {
+    <app-skeleton variant="shelf" [count]="shelf.initialSize" [compact]="compact" [label]="'Loading ' + label" />
+  } @else {
+    <div class="shelf" [style.--mobile-columns]="columns">
+      @for(book of shelf.books; track book.id) {
+        <app-book-item class="mobile-grid-book" [class.reading-current-book]="singleReading"
+          [selectedBook]="book" [editable]="editable" [minimize]="compact" (bookUpdated)="bookUpdated.emit()" />
+      }
+    </div>
+  }
+  @if(shelf.error) {
+    <div class="shelf-error" role="alert">{{ shelf.error }} <button type="button" class="btn btn-link" (click)="shelf.retry()">Try again</button></div>
+  }
+  @if(shelf.loadingMore) {
+    <app-skeleton variant="shelf" [count]="3" [compact]="compact" [label]="'Loading more ' + label" />
+  }
+  @if(allowMore && shelf.hasMore && !shelf.error) {
+    <button type="button" class="btn shelf-more" [disabled]="shelf.loadingMore" (click)="shelf.loadMore()" [attr.aria-label]="'View more ' + label">
+      {{ shelf.loadingMore ? 'Loading…' : 'View more' }} <i class="bi bi-chevron-down" aria-hidden="true"></i>
+    </button>
+  }
+</div>

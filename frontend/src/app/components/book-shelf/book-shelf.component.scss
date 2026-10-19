@@ -1,0 +1,6 @@
+@import '../../../styles/variables';
+:host { display: block; min-width: 0; }
+.shelf { display: flex; flex-wrap: wrap; align-items: start; gap: .75rem; }
+.shelf-more { width: 100%; margin-top: 1rem; color: $ivory; background: rgba($purple, .12); border: 1px solid rgba($purple, .4); &:hover { background: rgba($purple, .25); } }
+.shelf-error { margin-top: 1rem; color: $salmon; font-size: .9rem; .btn { color: $ivory; } }
+@media (max-width: 768px) { .shelf { display: grid; grid-template-columns: repeat(var(--mobile-columns, 2), minmax(0, 1fr)); gap: 1rem .4rem; } }
