@@ -6,16 +6,20 @@
 @import '../src/styles/partials/navigation';
 @import '../src/styles/partials/surfaces';
 
-// Reset body and html for mobile navbar
+// Keep short pages and mobile overscroll on the app's dark surface.
 html, body {
   margin: 0;
   padding: 0;
+  min-height: 100svh;
+  background: $black;
+  color: $ivory;
   overflow-x: clip;
 }
 
+// Only authenticated pages with the fixed bottom nav need its clearance.
 @media screen and (max-width: 768px) {
-  body {
-    padding-bottom: calc(90px + env(safe-area-inset-bottom, 0px)); // Space for mobile navigation
+  .root:has(app-navbar) {
+    padding-bottom: calc(90px + env(safe-area-inset-bottom, 0px));
   }
 }
 .home-card {

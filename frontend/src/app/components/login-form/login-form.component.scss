@@ -1,6 +1,5 @@
 @import '../../../styles/variables';
 main {
-  min-height: 100vh;
 
   form {
     background-color: $light-black;
@@ -33,7 +32,32 @@ a {
   color: $teal;
 }
 .auth-card { max-width: 550px; }
-.btn.auth-link { color: $salmon; padding: .25rem 0; min-height: 44px; background: transparent; }
-.forgot-password { display: block; margin-left: auto; }
+.btn.auth-link {
+  color: $salmon;
+  padding: .25rem 0;
+  min-height: 44px;
+  background: transparent;
+  border: 1px solid transparent;
+  box-shadow: none;
+  &:hover, &:active, &:focus, &:disabled {
+    color: $salmon;
+    background: transparent;
+    border-color: transparent;
+    outline: none;
+    box-shadow: none;
+  }
+  &:focus-visible:not(:disabled) { outline: 2px solid $salmon; outline-offset: 3px; }
+}
+.btn.auth-link.forgot-password {
+  display: block;
+  margin-left: auto;
+  &:focus-visible:not(:disabled) {
+    outline: none;
+    border-color: transparent;
+    box-shadow: none;
+    text-decoration: underline;
+    text-underline-offset: .25rem;
+  }
+}
 .field-error { color: $salmon; font-size: .9rem; margin-top: .5rem; }
 .reset-notice { border: 1px solid rgba($teal, .4); background: rgba($teal, .08); border-radius: 10px; padding: .8rem; }
