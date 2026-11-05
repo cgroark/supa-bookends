@@ -158,8 +158,8 @@
       <div
         [class.col-8]="selectedBook.book_image"
       >
-        @if(selectedBook.description) {
-          {{ selectedBook.description }}
+        @if(selectedBook.overview || selectedBook.description) {
+          <p class="book-overview">{{ selectedBook.overview || selectedBook.description }}</p>
         } @else {
           @if(!selectedBook.book_image) {
             <h4 class="modal-text">

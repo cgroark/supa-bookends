@@ -60,8 +60,11 @@ div.fiction, div.non-fiction {
 
 .modal-body {
   &.book-detail {
+    background: $light-black;
+    color: $ivory;
+    .book-overview { margin: 0; white-space: pre-line; overflow-wrap: anywhere; }
     img {
-      max-width: 100%;;
+      max-width: 100%;
     }
   }
 }
