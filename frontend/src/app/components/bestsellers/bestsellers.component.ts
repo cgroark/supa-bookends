@@ -6,7 +6,9 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { HttpClient } from '@angular/common/http';
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
-import { combineLatest } from 'rxjs';
+import { combineLatest, of } from 'rxjs';
+import { catchError, finalize } from 'rxjs/operators';
+import { BookCatalogService, CatalogBook } from '../../services/book-catalog.service';
 import { BookFormComponent } from '../book-form/book-form.component';
 
 @Component({
@@ -31,7 +33,7 @@ export class BestsellersComponent implements OnInit {
   protected bookToAdd: any;
   private currentModal: any;
 
-  constructor(private http: HttpClient, private modalService: NgbModal, private datePipe: DatePipe) {}
+  constructor(private http: HttpClient, private modalService: NgbModal, private catalog: BookCatalogService, private datePipe: DatePipe) {}
 
   ngOnInit(): void {
     if(!this.fictionBooks.length) {
@@ -92,73 +94,41 @@ export class BestsellersComponent implements OnInit {
   }
 
   addBestSeller(contentForm: any, book: any): void {
+    if (this.isAdding) return;
     this.addingTitle = book.title;
     this.isAdding = true;
-    const isbns = [
-      book.isbns[1]?.isbn10,
-      book.isbns[1]?.isbn13,
-      book.isbns[0]?.isbn10,
-      book.isbns[0]?.isbn13,
-    ].filter((isbn) => isbn); // Filter out undefined or null ISBNs
-
-    function checkTitle(book: string, response: string): boolean {
-      return book.startsWith(response) ||
-      response.startsWith(book)
+    const fallback: CatalogBook = {
+      title: book.title || 'Unknown Title',
+      authors: [book.author || 'Unknown Author'],
+      image_url: book.book_image || null,
+      overview: book.description || null,
     };
+    const isbns = [...new Set<string>([
+      book.primary_isbn13,
+      book.primary_isbn10,
+      ...(book.isbns || []).flatMap((entry: any) => [entry.isbn13, entry.isbn10]),
+    ].filter((isbn): isbn is string => typeof isbn === 'string' && /^(?:[0-9]{13}|[0-9]{9}[0-9Xx])$/.test(isbn)))];
+    const query = isbns.length
+      ? isbns.map(isbn => `isbn:${isbn}`).join(' OR ')
+      : `${fallback.title} ${fallback.authors.join(' ')}`;
 
-    const searchBookByISBN = (index: number): void => {
-      if (index >= isbns.length) {
-        this.http
-        .get(`https://www.googleapis.com/books/v1/volumes?q=isbn:${book.primary_isbn13}&langRestrict=en`)
-        .subscribe({
-          next: (response: any) => {
-            if (response?.items?.length > 0
-              && checkTitle(book.title.toLowerCase(), response.items[0].volumeInfo.title.toLowerCase())) {
-              this.bookToAdd = response.items[0];
-              this.identifiedBook = true;
-              this.onOpenForm(contentForm);
-              this.isAdding = false;
-            } else {
-              this.identifiedBook = false;
-              this.bookToAdd = {
-              title: book.title ? book.title : 'Unknown title',
-                author: book.author ? book.author : 'Unknown author',
-              };
-              this.isAdding = false;
-              this.onOpenForm(contentForm);
-            }
-          },
-          error: (err) => {
-            console.error(`Error searching for ISBN: ${isbn}`, err);
-            this.isAdding = false;
-          },
-        });
-
-        return;
-      }
-
-      const isbn = isbns[index];
-      this.http
-        .get(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}&langRestrict=en`)
-        .subscribe({
-          next: (response: any) => {
-            if (response?.items?.length > 0
-              && checkTitle(book.title.toLowerCase(), response.items[0].volumeInfo.title.toLowerCase())) {
-              this.bookToAdd = response.items[0];
-              this.identifiedBook = true;
-              this.onOpenForm(contentForm);
-              this.isAdding = false;
-            } else {
-              searchBookByISBN(index + 1);
-            }
-          },
-          error: (err) => {
-            console.error(`Error searching for ISBN: ${isbn}`, err);
-            searchBookByISBN(index + 1);
-            this.isAdding = false;
-          },
-        });
-    };
-    searchBookByISBN(0);
+    this.catalog.search(query).pipe(
+      catchError(() => of([])),
+      finalize(() => { this.isAdding = false; this.addingTitle = null; }),
+    ).subscribe(results => {
+      const normalize = (title: string) => title.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
+      const title = normalize(fallback.title);
+      const match = results.find(result => {
+        const candidate = normalize(result.title);
+        return candidate === title || candidate.startsWith(`${title} `) || title.startsWith(`${candidate} `);
+      });
+      this.bookToAdd = match ? {
+        ...match,
+        image_url: match.image_url || fallback.image_url,
+        overview: fallback.overview,
+      } : fallback;
+      this.identifiedBook = true;
+      this.onOpenForm(contentForm);
+    });
   }
 }

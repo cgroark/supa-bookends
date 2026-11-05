@@ -9,9 +9,10 @@
   z-index: 999;
   display: block;
   position: fixed;
-  top: 5px;
-  right: 5px;
-  max-width: fit-content;
+  top: calc(5px + var(--safe-top));
+  right: calc(5px + var(--safe-right));
+  max-width: calc(100% - 10px - var(--safe-left) - var(--safe-right));
+  overflow-wrap: anywhere;
   min-height: 65px;
   align-content: center;
 }

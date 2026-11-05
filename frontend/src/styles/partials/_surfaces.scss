@@ -74,4 +74,10 @@
 }
 
 .section-nav-slot { min-width: 0; margin-bottom: 1.25rem; }
-.section-nav.section-nav--pinned { position: fixed; top: 0; margin-left: 0; margin-bottom: 0; }
+.section-nav.section-nav--pinned {
+  position: fixed;
+  top: 0;
+  margin-left: 0;
+  margin-bottom: 0;
+  padding-top: calc(.4rem + var(--safe-top));
+}

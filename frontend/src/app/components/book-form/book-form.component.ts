@@ -22,6 +22,7 @@ import {
 } from 'rxjs/operators';
 import { ReactiveFormsModule, FormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { BookCatalogService } from '../../services/book-catalog.service';
 
 
 @Component({
@@ -116,7 +117,7 @@ export class BookFormComponent implements OnInit, OnDestroy {
   private destroyed$ = new Subject<void>();
   private currentModal: any;
 
-  constructor(private bookService: BookService, private http: HttpClient, private systemMessageService: SystemMessageService, private modalService: NgbModal) {
+  constructor(private bookService: BookService, private http: HttpClient, private catalog: BookCatalogService, private systemMessageService: SystemMessageService, private modalService: NgbModal) {
 
     this.books$ = this.bookInput$.pipe(
       debounceTime(200),
@@ -126,19 +127,8 @@ export class BookFormComponent implements OnInit, OnDestroy {
           this.isLoading = false;
           return of([]);
         }
-        const fields = 'key,title,author_name,cover_i';
         this.isLoading = true;
-        return this.http.get<any>(`https://openlibrary.org/search.json?q=${encodeURIComponent(term)}&fields=${fields}&limit=20`).pipe(
-          map((response) =>
-            (response.docs || []).map((item: any) => ({
-              title: item.title || 'Unknown Title',
-              authors: item.author_name || ['Unknown Author'],
-              image_url: this.getOpenLibraryCoverUrl(item.cover_i),
-              overview: null,
-              openLibraryWorkKey: item.key,
-              disabled: false,
-            }))
-          ),
+        return this.catalog.search(term).pipe(
           switchMap((results: any[]) => {
             const token = localStorage.getItem('auth_token_bookends');
             const userId = token ? (jwtDecode(token) as { sub?: string }).sub : undefined;
@@ -216,12 +206,8 @@ export class BookFormComponent implements OnInit, OnDestroy {
         }
       )
     } else if(this.addingBestSeller && this.identifiedBook) {
-      this.selectedBook = {
-        title: this.addingBestSeller.volumeInfo?.title || 'Unknown Title',
-        authors: this.addingBestSeller.volumeInfo?.authors || ['Unknown Author'],
-        image_url: this.addingBestSeller.volumeInfo?.imageLinks.thumbnail,
-        overview: this.addingBestSeller.volumeInfo?.description
-      }
+      this.selectedBook = { ...this.addingBestSeller };
+      this.fetchOpenLibraryOverview(this.selectedBook);
       this.form.patchValue(
         {
           title: this.selectedBook.title ? this.selectedBook.title : 'Unknown',
@@ -241,10 +227,6 @@ export class BookFormComponent implements OnInit, OnDestroy {
   protected alreadyAdded(title: string, authors: any): boolean {
     const values = Array.isArray(authors) ? authors : [authors];
     return this.existingBooks.some(each => each.title === title && values.includes(each.author));
-  }
-
-  private getOpenLibraryCoverUrl(coverId: number | null): string | null {
-    return coverId ? `https://covers.openlibrary.org/b/id/${coverId}-M.jpg?default=false` : null;
   }
 
   private getOpenLibraryOverview(work: any): string | null {

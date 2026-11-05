@@ -210,10 +210,10 @@
       class="modal-title align-content-center"
       id="modal-basic-title"
       >
-      Add <em>{{ identifiedBook ? bookToAdd.volumeInfo.title : '' }}</em>
+      Add <em>{{ bookToAdd.title }}</em>
     </h4>
-    @if(bookToAdd.volumeInfo?.authors.length) {
-      <p>By {{ bookToAdd.volumeInfo.authors[0] }}</p>
+    @if(bookToAdd.authors?.length) {
+      <p>By {{ bookToAdd.authors[0] }}</p>
     }
    </div>
     <button

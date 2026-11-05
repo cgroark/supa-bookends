@@ -6,10 +6,12 @@ main {
 }
 .root {
   background-color: $black;
+  padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
   font-family: $font-ubuntu;
   font-size: $font-size-small;
 }
 .main-body  {
   max-width: 1025px;
-  min-height: 100svh;
+  min-height: calc(100vh - var(--safe-top) - var(--safe-bottom));
+  min-height: calc(100svh - var(--safe-top) - var(--safe-bottom));
 }

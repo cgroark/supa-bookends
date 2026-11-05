@@ -22,7 +22,8 @@
     left: 0;
     right: 0;
     margin: 0;
-    padding: .5rem .5rem calc(.5rem + env(safe-area-inset-bottom, 0px));
+    padding: .5rem calc(.5rem + var(--safe-right))
+      calc(.5rem + var(--safe-bottom)) calc(.5rem + var(--safe-left));
     border-radius: 18px 18px 0 0;
     box-shadow: 0 -8px 24px rgba($black, .25);
     z-index: 1000;

@@ -6,10 +6,19 @@
 @import '../src/styles/partials/navigation';
 @import '../src/styles/partials/surfaces';
 
+// Shared by normal flow and overlays mounted directly under body.
+:root {
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+}
+
 // Keep short pages and mobile overscroll on the app's dark surface.
 html, body {
   margin: 0;
   padding: 0;
+  min-height: 100vh;
   min-height: 100svh;
   background: $black;
   color: $ivory;
@@ -19,7 +28,7 @@ html, body {
 // Only authenticated pages with the fixed bottom nav need its clearance.
 @media screen and (max-width: 768px) {
   .root:has(app-navbar) {
-    padding-bottom: calc(90px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(90px + var(--safe-bottom));
   }
 }
 .home-card {

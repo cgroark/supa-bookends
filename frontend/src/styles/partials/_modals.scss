@@ -36,3 +36,12 @@
   .btn { flex: 1; min-width: 0; margin: 0; width: auto; }
 }
 .modal-confirmation .modal-actions { padding: 0; }
+
+// Bootstrap mounts dialogs outside the app shell. Keep their close buttons and
+// scrollable content clear of the notch in portrait and landscape.
+.modal {
+  padding-top: var(--safe-top);
+  padding-right: var(--safe-right);
+  padding-bottom: var(--safe-bottom);
+  padding-left: var(--safe-left);
+}
